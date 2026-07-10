@@ -20,7 +20,7 @@ from typing import Optional
 
 from fastapi import FastAPI, Query, Request
 from fastapi.exceptions import RequestValidationError
-from fastapi.responses import JSONResponse
+from fastapi.responses import FileResponse, JSONResponse
 
 from src import config
 from src.api.dto import (ErrorBody, ErrorResponse, SearchMeta, SearchResponse,
@@ -89,6 +89,13 @@ def _check_auth(request: Request) -> JSONResponse | None:
     if api_key and request.headers.get("X-API-Key", "") == api_key:
         return None
     return _error(401, "unauthorized", "Missing or invalid token/key", request)
+
+
+@app.get("/", include_in_schema=False)
+@app.get("/demo", include_in_schema=False)
+def demo_page():
+    """UI demo tĩnh (demo/index.html) — same-origin với API, offline 100%."""
+    return FileResponse(config.ROOT / "demo" / "index.html", media_type="text/html")
 
 
 @app.get("/health")

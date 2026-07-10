@@ -1,0 +1,473 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tasco Maps — Semantic Search</title>
+<style>
+  /* ===== tokens ===== */
+  :root {
+    --bg: #0B0B0D;
+    --surface: #111114;
+    --text: #EDEDEF;
+    --muted: #8A8A93;
+    --faint: #55555e;
+    --line: rgba(237, 237, 239, .09);
+    --line-strong: rgba(237, 237, 239, .16);
+    --accent: #46C8B2;
+    --accent-dim: rgba(70, 200, 178, .35);
+    --accent-faint: rgba(70, 200, 178, .12);
+    --mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, monospace;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { color-scheme: dark; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font: 17px/1.55 -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+  .wrap { width: min(980px, calc(100vw - 48px)); margin: 0 auto; flex: 1; }
+
+  /* ===== header ===== */
+  header { padding: 56px 0 8px; }
+  .eyebrow {
+    font-size: 12px; letter-spacing: .14em; text-transform: uppercase;
+    color: var(--muted); font-weight: 500;
+  }
+  h1 {
+    margin-top: 10px;
+    font-size: 30px; font-weight: 650; letter-spacing: -.02em;
+    text-wrap: balance;
+  }
+  .sub { margin-top: 6px; color: var(--muted); font-size: 15px; }
+
+  /* ===== search (command palette) ===== */
+  .search { margin-top: 28px; position: relative; }
+  .search input {
+    width: 100%;
+    background: var(--surface);
+    border: 1px solid var(--line-strong);
+    border-radius: 10px;
+    color: var(--text);
+    font: inherit; font-size: 19px;
+    padding: 16px 52px 16px 18px;
+    outline: none;
+    transition: border-color .18s ease-out, box-shadow .18s ease-out;
+  }
+  .search input::placeholder { color: var(--faint); }
+  .search input:focus {
+    border-color: var(--accent-dim);
+    box-shadow: 0 0 0 3px var(--accent-faint);
+  }
+  .search .key {
+    position: absolute; right: 14px; top: 50%; transform: translateY(-50%);
+    font-family: var(--mono); font-size: 12px; color: var(--faint);
+    border: 1px solid var(--line); border-radius: 5px; padding: 2px 7px;
+  }
+
+  /* ===== preset chips ===== */
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+  .chip {
+    background: none; color: var(--muted);
+    border: 1px solid var(--line-strong); border-radius: 8px;
+    font: inherit; font-size: 14px; padding: 7px 13px;
+    cursor: pointer;
+    transition: color .16s ease-out, border-color .16s ease-out;
+  }
+  .chip:hover { color: var(--text); border-color: rgba(237,237,239,.3); }
+  .chip[aria-pressed="true"] { color: var(--accent); border-color: var(--accent-dim); }
+  .chip:focus-visible, .search input:focus-visible {
+    outline: 2px solid var(--accent-dim); outline-offset: 2px;
+  }
+
+  /* ===== query plan ===== */
+  .plan {
+    margin-top: 30px;
+    border: 1px solid var(--line); border-radius: 12px;
+    background: var(--surface);
+    padding: 18px 20px;
+    display: none;
+    gap: 24px;
+  }
+  .plan.show { display: flex; }
+  .plan-main { flex: 1; min-width: 0; }
+  .panel-label {
+    font-size: 11px; letter-spacing: .14em; text-transform: uppercase;
+    color: var(--faint); font-weight: 500; margin-bottom: 12px;
+  }
+  .slots { display: flex; flex-wrap: wrap; gap: 16px 28px; }
+  .slot .slot-name {
+    font-size: 11px; letter-spacing: .1em; text-transform: uppercase;
+    color: var(--faint); margin-bottom: 6px;
+  }
+  .tokens { display: flex; flex-wrap: wrap; gap: 6px; }
+  .token {
+    border: 1px solid var(--line-strong); border-radius: 6px;
+    font-size: 13.5px; color: var(--text);
+    padding: 3px 9px;
+    opacity: 0; transform: translateY(4px);
+    animation: rise .2s ease-out forwards;
+  }
+  .token.neg { color: var(--muted); text-decoration: line-through; }
+  .token.empty { color: var(--faint); border-style: dashed; }
+  .coord {
+    margin-top: 14px; font-family: var(--mono); font-size: 12px; color: var(--muted);
+  }
+  .coord span { color: var(--faint); }
+
+  /* ===== mini map ===== */
+  .map { flex: 0 0 auto; display: none; }
+  .map.show { display: block; }
+  .map svg { display: block; }
+  .map-caption {
+    font-family: var(--mono); font-size: 11px; color: var(--faint);
+    text-align: center; margin-top: 4px;
+  }
+
+  /* ===== results ===== */
+  .results { margin-top: 18px; display: flex; flex-direction: column; gap: 12px; }
+  .state { color: var(--muted); font-size: 15px; padding: 26px 4px; display: none; }
+  .card {
+    border: 1px solid var(--line); border-radius: 12px;
+    background: var(--surface);
+    padding: 20px 22px;
+    opacity: 0; transform: translateY(6px);
+    animation: rise .22s ease-out forwards;
+    transition: border-color .16s ease-out, transform .16s ease-out;
+  }
+  .card:hover { border-color: var(--line-strong); transform: translateY(-1px); }
+  .card-top { display: flex; align-items: baseline; gap: 16px; }
+  .rank { font-family: var(--mono); font-size: 13px; color: var(--faint); flex: 0 0 18px; }
+  .name { font-size: 20px; font-weight: 600; letter-spacing: -.01em; flex: 1; min-width: 0; }
+  .score {
+    font-family: var(--mono); font-variant-numeric: tabular-nums;
+    font-size: 15px; color: var(--accent); flex: 0 0 auto;
+  }
+  .meta { margin-top: 4px; padding-left: 34px; color: var(--muted); font-size: 14.5px; }
+  .meta .cat {
+    text-transform: uppercase; letter-spacing: .08em; font-size: 11.5px; color: var(--faint);
+    margin-right: 12px;
+  }
+  .dist-row {
+    margin-top: 12px; padding-left: 34px;
+    display: flex; align-items: center; gap: 12px;
+    font-variant-numeric: tabular-nums;
+  }
+  .dist-val { font-family: var(--mono); font-size: 13px; color: var(--text); flex: 0 0 auto; }
+  .dist-track { flex: 0 1 220px; height: 2px; background: var(--line); border-radius: 1px; }
+  .dist-fill { display: block; height: 100%; width: 0; background: var(--accent);
+               border-radius: 1px; transition: width .5s ease-out; }
+  .dist-label { font-size: 12px; color: var(--faint); }
+
+  /* ===== signal breakdown (ngôi sao) ===== */
+  .signals { margin-top: 16px; padding-left: 34px; }
+  .sig-label {
+    font-size: 11px; letter-spacing: .12em; text-transform: uppercase;
+    color: var(--faint); margin-bottom: 8px;
+  }
+  .sig-bar {
+    display: flex; height: 10px; border-radius: 3px; overflow: hidden;
+    background: rgba(237,237,239,.04); gap: 1px;
+  }
+  .sig-seg {
+    background: var(--accent); height: 100%;
+    width: 0; transition: width .55s ease-out;
+  }
+  .sig-legend {
+    margin-top: 8px;
+    font-family: var(--mono); font-size: 12px; color: var(--muted);
+    font-variant-numeric: tabular-nums;
+    display: flex; flex-wrap: wrap; gap: 4px 18px;
+  }
+  .sig-legend b { color: var(--text); font-weight: 500; }
+
+  /* ===== footer ===== */
+  footer {
+    margin-top: 48px; padding: 18px 0 22px;
+    border-top: 1px solid var(--line);
+  }
+  .status {
+    width: min(980px, calc(100vw - 48px)); margin: 0 auto;
+    font-family: var(--mono); font-size: 12px; color: var(--faint);
+    font-variant-numeric: tabular-nums;
+    display: flex; justify-content: space-between;
+  }
+
+  @keyframes rise { to { opacity: 1; transform: translateY(0); } }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+    .token, .card { opacity: 1; transform: none; }
+  }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="eyebrow">Tasco Maps · AABW 2026 · Track 2</div>
+      <h1>Semantic search, giải thích được từng điểm số</h1>
+      <div class="sub">BM25 ∪ dense union-pool · multi-signal rerank · deterministic, offline, 0 LLM call</div>
+    </header>
+
+    <div class="search">
+      <input id="q" type="text" autocomplete="off" spellcheck="false"
+             placeholder="Tìm quán cà phê, nhà hàng, ATM…" aria-label="Câu tìm kiếm">
+      <span class="key">↵</span>
+    </div>
+
+    <div class="chips" id="chips" role="group" aria-label="Câu demo"></div>
+
+    <section class="plan" id="plan" aria-label="Query plan">
+      <div class="plan-main">
+        <div class="panel-label">Query plan — L1 hiểu câu này thế nào</div>
+        <div class="slots" id="slots"></div>
+        <div class="coord" id="coord"></div>
+      </div>
+      <div class="map" id="map"></div>
+    </section>
+
+    <div class="state" id="state"></div>
+    <div class="results" id="results" aria-live="polite"></div>
+  </div>
+
+  <footer>
+    <div class="status">
+      <span>tasco-semantic-search · /v1/search?explain=true</span>
+      <span id="statline">offline · deterministic · —</span>
+    </div>
+  </footer>
+
+<script>
+"use strict";
+
+const PRESETS = [
+  "cafe có wifi gần hồ gươm",
+  "nơi ăn uống lãng mạn view thành phố",
+  "quiet coffee shop to work near hoan kiem",
+  "quan cafe yen tinh lam viec",
+];
+const HERO = PRESETS[1];
+
+const SIG_LABELS = {
+  dense_relevance: "dense", bm25_relevance: "bm25", category: "category",
+  attr: "attr", city: "city", distance: "distance", rating: "rating",
+  pop: "pop", name: "name",
+};
+const SLOT_DEFS = [
+  ["categories", "category"],
+  ["attr_concepts", "attributes"],
+  ["neg_concepts", "phủ định"],
+  ["city", "city"],
+  ["district", "district"],
+  ["landmark", "landmark"],
+];
+
+const $ = (id) => document.getElementById(id);
+const esc = (s) => String(s).replace(/[&<>"']/g, (c) =>
+  ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+
+/* ---------- preset chips ---------- */
+for (const p of PRESETS) {
+  const b = document.createElement("button");
+  b.className = "chip";
+  b.type = "button";
+  b.textContent = p;
+  b.setAttribute("aria-pressed", "false");
+  b.addEventListener("click", () => { $("q").value = p; run(p); });
+  $("chips").appendChild(b);
+}
+function markActiveChip(query) {
+  for (const c of document.querySelectorAll(".chip"))
+    c.setAttribute("aria-pressed", String(c.textContent === query));
+}
+
+/* ---------- query plan ---------- */
+function renderPlan(plan) {
+  const slots = $("slots");
+  slots.innerHTML = "";
+  let delay = 0;
+  const slotHtml = [];
+  for (const [key, label] of SLOT_DEFS) {
+    let vals = plan[key];
+    if (vals == null) vals = [];
+    if (!Array.isArray(vals)) vals = [vals];
+    if (!vals.length) continue;
+    const neg = key === "neg_concepts" ? " neg" : "";
+    const toks = vals.map((v) => {
+      delay += 45;
+      return `<span class="token${neg}" style="animation-delay:${delay}ms">${esc(v)}</span>`;
+    }).join("");
+    slotHtml.push(`<div class="slot"><div class="slot-name">${label}</div>
+      <div class="tokens">${toks}</div></div>`);
+  }
+  if (!slotHtml.length)
+    slotHtml.push(`<div class="slot"><div class="slot-name">plan</div>
+      <div class="tokens"><span class="token empty">không có slot cấu trúc — relevance thuần dẫn dắt</span></div></div>`);
+  slots.innerHTML = slotHtml.join("");
+  $("coord").innerHTML = plan.resolved_coord
+    ? `<span>resolved_coord</span>  ${plan.resolved_coord[0].toFixed(4)}, ${plan.resolved_coord[1].toFixed(4)}`
+    : "";
+  $("plan").classList.add("show");
+}
+
+/* ---------- radial mini map ---------- */
+function haversineKm(a, b) {
+  const R = 6371, r = Math.PI / 180;
+  const dLat = (b.lat - a.lat) * r, dLon = (b.lon - a.lon) * r;
+  const h = Math.sin(dLat / 2) ** 2 +
+    Math.cos(a.lat * r) * Math.cos(b.lat * r) * Math.sin(dLon / 2) ** 2;
+  return 2 * R * Math.asin(Math.sqrt(h));
+}
+function renderMap(plan, results) {
+  const el = $("map");
+  if (!plan.resolved_coord) { el.classList.remove("show"); el.innerHTML = ""; return; }
+  const center = { lat: plan.resolved_coord[0], lon: plan.resolved_coord[1] };
+  const pts = results.map((res, i) => {
+    const c = res.coordinates;
+    const km = haversineKm(center, c);
+    const r0 = Math.PI / 180;
+    const brg = Math.atan2(
+      (c.lon - center.lon) * Math.cos(center.lat * r0), c.lat - center.lat);
+    return { i, km, brg };
+  });
+  const S = 148, cx = S / 2, cy = S / 2, Rmax = S / 2 - 14;
+  const maxKm = Math.max(...pts.map((p) => p.km), 0.5);
+  const rings = [1 / 3, 2 / 3, 1].map((f) =>
+    `<circle cx="${cx}" cy="${cy}" r="${Rmax * f}" fill="none"
+       stroke="rgba(237,237,239,.09)" stroke-width="1"/>`).join("");
+  const dots = pts.map((p) => {
+    const rr = Rmax * Math.pow(p.km / maxKm, .6);
+    const x = cx + rr * Math.sin(p.brg), y = cy - rr * Math.cos(p.brg);
+    return `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="4"
+        fill="var(--accent)" opacity="${p.i === 0 ? 1 : .45}"/>
+      <text x="${(x + 7).toFixed(1)}" y="${(y + 4).toFixed(1)}" font-size="10"
+        fill="#8A8A93" style="font-family:var(--mono)">${p.i + 1}</text>`;
+  }).join("");
+  el.innerHTML = `<svg width="${S}" height="${S}" viewBox="0 0 ${S} ${S}" role="img"
+      aria-label="Khoảng cách kết quả quanh landmark">
+      ${rings}
+      <circle cx="${cx}" cy="${cy}" r="2.5" fill="var(--accent)"/>
+      ${dots}
+    </svg>
+    <div class="map-caption">${esc(plan.landmark || "focus")} · vòng ngoài ≈ ${maxKm < 1 ? Math.round(maxKm * 1000) + " m" : maxKm.toFixed(1) + " km"}</div>`;
+  el.classList.add("show");
+}
+
+/* ---------- results ---------- */
+function fmtDist(km) { return km < 1 ? `${Math.round(km * 1000)} m` : `${km.toFixed(1)} km`; }
+
+function renderResults(data, planCoord) {
+  const box = $("results");
+  box.innerHTML = "";
+  data.results.forEach((res, i) => {
+    const card = document.createElement("article");
+    card.className = "card";
+    card.style.animationDelay = `${i * 70}ms`;
+
+    let distHtml = "";
+    let km = null;
+    if (planCoord) {
+      km = haversineKm({ lat: planCoord[0], lon: planCoord[1] }, res.coordinates);
+    } else if (res.distanceMeters != null) {
+      km = res.distanceMeters / 1000;
+    }
+    if (km != null) {
+      const pct = Math.max(4, Math.round(100 / (1 + km)));
+      distHtml = `<div class="dist-row">
+          <span class="dist-val">${fmtDist(km)}</span>
+          <span class="dist-track"><span class="dist-fill" data-w="${pct}"></span></span>
+          <span class="dist-label">proximity</span>
+        </div>`;
+    }
+
+    let sigHtml = "";
+    const ex = res.explanation;
+    if (ex && ex.signals) {
+      const parts = Object.entries(ex.signals)
+        .map(([k, v]) => ({ k: SIG_LABELS[k] || k, v }))
+        .filter((p) => p.v > 0.0005)
+        .sort((a, b) => b.v - a.v);
+      const total = parts.reduce((s, p) => s + p.v, 0) || 1;
+      const segs = parts.map((p, j) => {
+        const w = (p.v / total * 100);
+        const op = Math.max(.1, 1 - j * .17);
+        return `<span class="sig-seg" data-w="${w.toFixed(2)}" style="opacity:${op.toFixed(2)}"
+          title="${p.k} ${p.v.toFixed(3)}"></span>`;
+      }).join("");
+      const legend = parts.slice(0, 4).map((p) =>
+        `<span>${p.k} <b>${p.v.toFixed(3)}</b></span>`).join("");
+      sigHtml = `<div class="signals">
+          <div class="sig-label">signal contribution</div>
+          <div class="sig-bar">${segs}</div>
+          <div class="sig-legend">${legend}</div>
+        </div>`;
+    }
+
+    card.innerHTML = `
+      <div class="card-top">
+        <span class="rank">${i + 1}</span>
+        <span class="name">${esc(res.name)}</span>
+        <span class="score">${res.score.toFixed(3)}</span>
+      </div>
+      <div class="meta"><span class="cat">${esc(res.category)}</span>${esc(res.address)}</div>
+      ${distHtml}${sigHtml}`;
+    box.appendChild(card);
+  });
+
+  // animate widths sau khi vào DOM (transition từ 0 → target)
+  requestAnimationFrame(() => requestAnimationFrame(() => {
+    for (const el of box.querySelectorAll("[data-w]"))
+      el.style.width = el.dataset.w + "%";
+  }));
+}
+
+/* ---------- run ---------- */
+let inflight = null;
+async function run(query) {
+  markActiveChip(query);
+  const state = $("state");
+  state.style.display = "none";
+  if (inflight) inflight.abort();
+  inflight = new AbortController();
+  const t0 = performance.now();
+  try {
+    const url = `/v1/search?${new URLSearchParams({ q: query, limit: 3, explain: true })}`;
+    const resp = await fetch(url, { signal: inflight.signal });
+    if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+    const data = await resp.json();
+    const ms = Math.round(performance.now() - t0);
+    $("statline").textContent = `offline · deterministic · ${ms} ms`;
+    if (!data.results.length) {
+      $("results").innerHTML = ""; $("plan").classList.remove("show");
+      state.textContent = "Không có kết quả cho câu này.";
+      state.style.display = "block";
+      return;
+    }
+    const plan = (data.results[0].explanation || {}).plan || {};
+    renderPlan(plan);
+    renderMap(plan, data.results);
+    renderResults(data, plan.resolved_coord);
+  } catch (err) {
+    if (err.name === "AbortError") return;
+    $("results").innerHTML = ""; $("plan").classList.remove("show");
+    state.textContent = "Không gọi được service — kiểm tra `make api` đang chạy.";
+    state.style.display = "block";
+    $("statline").textContent = "offline · service unreachable";
+  }
+}
+
+$("q").addEventListener("keydown", (e) => {
+  if (e.key === "Enter" && $("q").value.trim()) run($("q").value.trim());
+});
+
+/* hero: màn không bao giờ trống */
+$("q").value = HERO;
+$("q").focus();
+run(HERO);
+</script>
+</body>
+</html>

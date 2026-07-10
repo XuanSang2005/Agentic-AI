@@ -64,8 +64,11 @@ def to_place_result(hit: SearchHit) -> PlaceResult:
         type="poi",
         name=poi.name,
         label=poi.name,
-        # address trong data đã có district ("27 Ngô Đức Kế, Quận 1") — nối thêm city
-        address=f"{poi.address}, {poi.city}" if poi.address else poi.city,
+        # address trong data đã có district ("27 Ngô Đức Kế, Quận 1") — nối thêm city,
+        # trừ khi address đã kết thúc bằng city sẵn (tránh "Đà Lạt, Đà Lạt")
+        address=(poi.address if not poi.address
+                 else poi.address if poi.address.endswith(poi.city)
+                 else f"{poi.address}, {poi.city}") or poi.city,
         category=poi.category,
         coordinates=Coordinates(lat=poi.lat, lon=poi.lon),
         distanceMeters=hit.distance_meters,
