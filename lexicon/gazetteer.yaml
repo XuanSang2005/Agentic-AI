@@ -1,10 +1,45 @@
 # Landmark → toạ độ (KHÔNG có trong dataset, phải tự cung cấp).
-# TODO Ngày 1: verify lại toạ độ. Lưu ý P009: "trên đường đi Hạ Long" là ngữ cảnh, không phải filter.
+# ĐÃ VERIFY (eval log 2026-07-11): mọi landmark cách POI thật lân cận <1km
+# (Hồ Gươm→C003 0.37km/S002 0.31km; Nguyễn Huệ→C002 0.11km; sông Hàn→C005 0.40km;
+#  Bến Thành→H005 0.43km; Xuân Hương→A004 0.18km; Mỹ Khê→R005 0.24km; Duy Tân→H003 0.08km).
+#
+# Chỉ resolve khi query có cue "gần/near/cạnh/sát/quanh" — bẫy P009: "trên đường đi
+# Hạ Long" là ngữ cảnh chuyến đi, không phải location filter (rules.py enforce).
+# "biển"/"beach" generic → Mỹ Khê (city Đà Nẵng — city khác trong data không có biển);
+# guard: chỉ resolve khi plan.city trống hoặc trùng city của landmark.
 
-ho_guom:        {names: [hồ gươm, hồ hoàn kiếm, hoan kiem lake], lat: 21.0287, lon: 105.8524, city: Hà Nội}
-pho_di_bo_nguyen_hue: {names: [phố đi bộ nguyễn huệ, nguyen hue walking street], lat: 10.7743, lon: 106.7038, city: TP.HCM}
-song_han:       {names: [sông hàn, han river], lat: 16.0678, lon: 108.2247, city: Đà Nẵng}
-cho_ben_thanh:  {names: [chợ bến thành, ben thanh market], lat: 10.7725, lon: 106.6980, city: TP.HCM}
-ho_xuan_huong:  {names: [hồ xuân hương], lat: 11.9416, lon: 108.4442, city: Đà Lạt}
-bien_my_khe:    {names: [biển mỹ khê, my khe beach, gần biển đà nẵng], lat: 16.0598, lon: 108.2479, city: Đà Nẵng}
-duy_tan:        {names: [duy tân, khu văn phòng duy tân], lat: 21.0305, lon: 105.7855, city: Hà Nội}
+ho_guom:
+  names: [hồ gươm, hồ hoàn kiếm, hoan kiem lake]
+  lat: 21.0287
+  lon: 105.8524
+  city: Hà Nội
+pho_di_bo_nguyen_hue:
+  names: [phố đi bộ nguyễn huệ, nguyen hue walking street, nguyễn huệ]
+  lat: 10.7743
+  lon: 106.7038
+  city: TP.HCM
+song_han:
+  names: [sông hàn, han river]
+  lat: 16.0678
+  lon: 108.2247
+  city: Đà Nẵng
+cho_ben_thanh:
+  names: [chợ bến thành, ben thanh market, bến thành]
+  lat: 10.7725
+  lon: 106.6980
+  city: TP.HCM
+ho_xuan_huong:
+  names: [hồ xuân hương, xuân hương]
+  lat: 11.9416
+  lon: 108.4442
+  city: Đà Lạt
+bien_my_khe:
+  names: [biển mỹ khê, my khe beach, mỹ khê, biển đà nẵng, beach da nang, biển, beach]
+  lat: 16.0598
+  lon: 108.2479
+  city: Đà Nẵng
+duy_tan:
+  names: [duy tân, khu văn phòng duy tân]
+  lat: 21.0305
+  lon: 105.7855
+  city: Hà Nội

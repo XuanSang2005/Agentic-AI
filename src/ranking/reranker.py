@@ -9,7 +9,7 @@ from src.data_loader import POI
 from src.ranking import signals
 from src.understanding.rules import extract_plan
 
-# Trọng số mặc định (prototype đạt 0.883). bm25 = điểm base đã chuẩn hóa theo max
+# Trọng số mặc định (Bước 1 — chưa distance). bm25 = điểm base đã chuẩn hóa theo max
 # trong candidate set; phần còn lại là signal từ QueryPlan + POI.
 DEFAULT_WEIGHTS = {
     "bm25": 0.32,
@@ -18,6 +18,17 @@ DEFAULT_WEIGHTS = {
     "city": 0.12,
     "rating": 0.05,
     "pop": 0.03,
+}
+
+# Bước 2: thêm distance (landmark/district), các weight khác giảm nhẹ tương ứng.
+WEIGHTS_WITH_DISTANCE = {
+    "bm25": 0.28,
+    "category": 0.22,
+    "attr": 0.20,
+    "city": 0.10,
+    "distance": 0.15,
+    "rating": 0.03,
+    "pop": 0.02,
 }
 
 N_CANDIDATES = 30  # đủ sâu: 60 câu eval đều có đáp án trong top-30 BM25 (recall@30 ~1.0)

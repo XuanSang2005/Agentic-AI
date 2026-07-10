@@ -196,7 +196,7 @@ def run_eval(
 
 
 def main() -> None:
-    from src.ranking.reranker import RerankRetriever
+    from src.ranking.reranker import WEIGHTS_WITH_DISTANCE, RerankRetriever
 
     pois = load_pois()
     queries = load_eval()
@@ -210,9 +210,14 @@ def main() -> None:
                            readme_row="BM25 only")
     print()
 
-    # L3 rerank (rules-based plan): category + attr concept + city + rating (+pop flag).
+    # L3 rerank Bước 1: category + attr concept + city + rating (+pop flag).
     rerank = RerankRetriever(pois, base=bm25)
-    run_eval(rerank, "BM25 + Rerank", queries, synthetic_ids,
+    run_eval(rerank, "BM25 + Rerank", queries, synthetic_ids, compare_to=base_report)
+    print()
+
+    # L3 rerank Bước 2: + distance (gazetteer landmark / district centroid).
+    rerank_dist = RerankRetriever(pois, base=bm25, weights=WEIGHTS_WITH_DISTANCE)
+    run_eval(rerank_dist, "BM25 + Rerank + Distance", queries, synthetic_ids,
              readme_row="+ Multi-signal Rerank", compare_to=base_report)
 
 

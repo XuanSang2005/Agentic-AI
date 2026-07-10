@@ -7,12 +7,13 @@ match giữa từ ("hn" không ăn vào "hnx", "dong" không ăn vào "dong da" 
 from __future__ import annotations
 
 import re
+import statistics
 from functools import lru_cache
 
 import yaml
 
 from src import config
-from src.data_loader import normalize_vi
+from src.data_loader import load_pois, normalize_vi
 from src.understanding.query_plan import QueryPlan
 
 # --- City: pattern trên text đã bỏ dấu. Thứ tự = ưu tiên khi (hiếm) match nhiều city.
@@ -68,6 +69,81 @@ def _concept_rules() -> list[tuple[re.Pattern, str]]:
     return [(_boundary_pattern(t), cid) for t, cid in sorted(rules, key=lambda x: -len(x[0]))]
 
 
+# --- Landmark (gazetteer) + district ---
+# Cue bắt buộc trước landmark: "gần/near/cạnh/sát/quanh" trong cửa sổ 15 ký tự.
+# Bẫy P009: "trên đường đi hạ long" không có cue "gần" → không resolve, đúng chủ đích.
+_NEAR_CUE = re.compile(r"(?<![a-z0-9])(gan|near|canh|sat|quanh)(?![a-z0-9])")
+
+
+@lru_cache(maxsize=1)
+def _gazetteer_rules() -> list[tuple[re.Pattern, dict]]:
+    """[(name_pattern, entry)] — tên dài match trước ("biển mỹ khê" trước "biển")."""
+    raw = yaml.safe_load(config.GAZETTEER_YAML.read_text(encoding="utf-8"))
+    rules = []
+    for key, entry in raw.items():
+        info = {"key": key, "lat": float(entry["lat"]), "lon": float(entry["lon"]),
+                "city": entry["city"]}
+        rules.extend((normalize_vi(str(n)), info) for n in entry["names"])
+    return [(_boundary_pattern(n), info) for n, info in sorted(rules, key=lambda x: -len(x[0]))]
+
+
+@lru_cache(maxsize=1)
+def _district_rules() -> list[tuple[re.Pattern, tuple[str, str]]]:
+    """[(pattern, (district, city))] sinh từ data — "Quận N" thêm biến thể qN/district N."""
+    pairs = {(p.district, p.city) for p in load_pois() if p.district}
+    rules = []
+    for district, city in pairs:
+        surfaces = {normalize_vi(district)}
+        m = re.fullmatch(r"quan (\d+)", normalize_vi(district))
+        if m:
+            surfaces |= {f"q{m.group(1)}", f"q.{m.group(1)}", f"district {m.group(1)}"}
+        rules.extend((s, (district, city)) for s in surfaces)
+    return [(_boundary_pattern(s), dc) for s, dc in sorted(rules, key=lambda x: -len(x[0]))]
+
+
+@lru_cache(maxsize=1)
+def district_centroids() -> dict[tuple[str, str], tuple[float, float]]:
+    """(city, district) → (median lat, median lon) trên TOÀN BỘ POI trong quận.
+
+    Median (không phải mean) để vài dòng toạ độ lệch không kéo trôi centroid.
+    Lưu ý: signals chấm POI CÙNG district = distance 1.0 trực tiếp — centroid chỉ
+    làm gradient cho POI khác quận, nên sai số ~1km ở đây không nguy hiểm.
+    """
+    by_district: dict[tuple[str, str], list] = {}
+    for p in load_pois():
+        if p.district and p.lat and p.lon:
+            by_district.setdefault((p.city, p.district), []).append(p)
+    return {key: (statistics.median(p.lat for p in ps), statistics.median(p.lon for p in ps))
+            for key, ps in by_district.items()}
+
+
+def _detect_landmark(plan: QueryPlan, norm: str) -> None:
+    for pat, info in _gazetteer_rules():
+        m = pat.search(norm)
+        if not m:
+            continue
+        if not _NEAR_CUE.search(norm[max(0, m.start() - 15):m.start()]):
+            continue  # không có "gần/near" ngay trước → chỉ là ngữ cảnh (bẫy P009)
+        if plan.city is not None and plan.city != info["city"]:
+            continue  # "gần biển" nhưng query nói city không có biển → không resolve
+        plan.landmark = info["key"]
+        plan.resolved_coord = (info["lat"], info["lon"])
+        plan.city = plan.city or info["city"]
+        return
+
+
+def _detect_district(plan: QueryPlan, norm: str) -> None:
+    for pat, (district, city) in _district_rules():
+        if pat.search(norm):
+            if plan.city is not None and plan.city != city:
+                continue
+            plan.district = district
+            plan.city = plan.city or city
+            if plan.resolved_coord is None:  # landmark (điểm chính xác) được ưu tiên
+                plan.resolved_coord = district_centroids().get((city, district))
+            return
+
+
 def _match_consuming(norm_text: str, rules: list[tuple[re.Pattern, str]]) -> set[str]:
     """Match longest-first và TIÊU THỤ span: surface dài match trước thì surface con
     nằm đè lên span đó không fire nữa ("họp nhóm"→phong_hop chặn "nhóm"→nhom;
@@ -94,6 +170,9 @@ def extract_plan(query: str) -> QueryPlan:
         if pat.search(norm):
             plan.city = city
             break
+
+    _detect_landmark(plan, norm)   # cần cue "gần/near", có city guard
+    _detect_district(plan, norm)   # district → city + centroid (khi chưa có landmark)
 
     # Consume span RIÊNG từng loại: category và concept được phép cùng ăn 1 đoạn text
     # ("ăn tối" → category Nhà hàng + concept an_uong là chủ đích).
