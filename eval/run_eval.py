@@ -225,7 +225,8 @@ def main() -> None:
 
     # L3 rerank Bước 1: category + attr concept + city + rating (+pop flag).
     rerank = RerankRetriever(pois, base=bm25)
-    run_eval(rerank, "BM25 + Rerank", queries, synthetic_ids, compare_to=base_report)
+    run_eval(rerank, "BM25 + Rerank", queries, synthetic_ids,
+             readme_row="+ Rerank (rules, no distance)", compare_to=base_report)
     print()
 
     # L3 rerank Bước 2: + distance (gazetteer landmark / district centroid).

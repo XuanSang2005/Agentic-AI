@@ -117,7 +117,11 @@ def district_centroids() -> dict[tuple[str, str], tuple[float, float]]:
             for key, ps in by_district.items()}
 
 
-def _detect_landmark(plan: QueryPlan, norm: str) -> None:
+def _detect_landmark(plan: QueryPlan, norm: str) -> tuple[int, int] | None:
+    """Resolve landmark → trả span đã match để CONSUME: "gần hồ xuân hương" là
+    location chính xác (distance signal lo), không được rớt xuống concept "gần hồ"
+    generic rồi cộng oan attr cho POI cạnh hồ KHÁC thành phố.
+    """
     for pat, info in _gazetteer_rules():
         m = pat.search(norm)
         if not m:
@@ -129,7 +133,8 @@ def _detect_landmark(plan: QueryPlan, norm: str) -> None:
         plan.landmark = info["key"]
         plan.resolved_coord = (info["lat"], info["lon"])
         plan.city = plan.city or info["city"]
-        return
+        return m.span()
+    return None
 
 
 def _detect_district(plan: QueryPlan, norm: str) -> None:
@@ -144,12 +149,14 @@ def _detect_district(plan: QueryPlan, norm: str) -> None:
             return
 
 
-def _match_consuming(norm_text: str, rules: list[tuple[re.Pattern, str]]) -> set[str]:
+def _match_consuming(norm_text: str, rules: list[tuple[re.Pattern, str]],
+                     pre_taken: tuple[tuple[int, int], ...] = ()) -> set[str]:
     """Match longest-first và TIÊU THỤ span: surface dài match trước thì surface con
     nằm đè lên span đó không fire nữa ("họp nhóm"→phong_hop chặn "nhóm"→nhom;
     "trung tâm thương mại" chặn "trung tâm"). rules phải được sort dài→ngắn sẵn.
+    pre_taken: span đã bị tầng trước tiêu thụ (vd landmark) — không match đè lên.
     """
-    taken: list[tuple[int, int]] = []
+    taken: list[tuple[int, int]] = list(pre_taken)
     out: set[str] = set()
     for pat, value in rules:
         for m in pat.finditer(norm_text):
@@ -176,6 +183,11 @@ def extract_plan(query: str) -> QueryPlan:
 
     # Consume span RIÊNG từng loại: category và concept được phép cùng ăn 1 đoạn text
     # ("ăn tối" → category Nhà hàng + concept an_uong là chủ đích).
+    #
+    # ĐÃ ĐO nhưng chưa bật — landmark-span consumption (pre_taken=landmark span cho
+    # concept): fix leak "cafe gần hồ xuân hương" ăn attr `gan_ho` rồi trả quán cạnh
+    # hồ KHÁC city, NHƯNG làm P002 rơi vào dense-bait G003 (thua 0.016). Bật lại khi
+    # có reranker semantic mạnh hơn phân xử được bait (LLM rerank / e5-base).
     plan.categories = _match_consuming(norm, _category_rules())
     plan.attr_concepts = _match_consuming(norm, _concept_rules())
 

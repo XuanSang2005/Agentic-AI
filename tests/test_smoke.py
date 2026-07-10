@@ -78,6 +78,28 @@ def test_name_match_strict():
     assert name_match(extract_plan("mua sắm ăn uống trung tâm quận 1"), pois["G036"]) == 0.0
 
 
+def test_no_accent_regression():
+    """Câu KHÔNG DẤU phải ra đúng gold — dense mù chỗ này, BM25 (bỏ dấu 2 phía)
+    + rules (match trên norm) + district phải gánh. Chạy path v2 (không dense) cho nhanh.
+    """
+    from src.ranking.reranker import RerankRetriever, WEIGHTS_WITH_DISTANCE
+    from src.retrieval.bm25 import BM25Retriever
+
+    pois = load_pois()
+    r = RerankRetriever(pois, base=BM25Retriever(pois), weights=WEIGHTS_WITH_DISTANCE)
+
+    cases = [
+        ("quan ca phe yen tinh de lam viec", {"C001", "C004", "C007"}),
+        ("cafe co wifi gan ho guom", {"C003", "C004"}),
+        ("benh vien cap cuu 24/7 ha noi", {"S005"}),
+        ("tram sac xe dien o da nang", {"S004"}),
+        ("khach san gan bien da nang co ho boi", {"H001", "H002"}),
+    ]
+    for query, gold in cases:
+        top1 = r.search(query, k=5)[0]
+        assert top1 in gold, f"no-accent fail: {query!r} → {top1}, muốn {gold}"
+
+
 def test_bm25_retriever_smoke():
     pois = load_pois()
     retriever = BM25Retriever(pois)

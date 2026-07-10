@@ -72,16 +72,6 @@ class RerankRetriever:
         ids = self._base.search(query, k=self._n)
         return [(pid, 1.0 - i / max(len(ids), 1)) for i, pid in enumerate(ids)]
 
-    def score_breakdown(self, query: str, poi_id: str, base_norm: float) -> dict[str, float]:
-        """Điểm từng signal (đã nhân weight) — dùng cho explainability và debug."""
-        plan = extract_plan(query)
-        poi = self._by_id[poi_id]
-        parts = {"bm25": self._weights.get("bm25", 0.0) * base_norm}
-        for name, w in self._weights.items():
-            if name != "bm25":
-                parts[name] = w * signals.SIGNAL_FUNCS[name](plan, poi)
-        return parts
-
     @staticmethod
     def _minmax_in_pool(scores: dict[str, float], pool: list[str]) -> dict[str, float]:
         """Normalize [0,1] TRONG pool; kênh phẳng (max=min) → 0.5 trung tính."""
@@ -91,8 +81,18 @@ class RerankRetriever:
             return {pid: 0.5 for pid in pool}
         return {pid: (scores.get(pid, 0.0) - lo) / (hi - lo) for pid in pool}
 
-    def _search_with_dense(self, query: str, k: int) -> list[str]:
-        """Union pool BM25 ∪ dense (tối đa recall), dense_relevance làm relevance chính."""
+    def _score_pool(self, query: str,
+                    user_coord: tuple[float, float] | None = None
+                    ) -> list[tuple[str, float, dict[str, float]]]:
+        """Union pool BM25 ∪ dense → [(poi_id, total, breakdown weighted-per-signal)].
+
+        Nguồn sự thật DUY NHẤT của điểm số: search() và search_explained()
+        đều đi qua đây — explain không bao giờ lệch khỏi ranking thật.
+
+        user_coord: focus point từ API (?lat/lon — "local ranking" theo PDF). CHỈ làm
+        fallback khi query text không tự resolve được location (landmark/district giữ
+        ưu tiên). Eval không truyền → không ảnh hưởng con số eval.
+        """
         n_all = len(self._by_id)
         bm25_all = self._base.search_scored(query, k=n_all)
         dense_all = self._dense.search_scored(query, k=n_all)
@@ -102,21 +102,38 @@ class RerankRetriever:
         dense_n = self._minmax_in_pool(dict(dense_all), pool)
 
         plan = extract_plan(query)
+        if user_coord is not None and plan.resolved_coord is None:
+            plan.resolved_coord = user_coord
         scored = []
         for pid in pool:
             poi = self._by_id[pid]
-            total = (self._weights.get("bm25", 0.0) * bm25_n[pid]
-                     + self._weights.get("dense", 0.0) * dense_n[pid])
+            parts = {
+                "bm25_relevance": self._weights.get("bm25", 0.0) * bm25_n[pid],
+                "dense_relevance": self._weights.get("dense", 0.0) * dense_n[pid],
+            }
             for name, w in self._weights.items():
                 if name not in ("bm25", "dense"):
-                    total += w * signals.SIGNAL_FUNCS[name](plan, poi)
-            scored.append((pid, total))
+                    parts[name] = w * signals.SIGNAL_FUNCS[name](plan, poi)
+            scored.append((pid, sum(parts.values()), parts))
         scored.sort(key=lambda x: (-x[1], x[0]))
-        return [pid for pid, _ in scored[:k]]
+        return scored
+
+    @property
+    def max_score(self) -> float:
+        """Tổng weights — trần lý thuyết của total, để chuẩn hóa score hiển thị [0,1]."""
+        return sum(self._weights.values())
+
+    def search_explained(self, query: str, k: int = 10,
+                         user_coord: tuple[float, float] | None = None) -> list[dict]:
+        """Top-k kèm breakdown từng signal (explainability cho API ?explain=true)."""
+        if self._dense is None:
+            raise ValueError("search_explained cần cấu hình full pipeline (dense != None)")
+        return [{"poi_id": pid, "total": total, "signals": parts}
+                for pid, total, parts in self._score_pool(query, user_coord)[:k]]
 
     def search(self, query: str, k: int = 10) -> list[str]:
         if self._dense is not None:
-            return self._search_with_dense(query, k)
+            return [pid for pid, _, _ in self._score_pool(query)[:k]]
         plan = extract_plan(query)
         cands = self._candidates(query)
         if not cands:
