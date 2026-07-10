@@ -78,6 +78,24 @@ def test_name_match_strict():
     assert name_match(extract_plan("mua sắm ăn uống trung tâm quận 1"), pois["G036"]) == 0.0
 
 
+def test_restore_diacritics():
+    """Restore CHỈ cho nhánh dense: câu không dấu → có dấu (phrase-level thắng
+    nhập nhằng từ đơn); câu có dấu và English phải GIỮ NGUYÊN tuyệt đối.
+    """
+    from src.understanding.diacritics import restore_diacritics as r
+
+    # Phrase-level: "cho" giới từ vs "chợ" — gazetteer/concept phrase phải thắng
+    assert r("mua sam an uong gan cho ben thanh") == "mua sắm ăn uống gần chợ bến thành"
+    assert r("quan cafe yen tinh lam viec gan ho guom") == "quán cafe yên tĩnh làm việc gần hồ gươm"
+    # Câu đã có dấu → no-op (eval public toàn câu có dấu — bất biến 60/60)
+    assert r("cafe có wifi gần hồ gươm") == "cafe có wifi gần hồ gươm"
+    # English → không được phá (guard tỉ lệ token phục hồi được)
+    assert r("quiet coffee shop to work near hoan kiem") == "quiet coffee shop to work near hoan kiem"
+    assert r("restaurant for date night in saigon") == "restaurant for date night in saigon"
+    # Số/ký hiệu giữ nguyên
+    assert "24/7" in r("atm rut tien 24/7 gan pho di bo")
+
+
 def test_no_accent_regression():
     """Câu KHÔNG DẤU phải ra đúng gold — dense mù chỗ này, BM25 (bỏ dấu 2 phía)
     + rules (match trên norm) + district phải gánh. Chạy path v2 (không dense) cho nhanh.

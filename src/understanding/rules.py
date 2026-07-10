@@ -50,6 +50,29 @@ def _category_rules() -> list[tuple[re.Pattern, str]]:
 
 
 @lru_cache(maxsize=1)
+def _concept_labels() -> dict[str, str]:
+    """concept id → nhãn người-đọc-được (token đầu tiên, CÓ DẤU) — cho UI/explain."""
+    raw = yaml.safe_load(config.ATTRIBUTE_CONCEPTS_YAML.read_text(encoding="utf-8"))
+    return {cid: str(entry["tokens"][0]) if entry.get("tokens") else cid
+            for cid, entry in raw.items()}
+
+
+def concept_label(concept_id: str) -> str:
+    return _concept_labels().get(concept_id, concept_id)
+
+
+@lru_cache(maxsize=1)
+def _landmark_labels() -> dict[str, str]:
+    """gazetteer key → tên hiển thị (name đầu tiên, CÓ DẤU)."""
+    raw = yaml.safe_load(config.GAZETTEER_YAML.read_text(encoding="utf-8"))
+    return {key: str(entry["names"][0]) for key, entry in raw.items()}
+
+
+def landmark_label(key: str) -> str:
+    return _landmark_labels().get(key, key)
+
+
+@lru_cache(maxsize=1)
 def concept_tokens() -> dict[str, frozenset[str]]:
     """concept id → tập token thành viên ĐÃ normalize (để match phía POI attributes)."""
     raw = yaml.safe_load(config.ATTRIBUTE_CONCEPTS_YAML.read_text(encoding="utf-8"))

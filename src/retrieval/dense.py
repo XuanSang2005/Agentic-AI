@@ -16,6 +16,7 @@ import numpy as np
 
 from src import config
 from src.data_loader import POI
+from src.understanding.diacritics import restore_diacritics
 
 
 class DenseRetriever:
@@ -52,9 +53,15 @@ class DenseRetriever:
         return emb
 
     def search_scored(self, query: str, k: int = 10) -> list[tuple[str, float]]:
-        """Top-k (poi_id, cosine). Embeddings đã L2-normalize → cosine = dot."""
+        """Top-k (poi_id, cosine). Embeddings đã L2-normalize → cosine = dot.
+
+        restore_diacritics CHỈ ở đây (query-side dense): e5 yếu với câu không dấu.
+        BM25/rules vẫn nhận query gốc — không rò sang nhánh khác. Câu có dấu /
+        English → restore là no-op. Cache .npy phía POI không đổi.
+        """
         q_emb = self._get_model().encode(
-            [f"query: {query}"], normalize_embeddings=True, show_progress_bar=False,
+            [f"query: {restore_diacritics(query)}"],
+            normalize_embeddings=True, show_progress_bar=False,
         ).astype(np.float32)[0]
         # einsum thay vì `@`: Accelerate BLAS (numpy 2.x/macOS) bắn RuntimeWarning
         # divide-by-zero giả trong matmul dù input/output finite (đã verify identical)

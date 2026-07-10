@@ -99,6 +99,18 @@
     font-size: 11px; letter-spacing: .14em; text-transform: uppercase;
     color: var(--faint); font-weight: 500; margin-bottom: 12px;
   }
+  .understood {
+    display: none;
+    margin: -2px 0 14px;
+    font-size: 14.5px; color: var(--muted);
+    padding-bottom: 12px; border-bottom: 1px solid var(--line);
+  }
+  .understood.show { display: block; }
+  .understood .u-label {
+    font-family: var(--mono); font-size: 11px; letter-spacing: .1em;
+    text-transform: uppercase; color: var(--accent); margin-right: 10px;
+  }
+  .understood .u-text { color: var(--text); }
   .slots { display: flex; flex-wrap: wrap; gap: 16px 28px; }
   .slot .slot-name {
     font-size: 11px; letter-spacing: .1em; text-transform: uppercase;
@@ -224,6 +236,7 @@
     <section class="plan" id="plan" aria-label="Query plan">
       <div class="plan-main">
         <div class="panel-label">Query plan — L1 hiểu câu này thế nào</div>
+        <div class="understood" id="understood"></div>
         <div class="slots" id="slots"></div>
         <div class="coord" id="coord"></div>
       </div>
@@ -249,6 +262,7 @@ const PRESETS = [
   "nơi ăn uống lãng mạn view thành phố",
   "quiet coffee shop to work near hoan kiem",
   "quan cafe yen tinh lam viec",
+  "quan cafe yen tinh lam viec gan ho guom",
 ];
 const HERO = PRESETS[1];
 
@@ -257,10 +271,11 @@ const SIG_LABELS = {
   attr: "attr", city: "city", distance: "distance", rating: "rating",
   pop: "pop", name: "name",
 };
+// đọc từ explanation.interpreted — nhãn người-đọc-được (có dấu), không phải concept id
 const SLOT_DEFS = [
   ["categories", "category"],
-  ["attr_concepts", "attributes"],
-  ["neg_concepts", "phủ định"],
+  ["attributes", "attributes"],
+  ["excluded", "loại trừ"],
   ["city", "city"],
   ["district", "district"],
   ["landmark", "landmark"],
@@ -286,17 +301,31 @@ function markActiveChip(query) {
 }
 
 /* ---------- query plan ---------- */
-function renderPlan(plan) {
+function renderPlan(ex, submittedQuery) {
+  const interpreted = ex.interpreted || {};
+  const plan = ex.plan || {};
+
+  // "Đã hiểu" — chỉ hiện khi input KHÁC câu sau khi restore dấu
+  const u = $("understood");
+  const nq = ex.normalized_query;
+  if (nq && nq.trim() !== submittedQuery.trim()) {
+    u.innerHTML = `<span class="u-label">đã hiểu</span><span class="u-text">${esc(nq)}</span>`;
+    u.classList.add("show");
+  } else {
+    u.classList.remove("show");
+    u.innerHTML = "";
+  }
+
   const slots = $("slots");
   slots.innerHTML = "";
   let delay = 0;
   const slotHtml = [];
   for (const [key, label] of SLOT_DEFS) {
-    let vals = plan[key];
+    let vals = interpreted[key];
     if (vals == null) vals = [];
     if (!Array.isArray(vals)) vals = [vals];
     if (!vals.length) continue;
-    const neg = key === "neg_concepts" ? " neg" : "";
+    const neg = key === "excluded" ? " neg" : "";
     const toks = vals.map((v) => {
       delay += 45;
       return `<span class="token${neg}" style="animation-delay:${delay}ms">${esc(v)}</span>`;
@@ -322,7 +351,7 @@ function haversineKm(a, b) {
     Math.cos(a.lat * r) * Math.cos(b.lat * r) * Math.sin(dLon / 2) ** 2;
   return 2 * R * Math.asin(Math.sqrt(h));
 }
-function renderMap(plan, results) {
+function renderMap(plan, results, landmarkLabel) {
   const el = $("map");
   if (!plan.resolved_coord) { el.classList.remove("show"); el.innerHTML = ""; return; }
   const center = { lat: plan.resolved_coord[0], lon: plan.resolved_coord[1] };
@@ -353,7 +382,7 @@ function renderMap(plan, results) {
       <circle cx="${cx}" cy="${cy}" r="2.5" fill="var(--accent)"/>
       ${dots}
     </svg>
-    <div class="map-caption">${esc(plan.landmark || "focus")} · vòng ngoài ≈ ${maxKm < 1 ? Math.round(maxKm * 1000) + " m" : maxKm.toFixed(1) + " km"}</div>`;
+    <div class="map-caption">${esc(landmarkLabel || plan.landmark || "focus")} · vòng ngoài ≈ ${maxKm < 1 ? Math.round(maxKm * 1000) + " m" : maxKm.toFixed(1) + " km"}</div>`;
   el.classList.add("show");
 }
 
@@ -447,9 +476,10 @@ async function run(query) {
       state.style.display = "block";
       return;
     }
-    const plan = (data.results[0].explanation || {}).plan || {};
-    renderPlan(plan);
-    renderMap(plan, data.results);
+    const ex = data.results[0].explanation || {};
+    const plan = ex.plan || {};
+    renderPlan(ex, query);
+    renderMap(plan, data.results, (ex.interpreted || {}).landmark);
     renderResults(data, plan.resolved_coord);
   } catch (err) {
     if (err.name === "AbortError") return;
