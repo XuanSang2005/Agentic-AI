@@ -17,10 +17,13 @@ stress:
 openapi:
 	$(PY) -m src.api.export_openapi
 
+deploy-hf:
+	$(PY) deploy/deploy_hf.py $(SPACE)
+
 verify-data:
 	$(PY) eval/verify_dataset.py
 
 test:
 	$(PY) -m pytest tests/ -q
 
-.PHONY: install api eval stress openapi verify-data test
+.PHONY: install api eval stress openapi deploy-hf verify-data test
