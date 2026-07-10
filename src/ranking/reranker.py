@@ -31,18 +31,39 @@ WEIGHTS_WITH_DISTANCE = {
     "pop": 0.02,
 }
 
+# Slice dense-as-signal: dense_relevance là relevance CHÍNH; BM25 hạ mạnh (thủ phạm
+# dính bait G ở P036/P042) + tách "name" = khớp chính xác tên/brand. Các weight
+# structured (category/attr/city/distance/rating/pop) GIỮ NGUYÊN từ v2 — chúng đang
+# bảo vệ mixed-lang/location queries, đừng đụng.
+WEIGHTS_WITH_DENSE = {
+    "dense": 0.32,
+    "bm25": 0.06,
+    "name": 0.06,
+    "category": 0.22,
+    "attr": 0.20,
+    "city": 0.10,
+    "distance": 0.15,
+    "rating": 0.03,
+    "pop": 0.02,
+}
+
 N_CANDIDATES = 30  # đủ sâu: 60 câu eval đều có đáp án trong top-30 BM25 (recall@30 ~1.0)
 
 
+POOL_K = 25  # union pool: top-25 BM25 ∪ top-25 dense — tối đa recall cho reranker
+
+
 class RerankRetriever:
-    """Rerank trên candidate của base retriever (BM25 bây giờ, hybrid sau này)."""
+    """Rerank trên candidate của base retriever; có dense → union pool 2 nguồn."""
 
     def __init__(self, pois: list[POI], base, weights: dict[str, float] | None = None,
-                 n_candidates: int = N_CANDIDATES):
+                 n_candidates: int = N_CANDIDATES, dense=None, pool_k: int = POOL_K):
         self._by_id = {p.id: p for p in pois}
         self._base = base
-        self._weights = weights or DEFAULT_WEIGHTS
+        self._dense = dense
+        self._weights = weights or (WEIGHTS_WITH_DENSE if dense else DEFAULT_WEIGHTS)
         self._n = n_candidates
+        self._pool_k = pool_k
 
     def _candidates(self, query: str) -> list[tuple[str, float]]:
         """Top-N (poi_id, base_score); fallback điểm theo rank nếu base không có score."""
@@ -61,7 +82,41 @@ class RerankRetriever:
                 parts[name] = w * signals.SIGNAL_FUNCS[name](plan, poi)
         return parts
 
+    @staticmethod
+    def _minmax_in_pool(scores: dict[str, float], pool: list[str]) -> dict[str, float]:
+        """Normalize [0,1] TRONG pool; kênh phẳng (max=min) → 0.5 trung tính."""
+        vals = [scores.get(pid, 0.0) for pid in pool]
+        lo, hi = min(vals), max(vals)
+        if hi - lo < 1e-12:
+            return {pid: 0.5 for pid in pool}
+        return {pid: (scores.get(pid, 0.0) - lo) / (hi - lo) for pid in pool}
+
+    def _search_with_dense(self, query: str, k: int) -> list[str]:
+        """Union pool BM25 ∪ dense (tối đa recall), dense_relevance làm relevance chính."""
+        n_all = len(self._by_id)
+        bm25_all = self._base.search_scored(query, k=n_all)
+        dense_all = self._dense.search_scored(query, k=n_all)
+        pool = sorted({pid for pid, _ in bm25_all[:self._pool_k]}
+                      | {pid for pid, _ in dense_all[:self._pool_k]})
+        bm25_n = self._minmax_in_pool(dict(bm25_all), pool)
+        dense_n = self._minmax_in_pool(dict(dense_all), pool)
+
+        plan = extract_plan(query)
+        scored = []
+        for pid in pool:
+            poi = self._by_id[pid]
+            total = (self._weights.get("bm25", 0.0) * bm25_n[pid]
+                     + self._weights.get("dense", 0.0) * dense_n[pid])
+            for name, w in self._weights.items():
+                if name not in ("bm25", "dense"):
+                    total += w * signals.SIGNAL_FUNCS[name](plan, poi)
+            scored.append((pid, total))
+        scored.sort(key=lambda x: (-x[1], x[0]))
+        return [pid for pid, _ in scored[:k]]
+
     def search(self, query: str, k: int = 10) -> list[str]:
+        if self._dense is not None:
+            return self._search_with_dense(query, k)
         plan = extract_plan(query)
         cands = self._candidates(query)
         if not cands:

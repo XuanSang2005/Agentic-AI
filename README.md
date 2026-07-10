@@ -23,9 +23,9 @@ make eval          # Hit@1 / MRR / Recall@3 + ablation
 | Pipeline | Hit@1 | MRR | Recall@3 |
 |---|---|---|---|
 | BM25 only | 0.833 | 0.890 | 0.861 |
-| + Dense (RRF) | — | — | — |
-| + Hard Filter | — | — | — |
 | + Multi-signal Rerank | 0.967 | 0.983 | 0.936 |
+| + Dense (signal) | 1.000 | 1.000 | 0.942 |
+| + Hard Filter | — | — | — |
 | + LLM Planner | — | — | — |
 
 Chi tiết kiến trúc, gotchas và build order: xem `CLAUDE.md`.

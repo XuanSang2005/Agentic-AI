@@ -61,6 +61,20 @@ def popularity(plan: QueryPlan, poi: POI) -> float:
     return poi.popularity / 100.0 if plan.want_pop else 0.5
 
 
+def name_match(plan: QueryPlan, poi: POI) -> float:
+    """Khớp CHÍNH XÁC tên/brand (substring word-boundary trên bản bỏ dấu) — 1.0 hoặc 0.0.
+
+    Cố tình STRICT thay vì token-overlap chung: tên POI chứa city/district token
+    ("Aeon Mall Quận 1") mà tính overlap sẽ ăn điểm oan từ query location.
+    """
+    padded_query = f" {plan.norm_query} "
+    for field in (poi.name, poi.brand):
+        norm = normalize_vi(field) if field else ""
+        if norm and f" {norm} " in padded_query:
+            return 1.0
+    return 0.0
+
+
 def haversine_km(lat1: float, lon1: float, lat2: float, lon2: float) -> float:
     r = 6371.0
     p1, p2 = math.radians(lat1), math.radians(lat2)
@@ -86,7 +100,8 @@ def distance_score(plan: QueryPlan, poi: POI) -> float:
     return 1.0 / (1.0 + km)
 
 
-# Registry để reranker dot-product với weights (bm25 tính riêng vì cần candidate set)
+# Registry để reranker dot-product với weights.
+# bm25/dense tính riêng trong reranker (điểm theo query, normalize trong candidate pool).
 SIGNAL_FUNCS = {
     "category": category_match,
     "attr": attr_match,
@@ -94,4 +109,5 @@ SIGNAL_FUNCS = {
     "rating": rating_norm,
     "pop": popularity,
     "distance": distance_score,
+    "name": name_match,
 }

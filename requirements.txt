@@ -4,7 +4,9 @@ pydantic
 openpyxl
 numpy
 PyYAML
-sentence-transformers
+# Pin cho reproducible embeddings (model: intfloat/multilingual-e5-small — xem src/config.py)
+sentence-transformers==5.1.2
+torch==2.8.0
 faiss-cpu
 rank_bm25
 pyvi

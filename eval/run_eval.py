@@ -34,6 +34,13 @@ def _evaluate_query(retriever: Retriever, q: EvalQuery, synthetic_ids: set[str],
             rr = 1.0 / rank
             break
 
+    # G-above-gold: dòng G xếp TRÊN expected tốt nhất — G có HẠI thật sự.
+    # (G ở dưới đáp án chỉ là cosmetic.) Không tìm thấy expected trong top-k
+    # → mọi G trong top-k đều tính là hại.
+    gold_rank = next((i for i, pid in enumerate(ranked) if pid in expected), None)
+    above_cut = ranked if gold_rank is None else ranked[:gold_rank]
+    g_above_gold = [pid for pid in above_cut if pid in synthetic_ids]
+
     return {
         "query_id": q.id,
         "query": q.query,
@@ -46,6 +53,7 @@ def _evaluate_query(retriever: Retriever, q: EvalQuery, synthetic_ids: set[str],
         "recall3": len(set(ranked[:3]) & expected) / len(expected),
         "recall5": len(set(ranked[:5]) & expected) / len(expected),
         "g_in_top3": [pid for pid in ranked[:3] if pid in synthetic_ids],
+        "g_above_gold": g_above_gold,
     }
 
 
@@ -113,9 +121,11 @@ def run_eval(
         for c, cat_rows in sorted(groups.items(), key=lambda kv: (-len(kv[1]), kv[0]))
     }
 
-    # --- Sanity check G-in-top3 (cảnh báo, không crash) ---
+    # --- Sanity check G (cảnh báo, không crash) ---
     g_detail = {r["query_id"]: r["g_in_top3"] for r in rows if r["g_in_top3"]}
     g_total = sum(len(v) for v in g_detail.values())
+    g_harm_detail = {r["query_id"]: r["g_above_gold"] for r in rows if r["g_above_gold"]}
+    g_harm_total = sum(len(v) for v in g_harm_detail.values())
 
     # --- In bảng ---
     width = 73
@@ -134,12 +144,13 @@ def run_eval(
     print("-" * width)
     n_fail = sum(1 for r in rows if not r["hit1"])
     print(f" Hit@1 fail: {n_fail}/{len(rows)} câu (danh sách trong report JSON)")
-    # G-in-top3 là DIAGNOSTIC (robustness với distractor), không phải mục tiêu tối ưu trực tiếp
-    if g_total:
-        print(f" ⚠ G-in-top3 (diagnostic): {g_total} dòng G trong top-3 trên"
-              f" {len(g_detail)}/{len(rows)} câu")
+    # G-above-gold = G xếp TRÊN đáp án → CÓ HẠI. G-in-top3 thô chỉ là cosmetic.
+    if g_harm_total:
+        print(f" ⚠ G-above-gold (harmful): {g_harm_total} dòng G trên {len(g_harm_detail)}"
+              f"/{len(rows)} câu xếp TRÊN đáp án")
     else:
-        print(" ✓ G-in-top3 (diagnostic): 0 — không dòng G nào lọt top-3")
+        print(" ✓ G-above-gold (harmful): 0 — không dòng G nào xếp trên đáp án")
+    print(f"   G-in-top3 (cosmetic):  {g_total} dòng G / {len(g_detail)} câu")
 
     # --- So sánh với baseline (Hit@1 fail→pass / pass→fail) ---
     vs_baseline = None
@@ -169,6 +180,8 @@ def run_eval(
         "overall": overall,
         "by_difficulty": by_difficulty,
         "by_category": by_category,
+        "g_above_gold": {"total": g_harm_total, "queries_affected": len(g_harm_detail),
+                         "detail": g_harm_detail},
         "g_in_top3": {"total": g_total, "queries_affected": len(g_detail), "detail": g_detail},
         "per_query": {r["query_id"]: {"hit1": r["hit1"], "rr": r["rr"],
                                       "recall3": r["recall3"], "top5": r["top5"]}
@@ -217,8 +230,24 @@ def main() -> None:
 
     # L3 rerank Bước 2: + distance (gazetteer landmark / district centroid).
     rerank_dist = RerankRetriever(pois, base=bm25, weights=WEIGHTS_WITH_DISTANCE)
-    run_eval(rerank_dist, "BM25 + Rerank + Distance", queries, synthetic_ids,
-             readme_row="+ Multi-signal Rerank", compare_to=base_report)
+    dist_report = run_eval(rerank_dist, "BM25 + Rerank + Distance", queries, synthetic_ids,
+                           readme_row="+ Multi-signal Rerank", compare_to=base_report)
+    print()
+
+    # Dense-as-signal: union pool BM25 ∪ dense, dense_relevance là relevance chính.
+    # So với MỐC 0.967 (dist_report) để soi saved/broken sát nhất.
+    from src.retrieval.dense import DenseRetriever
+    dense = DenseRetriever(pois)
+    rerank_dense = RerankRetriever(pois, base=bm25, dense=dense)
+    dense_report = run_eval(rerank_dense, "BM25 + Rerank + Distance + Dense",
+                            queries, synthetic_ids,
+                            readme_row="+ Dense (signal)", compare_to=dist_report)
+
+    # Watchlist mixed-language: distance/landmark phải fire cả trên query tiếng Anh.
+    print("\n Watchlist mixed-lang (phải giữ pass khi dense vào):")
+    for qid in ("P033", "P035"):
+        ok = dense_report["per_query"][qid]["hit1"]
+        print(f"   {qid}: {'✓ PASS' if ok else '✗ FAIL — check landmark/district cho English cue'}")
 
 
 if __name__ == "__main__":

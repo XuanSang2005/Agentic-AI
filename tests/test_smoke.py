@@ -67,6 +67,17 @@ def test_rules_extract_plan():
     assert "toilet" in plan.attr_concepts
 
 
+def test_name_match_strict():
+    from src.ranking.signals import name_match
+    from src.understanding.rules import extract_plan
+
+    pois = {p.id: p for p in load_pois()}
+    # Khớp đúng tên đầy đủ → 1.0
+    assert name_match(extract_plan("đường tới The Workshop Coffee quận 1"), pois["C001"]) == 1.0
+    # Token trùng lẻ tẻ (city/district trong tên) KHÔNG được ăn điểm — phải strict
+    assert name_match(extract_plan("mua sắm ăn uống trung tâm quận 1"), pois["G036"]) == 0.0
+
+
 def test_bm25_retriever_smoke():
     pois = load_pois()
     retriever = BM25Retriever(pois)

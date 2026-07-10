@@ -27,8 +27,11 @@ REPORTS_DIR = ROOT / "eval" / "reports"
 README_MD = ROOT / "README.md"
 EVAL_TOP_K = 10  # số kết quả retriever trả cho eval (MRR tính trong top-k)
 
-# --- L2 dense (chưa dùng ở slice BM25 — khai báo trước để không rải magic string) ---
-EMBEDDING_MODEL = "intfloat/multilingual-e5-base"
+# --- L2 dense ---
+# e5-small đã đo retrieval-only 0.950 trên corpus 111 doc. TODO thử e5-base/bge-m3
+# như ablation NHƯNG phải đo lại — corpus nhỏ, không mặc định model to hơn là tốt hơn.
+EMBEDDING_MODEL = "intfloat/multilingual-e5-small"
+EMBEDDING_CACHE_DIR = ROOT / "data" / "cache"  # .npy cache — gitignore, xoá là tự build lại
 
 # --- L1 LLM planner (chưa dùng ở slice BM25) ---
 # Ngưỡng cosine cho semantic cache: đủ gần mới tin, xa hơn → quăng về LLM.
