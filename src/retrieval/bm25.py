@@ -20,9 +20,13 @@ class BM25Retriever:
         corpus = [p.norm_document.split() for p in pois]
         self._bm25 = BM25Okapi(corpus)
 
-    def search(self, query: str, k: int = 10) -> list[str]:
+    def search_scored(self, query: str, k: int = 10) -> list[tuple[str, float]]:
+        """Top-k (poi_id, bm25_score) — cho reranker chuẩn hóa lại điểm base."""
         tokens = normalize_vi(query).split()
         scores = self._bm25.get_scores(tokens)
         # Sort ổn định + tie-break theo poi_id để kết quả DETERMINISTIC tuyệt đối
         order = sorted(range(len(self._ids)), key=lambda i: (-scores[i], self._ids[i]))
-        return [self._ids[i] for i in order[:k]]
+        return [(self._ids[i], float(scores[i])) for i in order[:k]]
+
+    def search(self, query: str, k: int = 10) -> list[str]:
+        return [pid for pid, _ in self.search_scored(query, k)]

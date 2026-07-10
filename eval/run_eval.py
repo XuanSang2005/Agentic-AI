@@ -85,8 +85,13 @@ def run_eval(
     synthetic_ids: set[str] | None = None,
     k: int = config.EVAL_TOP_K,
     readme_row: str | None = None,
+    compare_to: dict | None = None,
 ) -> dict:
-    """Chạy retriever trên toàn bộ eval set, in bảng, ghi report JSON, trả report dict."""
+    """Chạy retriever trên toàn bộ eval set, in bảng, ghi report JSON, trả report dict.
+
+    compare_to: report của lần chạy khác (thường baseline) → in thêm danh sách
+    CỨU được (fail→pass) và REGRESSION (pass→fail) theo Hit@1.
+    """
     if queries is None:
         queries = load_eval()
     if synthetic_ids is None:
@@ -129,11 +134,32 @@ def run_eval(
     print("-" * width)
     n_fail = sum(1 for r in rows if not r["hit1"])
     print(f" Hit@1 fail: {n_fail}/{len(rows)} câu (danh sách trong report JSON)")
+    # G-in-top3 là DIAGNOSTIC (robustness với distractor), không phải mục tiêu tối ưu trực tiếp
     if g_total:
-        print(f" ⚠ SANITY G-in-top3: {g_total} dòng G lọt top-3 trên {len(g_detail)}/{len(rows)} câu"
-              f" — các lớp sau phải kéo về 0")
+        print(f" ⚠ G-in-top3 (diagnostic): {g_total} dòng G trong top-3 trên"
+              f" {len(g_detail)}/{len(rows)} câu")
     else:
-        print(" ✓ SANITY G-in-top3: 0 — không dòng G nào lọt top-3")
+        print(" ✓ G-in-top3 (diagnostic): 0 — không dòng G nào lọt top-3")
+
+    # --- So sánh với baseline (Hit@1 fail→pass / pass→fail) ---
+    vs_baseline = None
+    if compare_to is not None:
+        base_pq = compare_to["per_query"]
+        saved = [r for r in rows if r["hit1"] and not base_pq[r["query_id"]]["hit1"]]
+        regressed = [r for r in rows if not r["hit1"] and base_pq[r["query_id"]]["hit1"]]
+        vs_baseline = {
+            "baseline_name": compare_to["name"],
+            "saved": [r["query_id"] for r in saved],
+            "regressed": [r["query_id"] for r in regressed],
+        }
+        print(f" vs '{compare_to['name']}':")
+        print(f"   CỨU được (fail→pass): {len(saved)} câu")
+        for r in saved:
+            print(f"     + {r['query_id']} {r['query']!r} → top1={r['top5'][0]}")
+        print(f"   REGRESSION (pass→fail): {len(regressed)} câu")
+        for r in regressed:
+            print(f"     - {r['query_id']} {r['query']!r} expected={r['expected']}"
+                  f" top3={r['top5'][:3]}")
 
     # --- Report JSON ---
     report = {
@@ -144,6 +170,10 @@ def run_eval(
         "by_difficulty": by_difficulty,
         "by_category": by_category,
         "g_in_top3": {"total": g_total, "queries_affected": len(g_detail), "detail": g_detail},
+        "per_query": {r["query_id"]: {"hit1": r["hit1"], "rr": r["rr"],
+                                      "recall3": r["recall3"], "top5": r["top5"]}
+                      for r in rows},
+        "vs_baseline": vs_baseline,
         "hit1_failures": [
             {key: r[key] for key in
              ("query_id", "query", "difficulty", "category", "expected", "top5")}
@@ -166,16 +196,24 @@ def run_eval(
 
 
 def main() -> None:
+    from src.ranking.reranker import RerankRetriever
+
     pois = load_pois()
     queries = load_eval()
     synthetic_ids = {p.id for p in pois if p.is_synthetic}
     print(f"POI: {len(pois)} ({len(pois) - len(synthetic_ids)} thật + "
           f"{len(synthetic_ids)} synthetic G) | Eval: {len(queries)} câu\n")
 
-    # Dòng 1 bảng ablation — BM25 thuần trên câu thô, cố tình chưa có
-    # understanding/dense/filter/rerank để thấy sàn lexical.
-    run_eval(BM25Retriever(pois), "BM25 baseline", queries, synthetic_ids,
-             readme_row="BM25 only")
+    # Dòng 1 bảng ablation — BM25 thuần trên câu thô: sàn lexical.
+    bm25 = BM25Retriever(pois)
+    base_report = run_eval(bm25, "BM25 baseline", queries, synthetic_ids,
+                           readme_row="BM25 only")
+    print()
+
+    # L3 rerank (rules-based plan): category + attr concept + city + rating (+pop flag).
+    rerank = RerankRetriever(pois, base=bm25)
+    run_eval(rerank, "BM25 + Rerank", queries, synthetic_ids,
+             readme_row="+ Multi-signal Rerank", compare_to=base_report)
 
 
 if __name__ == "__main__":

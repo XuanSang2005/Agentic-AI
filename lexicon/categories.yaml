@@ -1,9 +1,59 @@
-# Category chuẩn trong data + synonym để map query → category filter.
-# TODO Ngày 1. Ví dụ format:
+# Category chuẩn trong data + synonym (surface form phía query) để map query → category.
+# Matching chạy trên text đã normalize_vi (bỏ dấu) — file này giữ dấu cho dễ đọc,
+# rules.py tự normalize khi load. Một surface có thể thuộc NHIỀU category (set semantics).
+#
+# ⚠ Bẫy normalize đã né:
+#   - "chợ" → "cho" trùng từ "cho" (P019 "bún chả CHO khách du lịch") → không dùng bare "chợ".
+#   - "phở" → "pho" trùng "phố" (phố đi bộ) → chỉ dùng "quán phở"/"phở bò".
+#   - "ăn uống" KHÔNG map vào Nhà hàng: mall cũng có attr "ăn uống" (P021/P055 đáp án là mall).
 
 quan_ca_phe:
   canonical: Quán cà phê
-  synonyms: [cafe, cà phê, coffee, coffee shop, quán cafe]
+  synonyms: [cafe, cà phê, coffee, coffee shop, quán cafe, uống cafe, uống cà phê]
+
 nha_hang:
   canonical: Nhà hàng
-  synonyms: [quán ăn, restaurant, ăn uống]
+  synonyms: [nhà hàng, quán ăn, restaurant, ăn tối, ăn trưa, ăn sáng, quán lẩu, lẩu,
+             quán phở, phở bò, bún chả, quán chay, quán nhậu, đồ ăn, món ăn]
+
+khach_san:
+  canonical: Khách sạn
+  synonyms: [khách sạn, hotel, resort, homestay, nơi nghỉ, chỗ ở, nghỉ dưỡng]
+
+atm:
+  canonical: ATM
+  synonyms: [atm, cây atm, máy atm, rút tiền]
+
+tram_xang:
+  canonical: Trạm xăng
+  synonyms: [trạm xăng, cây xăng, đổ xăng, xăng dầu, gas station, petrol]
+
+tram_sac:
+  canonical: Trạm sạc điện
+  synonyms: [trạm sạc, sạc xe điện, sạc điện, chỗ sạc, ev charging, xe điện]
+
+benh_vien:
+  canonical: Bệnh viện
+  synonyms: [bệnh viện, hospital, cấp cứu, phòng khám]
+
+nha_thuoc:
+  canonical: Nhà thuốc
+  synonyms: [nhà thuốc, pharmacy, hiệu thuốc, tiệm thuốc, mua thuốc]
+
+trung_tam_thuong_mai:
+  canonical: Trung tâm thương mại
+  synonyms: [trung tâm thương mại, tttm, mall, trung tâm mua sắm, mua sắm, shopping,
+             nơi mua sắm, đi mua sắm]
+
+rap_phim:
+  canonical: Rạp phim
+  synonyms: [rạp phim, rạp chiếu phim, cinema, cgv, xem phim]
+
+cong_vien:
+  canonical: Công viên
+  synonyms: [công viên, park, đi chơi]
+
+diem_tham_quan:
+  canonical: Điểm tham quan
+  synonyms: [điểm tham quan, tham quan, check-in, check in, checkin, địa điểm du lịch,
+             khu du lịch, sở thú, khu vui chơi, đi chơi, vui chơi]

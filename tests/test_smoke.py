@@ -40,6 +40,33 @@ def test_normalize_vi():
     assert normalize_vi("24/7") == "24/7"        # không phá token dạng số
 
 
+def test_rules_extract_plan():
+    from src.understanding.rules import extract_plan
+
+    # Concept-expansion: "hẹn hò" phải ra concept lang_man (không match token thô)
+    plan = extract_plan("nơi phù hợp để hẹn hò ở quận 1")
+    assert "lang_man" in plan.attr_concepts
+
+    # Polarity: "không quá đông" → cần yên tĩnh + PHỦ ĐỊNH đông khách
+    plan = extract_plan("cafe không quá đông để họp nhóm")
+    assert "yen_tinh" in plan.attr_concepts
+    assert "dong_khach" in plan.neg_concepts
+    # Span consumption: "họp nhóm" → phong_hop, KHÔNG fire concept nhom
+    assert "phong_hop" in plan.attr_concepts
+    assert "nhom" not in plan.attr_concepts
+
+    # Popularity là cờ, không phải attribute
+    plan = extract_plan("quán phở nổi tiếng hà nội")
+    assert plan.want_pop and plan.city == "Hà Nội"
+    assert "Nhà hàng" in plan.categories
+
+    # Bẫy P009: "trên đường đi hạ long" là ngữ cảnh — không city, không landmark filter
+    plan = extract_plan("cây xăng có toilet trên đường đi hạ long")
+    assert plan.city is None
+    assert "Trạm xăng" in plan.categories
+    assert "toilet" in plan.attr_concepts
+
+
 def test_bm25_retriever_smoke():
     pois = load_pois()
     retriever = BM25Retriever(pois)

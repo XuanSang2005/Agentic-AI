@@ -1,13 +1,204 @@
-# Chuẩn hóa 82 attribute token thật → ~25-30 concept.
-# Mỗi concept giữ danh sách token thành viên (token phải CÓ THẬT trong data, không chế mới).
-# Đây cũng là WHITELIST cho LLM planner.
-# TODO Ngày 1: hoàn thiện từ output của eval/verify_dataset.py. Ví dụ format:
+# Chuẩn hóa 82 attribute token thật → concept. Phủ đủ 82/82 token (verify bằng make verify-data).
+# Đây cũng là WHITELIST cho LLM planner sau này.
+#
+# Mỗi concept:
+#   tokens : token CÓ THẬT trong cột POI_Dataset.attributes (không chế mới) — dùng để
+#            MATCH phía POI: POI khớp concept nếu có BẤT KỲ token thành viên nào.
+#   surface: cách diễn đạt phía QUERY kích hoạt concept (ngoài chính các token).
+#            Matching trên text đã normalize_vi, word-boundary.
+#
+# ⚠ Bẫy normalize đã né (trùng chữ sau khi bỏ dấu):
+#   "chợ"→"cho" (từ nối), "sách"→"sach" (sạch), "phở"→"pho" (phố) → chỉ dùng surface đa từ.
+# Nhóm synonym-noise trong data đã gộp theo CLAUDE.md:
+#   gia đình + trẻ em (1 concept), lãng mạn + hẹn hò + cặp đôi, giá rẻ/hợp lý/vừa phải,
+#   wifi/wifi mạnh, ngoài trời/sân vườn.
 
 yen_tinh:
   tokens: [yên tĩnh]
+  surface: [quiet, không ồn, tĩnh lặng]
 wifi:
   tokens: [wifi, wifi mạnh]
-phu_hop_gia_dinh:
-  tokens: [phù hợp gia đình, phù hợp trẻ em, ghế trẻ em]
+  surface: [internet]
+lam_viec:
+  tokens: [phù hợp làm việc, phù hợp học tập, ổ cắm]
+  surface: [làm việc, học bài, học tập, work, coworking, laptop]
+phong_hop:
+  tokens: [phòng họp]
+  surface: [họp, họp nhóm, meeting]  # "họp nhóm" dài hơn "nhóm" → consume span, chặn concept nhom
+nhom:
+  tokens: [phù hợp nhóm]
+  surface: [nhóm, nhóm bạn, đoàn khách, đông người, group]
+rong_rai:
+  tokens: [không gian rộng]
+  surface: [rộng rãi, không gian lớn]
+gia_dinh_tre_em:
+  tokens: [phù hợp gia đình, gia đình, phù hợp trẻ em, ghế trẻ em]
+  surface: [trẻ em, trẻ nhỏ, con nhỏ, em bé, kids, family, cho trẻ, đưa trẻ, children]
+lang_man:
+  tokens: [lãng mạn, phù hợp hẹn hò, hẹn hò, phù hợp cặp đôi]
+  surface: [cặp đôi, couple, romantic, date, người yêu]
+gap_ban:
+  tokens: [phù hợp gặp bạn]
+  surface: [gặp bạn, gặp mặt, hẹn bạn]
+view_dep:
+  tokens: [view đẹp, đài quan sát]
+  surface: [view, view thành phố, ngắm cảnh, đẹp, sống ảo]
+check_in:
+  tokens: [check-in]
+  surface: [checkin, check in, chụp ảnh, chụp hình]
 gia_re:
-  tokens: [giá rẻ, giá hợp lý, giá vừa phải, miễn phí, giá dưới 2 triệu]
+  tokens: [giá rẻ, giá hợp lý, giá vừa phải, giá dưới 2 triệu]
+  surface: [rẻ, bình dân, budget, cheap, tiết kiệm, giá tốt, giá mềm]
+mien_phi:
+  tokens: [miễn phí]
+  surface: [free, không tốn tiền]
+mo_khuya:
+  tokens: [mở khuya, mở muộn]
+  surface: [mở cửa sau, ăn đêm, khuya, đêm muộn, late night, mở đêm]
+hai_bon_bay:
+  tokens: ['24/7']
+  surface: [24h, 24 giờ, suốt ngày đêm, cả đêm]
+bai_do_xe:
+  tokens: [bãi đỗ xe]
+  surface: [chỗ đậu xe, đậu xe, đỗ xe, parking, gửi xe, bãi đậu xe, chỗ để xe]
+ho_boi:
+  tokens: [hồ bơi]
+  surface: [bể bơi, pool, swimming pool]
+gan_bien:
+  tokens: [gần biển]
+  surface: [sát biển, view biển, beach, ven biển]
+gan_ho:
+  tokens: [gần hồ]
+  surface: [ven hồ, view hồ, bờ hồ]
+gan_song:
+  tokens: [gần sông]
+  surface: [ven sông, bờ sông, view sông, riverside]
+gan_pho_di_bo:
+  tokens: [gần phố đi bộ]
+  surface: [phố đi bộ, walking street]
+gan_cho:
+  tokens: [gần chợ]
+  surface: []          # chỉ multiword "gần chợ" — tránh bare "chợ" (trùng từ "cho")
+trung_tam:
+  tokens: [trung tâm, gần trung tâm]
+  surface: [trung tâm thành phố, central, downtown, city center]
+gan_van_phong:
+  tokens: [gần văn phòng]
+  surface: [khu văn phòng]
+spa:
+  tokens: [spa]
+  surface: [massage]
+hai_san:
+  tokens: [hải sản]
+  surface: [seafood, đồ biển]
+mon_viet:
+  tokens: [món Việt]
+  surface: [món việt nam, vietnamese, đồ việt]
+mon_y:
+  tokens: [món Ý]
+  surface: [pizza, pasta, italian]
+mon_chay:
+  tokens: [món chay]
+  surface: [chay, vegetarian, không thịt, thuần chay]
+healthy:
+  tokens: [tốt cho sức khỏe]
+  surface: [healthy, lành mạnh]
+mon_dia_phuong:
+  tokens: [món địa phương]
+  surface: [đặc sản, địa phương, local food]
+pho_bo:
+  tokens: [phở bò]
+  surface: [quán phở]  # không bare "phở" — trùng "phố" sau khi bỏ dấu
+am_cung:
+  tokens: [ấm cúng]
+  surface: [cozy, trời lạnh, ấm áp]
+du_lich:
+  tokens: [du lịch, phù hợp du lịch]
+  surface: [khách du lịch, tourist]
+dat_ban:
+  tokens: [đặt bàn]
+  surface: [đặt chỗ, reservation]
+ngoai_troi:
+  tokens: [ngoài trời, sân vườn]
+  surface: [outdoor, không gian xanh]
+an_uong:
+  tokens: [ăn uống]
+  surface: [ẩm thực, nhiều nhà hàng, ăn tối, đồ ăn]
+mua_sam:
+  tokens: [mua sắm]
+  surface: [shopping, mua đồ]
+giai_tri:
+  tokens: [giải trí]
+  surface: [vui chơi, entertainment]
+rap_phim:
+  tokens: [rạp phim]
+  surface: [xem phim, rạp chiếu phim, cinema, cgv]
+trong_ttm:
+  tokens: [trung tâm thương mại]
+  surface: [trong vincom, trong mall]
+rut_tien:
+  tokens: [rút tiền]
+  surface: [rút atm]
+cap_cuu:
+  tokens: [cấp cứu]
+  surface: [emergency]
+da_khoa:
+  tokens: [đa khoa]
+  surface: []
+quoc_te:
+  tokens: [quốc tế]
+  surface: [international]
+dich_vu_tot:
+  tokens: [dịch vụ tốt]
+  surface: [dịch vụ tốt]
+toilet:
+  tokens: [toilet]
+  surface: [nhà vệ sinh, wc, vệ sinh]
+bom_lop:
+  tokens: [bơm lốp]
+  surface: [bơm xe, vá xe]
+xang_dau:
+  tokens: [xăng dầu]
+  surface: [đổ xăng]
+sac_nhanh:
+  tokens: [sạc nhanh]
+  surface: [fast charging]
+sach:
+  tokens: [sách]
+  surface: [đọc sách, book cafe, cà phê sách]  # không bare "sách" phía surface: "sach"≈"sạch"
+bua_sang:
+  tokens: [bữa sáng]
+  surface: [ăn sáng, breakfast]
+cong_tac:
+  tokens: [phù hợp công tác]
+  surface: [công tác, business]
+dong_khach:
+  tokens: [đông khách]
+  surface: [đông đúc]
+resort:
+  tokens: [resort]
+  surface: []          # "resort" phía query cũng map category Khách sạn; attr chỉ H002 có
+di_bo:
+  tokens: [đi bộ, đi dạo]
+  surface: [tản bộ, walking]
+dieu_hoa:
+  tokens: [điều hòa]
+  surface: [máy lạnh]
+cocktail:
+  tokens: [cocktail]
+  surface: [bar]
+rooftop:
+  tokens: [rooftop]
+  surface: [sân thượng, tầng thượng]
+an_nhanh:
+  tokens: [ăn nhanh]
+  surface: [nhanh gọn, fast food]
+the_thao:
+  tokens: [thể thao]
+  surface: [sport]
+thuoc:
+  tokens: [thuốc, chăm sóc sức khỏe]
+  surface: [dược]
+cua_hang_tien_loi:
+  tokens: [cửa hàng tiện lợi]
+  surface: [tiện lợi, convenience]
