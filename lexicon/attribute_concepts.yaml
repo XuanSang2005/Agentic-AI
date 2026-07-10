@@ -1,0 +1,13 @@
+# Chuẩn hóa 82 attribute token thật → ~25-30 concept.
+# Mỗi concept giữ danh sách token thành viên (token phải CÓ THẬT trong data, không chế mới).
+# Đây cũng là WHITELIST cho LLM planner.
+# TODO Ngày 1: hoàn thiện từ output của eval/verify_dataset.py. Ví dụ format:
+
+yen_tinh:
+  tokens: [yên tĩnh]
+wifi:
+  tokens: [wifi, wifi mạnh]
+phu_hop_gia_dinh:
+  tokens: [phù hợp gia đình, phù hợp trẻ em, ghế trẻ em]
+gia_re:
+  tokens: [giá rẻ, giá hợp lý, giá vừa phải, miễn phí, giá dưới 2 triệu]

@@ -1,0 +1,9 @@
+# Category chuẩn trong data + synonym để map query → category filter.
+# TODO Ngày 1. Ví dụ format:
+
+quan_ca_phe:
+  canonical: Quán cà phê
+  synonyms: [cafe, cà phê, coffee, coffee shop, quán cafe]
+nha_hang:
+  canonical: Nhà hàng
+  synonyms: [quán ăn, restaurant, ăn uống]

@@ -1,0 +1,10 @@
+# Landmark → toạ độ (KHÔNG có trong dataset, phải tự cung cấp).
+# TODO Ngày 1: verify lại toạ độ. Lưu ý P009: "trên đường đi Hạ Long" là ngữ cảnh, không phải filter.
+
+ho_guom:        {names: [hồ gươm, hồ hoàn kiếm, hoan kiem lake], lat: 21.0287, lon: 105.8524, city: Hà Nội}
+pho_di_bo_nguyen_hue: {names: [phố đi bộ nguyễn huệ, nguyen hue walking street], lat: 10.7743, lon: 106.7038, city: TP.HCM}
+song_han:       {names: [sông hàn, han river], lat: 16.0678, lon: 108.2247, city: Đà Nẵng}
+cho_ben_thanh:  {names: [chợ bến thành, ben thanh market], lat: 10.7725, lon: 106.6980, city: TP.HCM}
+ho_xuan_huong:  {names: [hồ xuân hương], lat: 11.9416, lon: 108.4442, city: Đà Lạt}
+bien_my_khe:    {names: [biển mỹ khê, my khe beach, gần biển đà nẵng], lat: 16.0598, lon: 108.2479, city: Đà Nẵng}
+duy_tan:        {names: [duy tân, khu văn phòng duy tân], lat: 21.0305, lon: 105.7855, city: Hà Nội}
