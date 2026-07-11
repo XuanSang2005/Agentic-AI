@@ -17,18 +17,21 @@ from __future__ import annotations
 import re
 from dataclasses import dataclass, field
 
+from src import config
 from src.data_loader import POI, normalize_vi
 from src.ranking.signals import haversine_km
 from src.understanding.query_plan import QueryPlan
 from src.understanding.rules import concept_label, concept_tokens, landmark_label
 
+# Ngưỡng + mapping concept→kiểu constraint từ config/settings.yaml (constraints).
 # Concept đặc thù được nâng thành constraint CÓ KIỂU riêng (không phải attribute
 # thuần): chấm bằng field cấu trúc thay vì chỉ token match.
-_TIME_CONCEPTS = {"mo_khuya", "hai_bon_bay"}
-_PRICE_CONCEPTS = {"gia_re", "mien_phi"}
-_PRICE_MAX_LEVEL = {"gia_re": 2, "mien_phi": 1}  # price_level trong data: 1..4
+_CONS = config.settings().constraints
+_TIME_CONCEPTS = _CONS.time_concepts
+_PRICE_CONCEPTS = _CONS.price_concepts
+_PRICE_MAX_LEVEL = _CONS.price_max_level  # price_level trong data: 1..4
 
-SATISFIED_THRESHOLD = 0.5  # score ≥ ngưỡng → "thỏa"; dưới → liệt kê vào "nới"
+SATISFIED_THRESHOLD = _CONS.satisfied_threshold  # score ≥ ngưỡng → "thỏa"; dưới → "nới"
 
 
 @dataclass
@@ -110,15 +113,15 @@ def score_constraint(poi: POI, c: Constraint) -> float:
         if c.key == "hai_bon_bay":
             return 1.0 if poi.opening_hours.strip() == "24/7" else 0.0
         # mo_khuya: 24/7 hoặc đóng qua đêm (close < open) → 1.0;
-        # đóng ≥ 23:00 → 1.0; ≥ 22:00 → 0.5 (thỏa một phần); còn lại 0.
+        # đóng ≥ late_close_full → 1.0; ≥ late_close_partial → 0.5; còn lại 0.
         if _poi_has_concept(poi, c.key):
             return 1.0  # token "mở khuya/mở muộn" tự khai trong attributes
         if hours is None:
             return 0.0
         o, close = hours
-        if close == 1440 or close < o or close >= 23 * 60:
+        if close == 1440 or close < o or close >= _CONS.late_close_full_minutes:
             return 1.0
-        return 0.5 if close >= 22 * 60 else 0.0
+        return 0.5 if close >= _CONS.late_close_partial_minutes else 0.0
 
     if c.type == "price":
         max_level = _PRICE_MAX_LEVEL[c.key]
@@ -129,9 +132,9 @@ def score_constraint(poi: POI, c: Constraint) -> float:
     if c.type == "location":
         if "coord" in c.data:
             km = haversine_km(c.data["coord"][0], c.data["coord"][1], poi.lat, poi.lon)
-            if km <= 1.0:
+            if km <= _CONS.near_km_full:
                 return 1.0
-            if km <= 3.0:
+            if km <= _CONS.near_km_partial:
                 return 0.7
             return 0.2 if poi.city == c.data.get("city") else 0.0
         if "district" in c.data:

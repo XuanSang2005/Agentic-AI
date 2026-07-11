@@ -93,9 +93,11 @@ def _concept_rules() -> list[tuple[re.Pattern, str]]:
 
 
 # --- Landmark (gazetteer) + district ---
-# Cue bắt buộc trước landmark: "gần/near/cạnh/sát/quanh" trong cửa sổ 15 ký tự.
+# Cue bắt buộc trước landmark: "gần/near/cạnh/sát/quanh" trong cửa sổ N ký tự
+# (config: understanding.landmark_near_cue_window).
 # Bẫy P009: "trên đường đi hạ long" không có cue "gần" → không resolve, đúng chủ đích.
 _NEAR_CUE = re.compile(r"(?<![a-z0-9])(gan|near|canh|sat|quanh)(?![a-z0-9])")
+_NEAR_CUE_WINDOW = config.settings().understanding.landmark_near_cue_window
 
 
 @lru_cache(maxsize=1)
@@ -149,7 +151,7 @@ def _detect_landmark(plan: QueryPlan, norm: str) -> tuple[int, int] | None:
         m = pat.search(norm)
         if not m:
             continue
-        if not _NEAR_CUE.search(norm[max(0, m.start() - 15):m.start()]):
+        if not _NEAR_CUE.search(norm[max(0, m.start() - _NEAR_CUE_WINDOW):m.start()]):
             continue  # không có "gần/near" ngay trước → chỉ là ngữ cảnh (bẫy P009)
         if plan.city is not None and plan.city != info["city"]:
             continue  # "gần biển" nhưng query nói city không có biển → không resolve

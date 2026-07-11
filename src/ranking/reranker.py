@@ -28,48 +28,15 @@ def preprocess_query(query: str) -> str:
         query = correct_typos(query)
     return query
 
-# Trọng số mặc định (Bước 1 — chưa distance). bm25 = điểm base đã chuẩn hóa theo max
-# trong candidate set; phần còn lại là signal từ QueryPlan + POI.
-DEFAULT_WEIGHTS = {
-    "bm25": 0.32,
-    "category": 0.26,
-    "attr": 0.22,
-    "city": 0.12,
-    "rating": 0.05,
-    "pop": 0.03,
-}
+# Trọng số 7-signal theo cấu hình pipeline — giá trị + rationale từng bộ nằm ở
+# config/settings.yaml (rerank_weights); tên module-level giữ nguyên để eval/tests
+# import thẳng. Thứ tự key trong yaml quyết định thứ tự cộng float — đừng đảo.
+DEFAULT_WEIGHTS = config.settings().rerank_weights["default"]
+WEIGHTS_WITH_DISTANCE = config.settings().rerank_weights["with_distance"]
+WEIGHTS_WITH_DENSE = config.settings().rerank_weights["with_dense"]
 
-# Bước 2: thêm distance (landmark/district), các weight khác giảm nhẹ tương ứng.
-WEIGHTS_WITH_DISTANCE = {
-    "bm25": 0.28,
-    "category": 0.22,
-    "attr": 0.20,
-    "city": 0.10,
-    "distance": 0.15,
-    "rating": 0.03,
-    "pop": 0.02,
-}
-
-# Slice dense-as-signal: dense_relevance là relevance CHÍNH; BM25 hạ mạnh (thủ phạm
-# dính bait G ở P036/P042) + tách "name" = khớp chính xác tên/brand. Các weight
-# structured (category/attr/city/distance/rating/pop) GIỮ NGUYÊN từ v2 — chúng đang
-# bảo vệ mixed-lang/location queries, đừng đụng.
-WEIGHTS_WITH_DENSE = {
-    "dense": 0.32,
-    "bm25": 0.06,
-    "name": 0.06,
-    "category": 0.22,
-    "attr": 0.20,
-    "city": 0.10,
-    "distance": 0.15,
-    "rating": 0.03,
-    "pop": 0.02,
-}
-
-N_CANDIDATES = 30  # đủ sâu: 60 câu eval đều có đáp án trong top-30 BM25 (recall@30 ~1.0)
-
-
-POOL_K = 25  # union pool: top-25 BM25 ∪ top-25 dense — tối đa recall cho reranker
+N_CANDIDATES = config.settings().retrieval.n_candidates
+POOL_K = config.settings().retrieval.pool_k
 
 
 class RerankRetriever:

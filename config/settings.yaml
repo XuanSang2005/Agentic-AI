@@ -1,0 +1,117 @@
+# =============================================================================
+# Cấu hình tập trung — TOÀN BỘ giá trị khai-tay của service (nhóm B).
+#
+# - KHÔNG chứa secret. Secret (API key/token) CHỈ đọc từ env — xem .env.example.
+# - Đọc qua src/config.py (load 1 lần, lru_cache) — KHÔNG yaml.load file này
+#   ở chỗ khác.
+# - Đường dẫn là relative so với repo root.
+# - Thuật toán/công thức (nhóm C) vẫn nằm trong code; đây chỉ là tham số.
+# =============================================================================
+
+paths:
+  data_xlsx: data/ai_maps_track2_dataset_participants.xlsx
+  lexicon_dir: lexicon
+  attribute_concepts: lexicon/attribute_concepts.yaml
+  gazetteer: lexicon/gazetteer.yaml
+  categories: lexicon/categories.yaml
+  abbreviations: config/abbreviations.yaml
+  embedding_cache_dir: data/cache      # .npy cache — gitignore, xoá là tự build lại
+  reports_dir: eval/reports
+  readme_md: README.md
+
+# Tên sheet trong xlsx (đã verify bằng eval/verify_dataset.py)
+sheets:
+  poi: POI_Dataset
+  eval: Public_Evaluation
+  taxonomy: Attribute_Taxonomy
+  signals: Ranking_Signals
+  readme: README
+
+embedding:
+  # e5-small đã đo retrieval-only 0.950 trên corpus 111 doc. TODO thử e5-base/bge-m3
+  # như ablation NHƯNG phải đo lại — corpus nhỏ, không mặc định model to hơn là tốt hơn.
+  model: intfloat/multilingual-e5-small
+
+eval:
+  top_k: 10          # số kết quả retriever trả cho eval (MRR tính trong top-k)
+
+search:
+  default_limit: 10  # limit mặc định của SearchService.search
+  k_internal: 50     # k nội bộ > limit để post-filter (category/radius/bbox) không đói kết quả
+  api_max_limit: 20  # "max recommended 20" theo docs/tasco_api.pdf
+
+retrieval:
+  n_candidates: 30   # đủ sâu: 60 câu eval đều có đáp án trong top-30 BM25 (recall@30 ~1.0)
+  pool_k: 25         # union pool: top-25 BM25 ∪ top-25 dense — tối đa recall cho reranker
+
+# Trọng số 7-signal theo cấu hình pipeline.
+# ⚠ GIỮ NGUYÊN THỨ TỰ KEY: total = tổng float cộng theo thứ tự này — đổi thứ tự
+# có thể lệch bit cuối và đảo tie-break.
+rerank_weights:
+  # Bước 1 — chưa distance. bm25 = điểm base đã chuẩn hóa theo max trong candidate
+  # set; phần còn lại là signal từ QueryPlan + POI.
+  default:
+    bm25: 0.32
+    category: 0.26
+    attr: 0.22
+    city: 0.12
+    rating: 0.05
+    pop: 0.03
+  # Bước 2: thêm distance (landmark/district), các weight khác giảm nhẹ tương ứng.
+  with_distance:
+    bm25: 0.28
+    category: 0.22
+    attr: 0.20
+    city: 0.10
+    distance: 0.15
+    rating: 0.03
+    pop: 0.02
+  # Slice dense-as-signal: dense_relevance là relevance CHÍNH; BM25 hạ mạnh (thủ phạm
+  # dính bait G ở P036/P042) + tách "name" = khớp chính xác tên/brand. Các weight
+  # structured (category/attr/city/distance/rating/pop) GIỮ NGUYÊN từ v2 — chúng đang
+  # bảo vệ mixed-lang/location queries, đừng đụng.
+  with_dense:
+    dense: 0.32
+    bm25: 0.06
+    name: 0.06
+    category: 0.22
+    attr: 0.20
+    city: 0.10
+    distance: 0.15
+    rating: 0.03
+    pop: 0.02
+
+understanding:
+  # Ngưỡng cosine cho semantic cache: đủ gần mới tin, xa hơn → quăng về LLM.
+  semantic_cache_threshold: 0.92
+  # Cửa sổ (số ký tự) trước landmark phải chứa cue "gần/near/cạnh/sát/quanh"
+  # thì mới resolve — bẫy P009 "trên đường đi hạ long" không có cue → bỏ qua.
+  landmark_near_cue_window: 15
+  diacritics:
+    max_gram: 4        # greedy longest-match phrase 4→2 gram
+    min_coverage: 0.5  # tỉ lệ token phục-hồi-được dưới ngưỡng → coi là câu ngoại ngữ, không restore
+  typo:
+    min_token_len: 3       # token ngắn hơn → không đụng (quá dễ va chạm)
+    junk_strip_min_len: 4  # strip ký tự rác cuối chỉ khi token ≥ 4 (stripped còn ≥ 3)
+    trailing_junk_chars: fjzw  # chữ không kết thúc âm tiết thuần Việt (Telex thiếu IME);
+                               # cố ý KHÔNG gồm s/r/x (hotels, bar, box...)
+
+constraints:
+  satisfied_threshold: 0.5   # score ≥ ngưỡng → "thỏa"; dưới → liệt kê vào "nới"
+  # Concept đặc thù nâng thành constraint CÓ KIỂU riêng (chấm bằng field cấu trúc)
+  time_concepts: [mo_khuya, hai_bon_bay]
+  price_concepts: [gia_re, mien_phi]
+  price_max_level:           # price_level trong data: 1..4
+    gia_re: 2
+    mien_phi: 1
+  # "mở khuya": đóng ≥ 23:00 → thỏa 1.0; ≥ 22:00 → 0.5 (thỏa một phần)
+  late_close_full_minutes: 1380    # 23:00
+  late_close_partial_minutes: 1320 # 22:00
+  # location theo landmark coord: ≤ near_km_full → 1.0; ≤ near_km_partial → 0.7
+  near_km_full: 1.0
+  near_km_partial: 3.0
+
+# Feature flags — default ở đây; env override từng cái (xem .env.example)
+features:
+  typo_fix: true            # env TASCO_TYPO_FIX=0/1
+  deterministic_mode: true  # env DETERMINISTIC_MODE=0/1 — không gọi LLM, planner rule-based

@@ -28,8 +28,9 @@ import yaml
 from src import config
 from src.data_loader import load_pois, normalize_vi
 
-_MAX_GRAM = 4
-_MIN_COVERAGE = 0.5  # dưới ngưỡng này coi là câu ngoại ngữ → không restore
+# Ngưỡng từ config/settings.yaml (understanding.diacritics)
+_MAX_GRAM = config.settings().understanding.diacritics.max_gram
+_MIN_COVERAGE = config.settings().understanding.diacritics.min_coverage  # dưới → câu ngoại ngữ, không restore
 _WORD_RE = re.compile(r"[^\W\d_]+", re.UNICODE)  # token chữ, bỏ số/punct
 
 

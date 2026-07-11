@@ -12,7 +12,6 @@ Chạy: make api  (uvicorn src.api.main:app --port 8000)
 """
 from __future__ import annotations
 
-import os
 import uuid
 from contextlib import asynccontextmanager
 
@@ -28,7 +27,7 @@ from src.api.dto import (ErrorBody, ErrorResponse, SearchMeta, SearchResponse,
 from src.data_loader import normalize_vi
 from src.search import SearchService
 
-MAX_LIMIT = 20  # "max recommended 20" theo PDF
+MAX_LIMIT = config.settings().search.api_max_limit  # "max recommended 20" theo PDF
 
 _service: SearchService | None = None
 
@@ -79,8 +78,8 @@ async def on_internal_error(request: Request, exc: Exception):
 
 def _check_auth(request: Request) -> JSONResponse | None:
     """401 nếu env cấu hình token/key mà header không khớp; mock mode nếu không đặt env."""
-    bearer = os.environ.get("TASCO_BEARER_TOKEN", "")
-    api_key = os.environ.get("TASCO_API_KEY", "")
+    bearer = config.bearer_token()
+    api_key = config.service_api_key()
     if not bearer and not api_key:
         return None  # mock mode — PDF: "accept requests with or without authentication"
     auth_header = request.headers.get("Authorization", "")

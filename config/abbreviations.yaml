@@ -1,0 +1,26 @@
+# Viết tắt → dạng đầy đủ CÓ DẤU (bám category/city THẬT trong data).
+# Dùng bởi src/understanding/abbreviations.py — match whole-word, case-insensitive.
+#
+# Guard lúc build map: seed trùng MỘT TỪ THẬT trong POI data (đã bỏ dấu) bị loại
+# hẳn (vd "hcm" — "TP.HCM" split ra "hcm"; rules đã tự bắt "hcm" làm city nên bỏ
+# expansion không mất gì).
+# Ambiguous loại khỏi seed có chủ đích: "q" trần (quá nhiều nghĩa — chỉ nhận dạng
+# qN số, xử lý bằng regex trong code), "st" (data không có siêu thị), "đh"/"dh"
+# (không có đại học).
+bv: bệnh viện
+ks: khách sạn
+nh: nhà hàng
+cf: cà phê
+cfe: cà phê
+tttm: trung tâm thương mại
+rp: rạp phim
+cv: công viên
+nt: nhà thuốc
+hn: Hà Nội
+sg: Sài Gòn
+tphcm: thành phố Hồ Chí Minh
+hcm: Hồ Chí Minh
+dn: Đà Nẵng
+đn: Đà Nẵng
+dl: Đà Lạt
+đl: Đà Lạt

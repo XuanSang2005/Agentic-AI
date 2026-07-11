@@ -34,6 +34,12 @@ from src.data_loader import load_pois, normalize_vi
 _WORD_RE = re.compile(r"[^\W\d_]+", re.UNICODE)
 _HAS_DIGIT = re.compile(r"\d")
 
+# Ngưỡng từ config/settings.yaml (understanding.typo) — edit distance = 1 là
+# THUẬT TOÁN (xem _edit1), không phải tham số.
+_TYPO_CFG = config.settings().understanding.typo
+_MIN_TOKEN_LEN = _TYPO_CFG.min_token_len        # luật (d): token ngắn hơn → không đụng
+_JUNK_STRIP_MIN_LEN = _TYPO_CFG.junk_strip_min_len
+
 # Function-words tiếng Việt hay gặp trong query mà data/lexicon không chứa đủ —
 # nằm trong KNOWN để tuyệt đối không bị coi là typo ("cuối tuần" ≠ "cuối quận").
 _STOPWORDS = """
@@ -130,10 +136,9 @@ def _has_diacritics(word: str) -> bool:
     return normalize_vi(word) != word.lower()
 
 
-# Ký tự rác cuối âm tiết: chữ KHÔNG kết thúc âm tiết thuần Việt (pattern gõ
-# Telex thiếu IME — f/j là phím dấu huyền/nặng). Cố ý KHÔNG gồm s/r/x
-# (kết thúc từ tiếng Anh quá phổ biến: hotels, bar, box...).
-_TRAILING_JUNK = frozenset("fjzw")
+# Ký tự rác cuối âm tiết (chi tiết rationale trong settings.yaml): chữ KHÔNG
+# kết thúc âm tiết thuần Việt — pattern gõ Telex thiếu IME.
+_TRAILING_JUNK = frozenset(_TYPO_CFG.trailing_junk_chars)
 
 
 def _resolve(core: str, prev_k: str | None, next_k: str | None) -> str | None:
@@ -170,8 +175,8 @@ def strip_trailing_junk(core: str, prev_k: str | None, next_k: str | None) -> st
     Không thỏa → trả None (giữ nguyên token). Caller đã đảm bảo core ∉ KNOWN —
     "jazz"/"view"/brand khớp vocab không bao giờ tới đây.
     """
-    if len(core) < 4 or core[-1].lower() not in _TRAILING_JUNK:
-        return None  # stripped phải còn ≥3 ký tự — giữ tinh thần luật (d)
+    if len(core) < _JUNK_STRIP_MIN_LEN or core[-1].lower() not in _TRAILING_JUNK:
+        return None  # stripped phải còn ≥ min_token_len ký tự — giữ tinh thần luật (d)
     _, targets, _, _ = _vocabs()
     stripped = core[:-1]
     skey = normalize_vi(stripped)
@@ -190,7 +195,7 @@ def correct_typos(text: str) -> str:
     for i, token in enumerate(tokens):
         core = token.strip(".,;:!?()\"'")
         key = keys[i]
-        if (len(core) < 3 or _HAS_DIGIT.search(core) or not core.isalpha()
+        if (len(core) < _MIN_TOKEN_LEN or _HAS_DIGIT.search(core) or not core.isalpha()
                 or key in known):
             out.append(token)
             continue

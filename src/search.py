@@ -65,10 +65,10 @@ class SearchService:
         query: str,
         lat: float | None = None,
         lon: float | None = None,
-        limit: int = 10,
+        limit: int = config.settings().search.default_limit,
         explain: bool = False,
         # k nội bộ lớn hơn limit để post-filter (category/radius/bbox) không làm đói kết quả
-        k_internal: int = 50,
+        k_internal: int = config.settings().search.k_internal,
     ) -> list[SearchHit]:
         user_coord = (lat, lon) if lat is not None and lon is not None else None
         ranked = self._reranker.search_explained(query, k=max(limit, k_internal),
