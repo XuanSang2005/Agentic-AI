@@ -131,10 +131,13 @@ verify:
   # Ngưỡng tune theo smoke 39 POI thật (scripts/smoke_geocode.py, 2026-07-11):
   # score tách 2 cụm rõ (0.73–0.83 vs 0.98–0.99, không vùng xám), cụm thấp có
   # tính hệ thống theo vùng (toàn TP.HCM/Đà Lạt — match đúng khu vực, chỉ khác
-  # văn phong địa chỉ) → 0.70 để không phạt oan. distance GIỮ 150m CÓ CHỦ ĐÍCH:
-  # các ca lệch 150m–2.1km là toạ độ dataset sai thật, verify phải flag.
+  # văn phong địa chỉ) → 0.70 để không phạt oan.
   match_score_threshold: 0.70  # MatchScores.Overall ≥ ngưỡng mới tính verified
-  max_distance_m: 150          # toạ độ claim vs matched lệch quá → unverified
+  # 500m (nới từ 150m, quyết định 2026-07-12): toạ độ dataset mock lệch có hệ
+  # thống ~200-400m ngay cả khi AWS tìm ra ĐÚNG doanh nghiệp bằng tên (Pizza
+  # 4P's: pin lệch 336m khỏi quán thật) — 150m phạt gần như toàn bộ data mock.
+  # 500m vẫn bắt được pin sai hẳn khu (>0.5km: Bà Nà 13.6km, Ocean View 4.5km).
+  max_distance_m: 500          # toạ độ claim vs matched lệch quá → unverified
   place_types: [PointAddress, PointOfInterest, Street]  # Street: địa danh không số nhà (vd A002)
   max_workers: 10              # verify song song có giới hạn (dưới rate limit AWS)
   throttle_retry_delays: [1, 2, 4]  # backoff (giây) khi ThrottlingException
