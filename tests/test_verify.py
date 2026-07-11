@@ -132,13 +132,13 @@ def test_http_client_api_key_url_body_and_throttle():
 
     http = httpx.Client(transport=httpx.MockTransport(handler))
     client = geocode.HttpGeocodeClient(api_key="k-test-123",
-                                       region="ap-southeast-1", http=http)
+                                       region="ap-southeast-2", http=http)
 
     resp = client.geocode(QueryText=_ADDR, BiasPosition=[_LON, _LAT],
                           Filter={"IncludeCountries": ["VNM"]}, IntendedUse="SingleUse")
     assert resp["ResultItems"][0]["MatchScores"]["Overall"] == 0.95
     assert seen["url"].startswith(
-        "https://places.geo.ap-southeast-1.amazonaws.com/v2/geocode?key=k-test-123")
+        "https://places.geo.ap-southeast-2.amazonaws.com/v2/geocode?key=k-test-123")
     assert seen["body"] == {"QueryText": _ADDR, "BiasPosition": [_LON, _LAT],
                             "Filter": {"IncludeCountries": ["VNM"]},
                             "IntendedUse": "SingleUse"}
