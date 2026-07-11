@@ -55,6 +55,13 @@ export URL tương ứng. Tính tương đương được gate bằng
 `row_order` giữ vị trí dòng xlsx gốc, loader `ORDER BY row_order`).
 `Public_Evaluation` luôn đọc từ xlsx (eval harness là tooling offline).
 
+Với nguồn Postgres có thêm ingestion (Phase 4a): `POST /admin/pois/batch` nhận mảng
+POI JSON — validate từng record (méo → rejected kèm lý do, không giết batch), upsert
+idempotent trong 1 transaction, rồi **reindex atomic swap** (build index mới, hoán đổi
+con trỏ — request đang chạy vẫn đọc index cũ trọn vẹn; chỉ POI mới phải encode).
+POI mới mang `status='pending'` (placeholder — Phase 4b verify qua AWS Location);
+endpoint chưa có auth (pass-through + TODO, chưa expose internet).
+
 ## Kiến trúc 3 lớp
 
 ```

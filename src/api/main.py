@@ -17,7 +17,7 @@ from contextlib import asynccontextmanager
 
 from typing import Optional
 
-from fastapi import FastAPI, Query, Request
+from fastapi import Body, Depends, FastAPI, Query, Request
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import FileResponse, JSONResponse
 
@@ -88,6 +88,50 @@ def _check_auth(request: Request) -> JSONResponse | None:
     if api_key and request.headers.get("X-API-Key", "") == api_key:
         return None
     return _error(401, "unauthorized", "Missing or invalid token/key", request)
+
+
+def _admin_auth() -> None:
+    """PASS-THROUGH có chủ đích (Phase 4a) — điểm cắm auth cho endpoint admin.
+
+    TODO(trước khi expose internet): auth thật cho admin — token riêng (không
+    dùng chung TASCO_BEARER_TOKEN của search) hoặc mTLS/IAM tuỳ hạ tầng deploy.
+    """
+
+
+@app.post("/admin/pois/batch")
+def ingest_pois_batch(request: Request, records: list[dict] = Body(...),
+                      _auth: None = Depends(_admin_auth)):
+    """Batch ingest POI (Phase 4a): validate từng record → upsert Postgres trong
+    1 transaction → reindex MỘT LẦN (atomic swap) để serve thấy POI mới.
+
+    Partial-success: record méo bị reject kèm lý do, record hợp lệ vẫn vào;
+    lỗi DB giữa batch → rollback sạch + KHÔNG reindex. POI mới mang
+    status='pending' (chưa verify — Phase 4b).
+    """
+    from src import ingestion
+
+    if config.DATA_SOURCE != "postgres":
+        return _error(503, "ingestion_unavailable",
+                      "Ingestion cần DATA_SOURCE=postgres (nguồn xlsx là read-only)",
+                      request)
+    valid, rejected = ingestion.validate_batch(records)
+    report = {
+        "received": len(records),
+        "accepted": len(valid),
+        "accepted_ids": [p.poi_id for p in valid],
+        "rejected": rejected,
+        "reindex": None,
+    }
+    if valid:
+        try:
+            ingestion.upsert_pois(valid)  # 1 transaction — lỗi là rollback sạch
+        except Exception as e:
+            # KHÔNG reindex: index phải khớp đúng thứ đã commit (= không gì cả)
+            return _error(500, "ingestion_db_error",
+                          "Batch rolled back, không record nào được ghi", request,
+                          details={"reason": str(e).strip()})
+        report["reindex"] = _get_service().reindex()
+    return report
 
 
 @app.get("/", include_in_schema=False)
