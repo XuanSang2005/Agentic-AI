@@ -1,0 +1,6712 @@
+{
+ "meta": {
+  "n": 133,
+  "n_scored": 129,
+  "source": "39 real POIs, gold từ field",
+  "seed": 7
+ },
+ "queries": [
+  {
+   "qid": "H0001",
+   "query": "atm",
+   "variant": "formal",
+   "difficulty": "easy",
+   "kind": "single",
+   "gold": [
+    "S001",
+    "S002"
+   ],
+   "n_constraints": 1,
+   "has_hard_negative": true
+  },
+  {
+   "qid": "H0002",
+   "query": "bệnh viện",
+   "variant": "formal",
+   "difficulty": "easy",
+   "kind": "single",
+   "gold": [
+    "S005",
+    "S006"
+   ],
+   "n_constraints": 1,
+   "has_hard_negative": false
+  },
+  {
+   "qid": "H0003",
+   "query": "công viên",
+   "variant": "formal",
+   "difficulty": "easy",
+   "kind": "single",
+   "gold": [
+    "A002"
+   ],
+   "n_constraints": 1,
+   "has_hard_negative": false
+  },
+  {
+   "qid": "H0004",
+   "query": "khách sạn",
+   "variant": "formal",
+   "difficulty": "easy",
+   "kind": "single",
+   "gold": [
+    "H001",
+    "H002",
+    "H003",
+    "H004",
+    "H005"
+   ],
+   "n_constraints": 1,
+   "has_hard_negative": true
+  },
+  {
+   "qid": "H0005",
+   "query": "nhà hàng",
+   "variant": "formal",
+   "difficulty": "easy",
+   "kind": "single",
+   "gold": [
+    "R001",
+    "R002",
+    "R003",
+    "R004",
+    "R005",
+    "R006",
+    "R007",
+    "R008",
+    "R009",
+    "R010"
+   ],
+   "n_constraints": 1,
+   "has_hard_negative": true
+  },
+  {
+   "qid": "H0006",
+   "query": "nhà thuốc",
+   "variant": "formal",
+   "difficulty": "easy",
+   "kind": "single",
+   "gold": [
+    "S007"
+   ],
+   "n_constraints": 1,
+   "has_hard_negative": false
+  },
+  {
+   "qid": "H0007",
+   "query": "quán cà phê",
+   "variant": "formal",
+   "difficulty": "easy",
+   "kind": "single",
+   "gold": [
+    "C001",
+    "C002",
+    "C003",
+    "C004",
+    "C005",
+    "C006",
+    "C007",
+    "C008"
+   ],
+   "n_constraints": 1,
+   "has_hard_negative": true
+  },
+  {
+   "qid": "H0008",
+   "query": "rạp phim",
+   "variant": "formal",
+   "difficulty": "easy",
+   "kind": "single",
+   "gold": [
+    "M003",
+    "M004"
+   ],
+   "n_constraints": 1,
+   "has_hard_negative": false
+  },
+  {
+   "qid": "H0009",
+   "query": "trung tâm thương mại",
+   "variant": "formal",
+   "difficulty": "easy",
+   "kind": "single",
+   "gold": [
+    "A005",
+    "M001",
+    "M002"
+   ],
+   "n_constraints": 1,
+   "has_hard_negative": true
+  },
+  {
+   "qid": "H0010",
+   "query": "trạm sạc điện",
+   "variant": "formal",
+   "difficulty": "easy",
+   "kind": "single",
+   "gold": [
+    "S004"
+   ],
+   "n_constraints": 1,
+   "has_hard_negative": false
+  },
+  {
+   "qid": "H0011",
+   "query": "trạm xăng",
+   "variant": "formal",
+   "difficulty": "easy",
+   "kind": "single",
+   "gold": [
+    "S003"
+   ],
+   "n_constraints": 1,
+   "has_hard_negative": true
+  },
+  {
+   "qid": "H0012",
+   "query": "điểm tham quan",
+   "variant": "formal",
+   "difficulty": "easy",
+   "kind": "single",
+   "gold": [
+    "A001",
+    "A003",
+    "A004"
+   ],
+   "n_constraints": 1,
+   "has_hard_negative": false
+  },
+  {
+   "qid": "H0013",
+   "query": "yên tĩnh",
+   "variant": "formal",
+   "difficulty": "easy",
+   "kind": "single",
+   "gold": [
+    "C001",
+    "C004",
+    "C005",
+    "C007",
+    "R007"
+   ],
+   "n_constraints": 1,
+   "has_hard_negative": true
+  },
+  {
+   "qid": "H0014",
+   "query": "có chỗ đậu xe",
+   "variant": "formal",
+   "difficulty": "easy",
+   "kind": "single",
+   "gold": [
+    "C007",
+    "C008",
+    "R010",
+    "A005",
+    "S004",
+    "M002"
+   ],
+   "n_constraints": 1,
+   "has_hard_negative": true
+  },
+  {
+   "qid": "H0015",
+   "query": "có wifi",
+   "variant": "formal",
+   "difficulty": "easy",
+   "kind": "single",
+   "gold": [
+    "C001",
+    "C002",
+    "C004",
+    "C005"
+   ],
+   "n_constraints": 1,
+   "has_hard_negative": true
+  },
+  {
+   "qid": "H0016",
+   "query": "view đẹp",
+   "variant": "formal",
+   "difficulty": "easy",
+   "kind": "single",
+   "gold": [
+    "C003",
+    "C006",
+    "R008",
+    "A003"
+   ],
+   "n_constraints": 1,
+   "has_hard_negative": true
+  },
+  {
+   "qid": "H0017",
+   "query": "gần biển",
+   "variant": "formal",
+   "difficulty": "easy",
+   "kind": "single",
+   "gold": [
+    "R005",
+    "H001",
+    "H002"
+   ],
+   "n_constraints": 1,
+   "has_hard_negative": true
+  },
+  {
+   "qid": "H0018",
+   "query": "có hồ bơi",
+   "variant": "formal",
+   "difficulty": "easy",
+   "kind": "single",
+   "gold": [
+    "H001",
+    "H002"
+   ],
+   "n_constraints": 1,
+   "has_hard_negative": true
+  },
+  {
+   "qid": "H0019",
+   "query": "cho gia đình",
+   "variant": "formal",
+   "difficulty": "easy",
+   "kind": "single",
+   "gold": [
+    "R001",
+    "R005",
+    "R007",
+    "H001"
+   ],
+   "n_constraints": 1,
+   "has_hard_negative": true
+  },
+  {
+   "qid": "H0020",
+   "query": "để làm việc",
+   "variant": "formal",
+   "difficulty": "easy",
+   "kind": "single",
+   "gold": [
+    "C001",
+    "C004",
+    "C005"
+   ],
+   "n_constraints": 1,
+   "has_hard_negative": true
+  },
+  {
+   "qid": "H0021",
+   "query": "lãng mạn",
+   "variant": "formal",
+   "difficulty": "easy",
+   "kind": "single",
+   "gold": [
+    "R002",
+    "R008"
+   ],
+   "n_constraints": 1,
+   "has_hard_negative": true
+  },
+  {
+   "qid": "H0022",
+   "query": "rooftop",
+   "variant": "formal",
+   "difficulty": "easy",
+   "kind": "single",
+   "gold": [
+    "R008"
+   ],
+   "n_constraints": 1,
+   "has_hard_negative": false
+  },
+  {
+   "qid": "H0023",
+   "query": "sống ảo",
+   "variant": "formal",
+   "difficulty": "easy",
+   "kind": "single",
+   "gold": [
+    "C006",
+    "H004",
+    "A003",
+    "A004"
+   ],
+   "n_constraints": 1,
+   "has_hard_negative": false
+  },
+  {
+   "qid": "H0024",
+   "query": "đồ chay",
+   "variant": "formal",
+   "difficulty": "easy",
+   "kind": "single",
+   "gold": [
+    "R007"
+   ],
+   "n_constraints": 1,
+   "has_hard_negative": false
+  },
+  {
+   "qid": "H0025",
+   "query": "hải sản",
+   "variant": "formal",
+   "difficulty": "easy",
+   "kind": "single",
+   "gold": [
+    "R005"
+   ],
+   "n_constraints": 1,
+   "has_hard_negative": true
+  },
+  {
+   "qid": "H0026",
+   "query": "cho nhóm",
+   "variant": "formal",
+   "difficulty": "easy",
+   "kind": "single",
+   "gold": [
+    "C008",
+    "R006",
+    "R009",
+    "H004"
+   ],
+   "n_constraints": 1,
+   "has_hard_negative": false
+  },
+  {
+   "qid": "H0027",
+   "query": "sân vườn",
+   "variant": "formal",
+   "difficulty": "easy",
+   "kind": "single",
+   "gold": [
+    "C008",
+    "H004"
+   ],
+   "n_constraints": 1,
+   "has_hard_negative": false
+  },
+  {
+   "qid": "H0028",
+   "query": "quán cà phê ở TP.HCM",
+   "variant": "formal",
+   "difficulty": "medium",
+   "kind": "single-loc",
+   "gold": [
+    "C001",
+    "C002",
+    "C008"
+   ],
+   "n_constraints": 2,
+   "has_hard_negative": true,
+   "constraints": [
+    {
+     "id": "cat",
+     "type": "category",
+     "value": "Quán cà phê",
+     "label": "quán cà phê"
+    },
+    {
+     "id": "loc",
+     "type": "city",
+     "value": "TP.HCM",
+     "label": "ở TP.HCM"
+    }
+   ],
+   "gold_satisfaction": {
+    "C001": {
+     "cat": 1.0,
+     "loc": 1.0
+    },
+    "C002": {
+     "cat": 1.0,
+     "loc": 1.0
+    },
+    "C008": {
+     "cat": 1.0,
+     "loc": 1.0
+    },
+    "C003": {
+     "cat": 1.0,
+     "loc": 0.0
+    },
+    "C004": {
+     "cat": 1.0,
+     "loc": 0.0
+    },
+    "C005": {
+     "cat": 1.0,
+     "loc": 0.0
+    },
+    "C006": {
+     "cat": 1.0,
+     "loc": 0.0
+    }
+   }
+  },
+  {
+   "qid": "H0029",
+   "query": "quán cà phê ở Hà Nội",
+   "variant": "formal",
+   "difficulty": "medium",
+   "kind": "single-loc",
+   "gold": [
+    "C003",
+    "C004",
+    "C007"
+   ],
+   "n_constraints": 2,
+   "has_hard_negative": true,
+   "constraints": [
+    {
+     "id": "cat",
+     "type": "category",
+     "value": "Quán cà phê",
+     "label": "quán cà phê"
+    },
+    {
+     "id": "loc",
+     "type": "city",
+     "value": "Hà Nội",
+     "label": "ở Hà Nội"
+    }
+   ],
+   "gold_satisfaction": {
+    "C003": {
+     "cat": 1.0,
+     "loc": 1.0
+    },
+    "C004": {
+     "cat": 1.0,
+     "loc": 1.0
+    },
+    "C007": {
+     "cat": 1.0,
+     "loc": 1.0
+    },
+    "C001": {
+     "cat": 1.0,
+     "loc": 0.0
+    },
+    "C002": {
+     "cat": 1.0,
+     "loc": 0.0
+    },
+    "C005": {
+     "cat": 1.0,
+     "loc": 0.0
+    },
+    "C006": {
+     "cat": 1.0,
+     "loc": 0.0
+    }
+   }
+  },
+  {
+   "qid": "H0030",
+   "query": "quán cà phê ở Đà Nẵng",
+   "variant": "formal",
+   "difficulty": "medium",
+   "kind": "single-loc",
+   "gold": [
+    "C005"
+   ],
+   "n_constraints": 2,
+   "has_hard_negative": true,
+   "constraints": [
+    {
+     "id": "cat",
+     "type": "category",
+     "value": "Quán cà phê",
+     "label": "quán cà phê"
+    },
+    {
+     "id": "loc",
+     "type": "city",
+     "value": "Đà Nẵng",
+     "label": "ở Đà Nẵng"
+    }
+   ],
+   "gold_satisfaction": {
+    "C005": {
+     "cat": 1.0,
+     "loc": 1.0
+    },
+    "C001": {
+     "cat": 1.0,
+     "loc": 0.0
+    },
+    "C002": {
+     "cat": 1.0,
+     "loc": 0.0
+    },
+    "C003": {
+     "cat": 1.0,
+     "loc": 0.0
+    },
+    "C004": {
+     "cat": 1.0,
+     "loc": 0.0
+    },
+    "C006": {
+     "cat": 1.0,
+     "loc": 0.0
+    }
+   }
+  },
+  {
+   "qid": "H0031",
+   "query": "quán cà phê ở Đà Lạt",
+   "variant": "formal",
+   "difficulty": "medium",
+   "kind": "single-loc",
+   "gold": [
+    "C006"
+   ],
+   "n_constraints": 2,
+   "has_hard_negative": true,
+   "constraints": [
+    {
+     "id": "cat",
+     "type": "category",
+     "value": "Quán cà phê",
+     "label": "quán cà phê"
+    },
+    {
+     "id": "loc",
+     "type": "city",
+     "value": "Đà Lạt",
+     "label": "ở Đà Lạt"
+    }
+   ],
+   "gold_satisfaction": {
+    "C006": {
+     "cat": 1.0,
+     "loc": 1.0
+    },
+    "C001": {
+     "cat": 1.0,
+     "loc": 0.0
+    },
+    "C002": {
+     "cat": 1.0,
+     "loc": 0.0
+    },
+    "C003": {
+     "cat": 1.0,
+     "loc": 0.0
+    },
+    "C004": {
+     "cat": 1.0,
+     "loc": 0.0
+    },
+    "C005": {
+     "cat": 1.0,
+     "loc": 0.0
+    }
+   }
+  },
+  {
+   "qid": "H0032",
+   "query": "quán cà phê để làm việc yên tĩnh ở Quận 1",
+   "variant": "formal",
+   "difficulty": "hard",
+   "kind": "multi",
+   "gold": [
+    "C001"
+   ],
+   "n_constraints": 4,
+   "has_hard_negative": false,
+   "constraints": [
+    {
+     "id": "cat",
+     "type": "category",
+     "value": "Quán cà phê",
+     "label": "quán cà phê"
+    },
+    {
+     "id": "a0",
+     "type": "attribute",
+     "value": "phù hợp làm việc",
+     "label": "để làm việc"
+    },
+    {
+     "id": "a1",
+     "type": "attribute",
+     "value": "yên tĩnh",
+     "label": "yên tĩnh"
+    },
+    {
+     "id": "loc",
+     "type": "district",
+     "value": "Quận 1",
+     "label": "ở Quận 1"
+    }
+   ],
+   "gold_satisfaction": {
+    "C001": {
+     "cat": 1.0,
+     "a0": 1.0,
+     "a1": 1.0,
+     "loc": 1.0
+    },
+    "C002": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "loc": 1.0
+    },
+    "C003": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "loc": 0.0
+    },
+    "C004": {
+     "cat": 1.0,
+     "a0": 1.0,
+     "a1": 1.0,
+     "loc": 0.0
+    },
+    "C005": {
+     "cat": 1.0,
+     "a0": 1.0,
+     "a1": 1.0,
+     "loc": 0.0
+    },
+    "C006": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "loc": 0.0
+    }
+   }
+  },
+  {
+   "qid": "H0033",
+   "query": "quán cà phê để làm việc yên tĩnh có wifi ở Quận 1",
+   "variant": "formal",
+   "difficulty": "hard",
+   "kind": "multi",
+   "gold": [
+    "C001"
+   ],
+   "n_constraints": 5,
+   "has_hard_negative": false,
+   "constraints": [
+    {
+     "id": "cat",
+     "type": "category",
+     "value": "Quán cà phê",
+     "label": "quán cà phê"
+    },
+    {
+     "id": "a0",
+     "type": "attribute",
+     "value": "phù hợp làm việc",
+     "label": "để làm việc"
+    },
+    {
+     "id": "a1",
+     "type": "attribute",
+     "value": "yên tĩnh",
+     "label": "yên tĩnh"
+    },
+    {
+     "id": "a2",
+     "type": "attribute",
+     "value": "wifi",
+     "label": "có wifi"
+    },
+    {
+     "id": "loc",
+     "type": "district",
+     "value": "Quận 1",
+     "label": "ở Quận 1"
+    }
+   ],
+   "gold_satisfaction": {
+    "C001": {
+     "cat": 1.0,
+     "a0": 1.0,
+     "a1": 1.0,
+     "a2": 1.0,
+     "loc": 1.0
+    },
+    "C002": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "a2": 1.0,
+     "loc": 1.0
+    },
+    "C003": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "a2": 0.0,
+     "loc": 0.0
+    },
+    "C004": {
+     "cat": 1.0,
+     "a0": 1.0,
+     "a1": 1.0,
+     "a2": 1.0,
+     "loc": 0.0
+    },
+    "C005": {
+     "cat": 1.0,
+     "a0": 1.0,
+     "a1": 1.0,
+     "a2": 1.0,
+     "loc": 0.0
+    },
+    "C006": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "a2": 0.0,
+     "loc": 0.0
+    }
+   }
+  },
+  {
+   "qid": "H0034",
+   "query": "quán cà phê gần phố đi bộ có wifi giá rẻ ở Quận 1",
+   "variant": "formal",
+   "difficulty": "hard",
+   "kind": "multi",
+   "gold": [
+    "C002"
+   ],
+   "n_constraints": 5,
+   "has_hard_negative": false,
+   "constraints": [
+    {
+     "id": "cat",
+     "type": "category",
+     "value": "Quán cà phê",
+     "label": "quán cà phê"
+    },
+    {
+     "id": "a0",
+     "type": "attribute",
+     "value": "gần phố đi bộ",
+     "label": "gần phố đi bộ"
+    },
+    {
+     "id": "a1",
+     "type": "attribute",
+     "value": "wifi",
+     "label": "có wifi"
+    },
+    {
+     "id": "loc",
+     "type": "district",
+     "value": "Quận 1",
+     "label": "ở Quận 1"
+    },
+    {
+     "id": "price",
+     "type": "price",
+     "value": "cheap",
+     "label": "giá rẻ"
+    }
+   ],
+   "gold_satisfaction": {
+    "C002": {
+     "cat": 1.0,
+     "a0": 1.0,
+     "a1": 1.0,
+     "loc": 1.0,
+     "price": 1.0
+    },
+    "C001": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 1.0,
+     "loc": 1.0,
+     "price": 0.0
+    },
+    "C003": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "loc": 0.0,
+     "price": 1.0
+    },
+    "C004": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 1.0,
+     "loc": 0.0,
+     "price": 1.0
+    },
+    "C005": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 1.0,
+     "loc": 0.0,
+     "price": 1.0
+    },
+    "C006": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "loc": 0.0,
+     "price": 1.0
+    }
+   }
+  },
+  {
+   "qid": "H0035",
+   "query": "quán cà phê gần phố đi bộ có wifi giá rẻ ở Quận 1",
+   "variant": "formal",
+   "difficulty": "hard",
+   "kind": "multi",
+   "gold": [
+    "C002"
+   ],
+   "n_constraints": 5,
+   "has_hard_negative": false,
+   "constraints": [
+    {
+     "id": "cat",
+     "type": "category",
+     "value": "Quán cà phê",
+     "label": "quán cà phê"
+    },
+    {
+     "id": "a0",
+     "type": "attribute",
+     "value": "gần phố đi bộ",
+     "label": "gần phố đi bộ"
+    },
+    {
+     "id": "a1",
+     "type": "attribute",
+     "value": "wifi",
+     "label": "có wifi"
+    },
+    {
+     "id": "loc",
+     "type": "district",
+     "value": "Quận 1",
+     "label": "ở Quận 1"
+    },
+    {
+     "id": "price",
+     "type": "price",
+     "value": "cheap",
+     "label": "giá rẻ"
+    }
+   ],
+   "gold_satisfaction": {
+    "C002": {
+     "cat": 1.0,
+     "a0": 1.0,
+     "a1": 1.0,
+     "loc": 1.0,
+     "price": 1.0
+    },
+    "C001": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 1.0,
+     "loc": 1.0,
+     "price": 0.0
+    },
+    "C003": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "loc": 0.0,
+     "price": 1.0
+    },
+    "C004": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 1.0,
+     "loc": 0.0,
+     "price": 1.0
+    },
+    "C005": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 1.0,
+     "loc": 0.0,
+     "price": 1.0
+    },
+    "C006": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "loc": 0.0,
+     "price": 1.0
+    }
+   }
+  },
+  {
+   "qid": "H0036",
+   "query": "quán cà phê gần hồ view đẹp giá rẻ ở Hoàn Kiếm",
+   "variant": "formal",
+   "difficulty": "hard",
+   "kind": "multi",
+   "gold": [
+    "C003"
+   ],
+   "n_constraints": 5,
+   "has_hard_negative": false,
+   "constraints": [
+    {
+     "id": "cat",
+     "type": "category",
+     "value": "Quán cà phê",
+     "label": "quán cà phê"
+    },
+    {
+     "id": "a0",
+     "type": "attribute",
+     "value": "gần hồ",
+     "label": "gần hồ"
+    },
+    {
+     "id": "a1",
+     "type": "attribute",
+     "value": "view đẹp",
+     "label": "view đẹp"
+    },
+    {
+     "id": "loc",
+     "type": "district",
+     "value": "Hoàn Kiếm",
+     "label": "ở Hoàn Kiếm"
+    },
+    {
+     "id": "price",
+     "type": "price",
+     "value": "cheap",
+     "label": "giá rẻ"
+    }
+   ],
+   "gold_satisfaction": {
+    "C003": {
+     "cat": 1.0,
+     "a0": 1.0,
+     "a1": 1.0,
+     "loc": 1.0,
+     "price": 1.0
+    },
+    "C001": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "loc": 0.0,
+     "price": 0.0
+    },
+    "C002": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "loc": 0.0,
+     "price": 1.0
+    },
+    "C004": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "loc": 1.0,
+     "price": 1.0
+    },
+    "C005": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "loc": 0.0,
+     "price": 1.0
+    },
+    "C006": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 1.0,
+     "loc": 0.0,
+     "price": 1.0
+    }
+   }
+  },
+  {
+   "qid": "H0037",
+   "query": "quán cà phê gần hồ view đẹp ở Hoàn Kiếm",
+   "variant": "formal",
+   "difficulty": "hard",
+   "kind": "multi",
+   "gold": [
+    "C003"
+   ],
+   "n_constraints": 4,
+   "has_hard_negative": false,
+   "constraints": [
+    {
+     "id": "cat",
+     "type": "category",
+     "value": "Quán cà phê",
+     "label": "quán cà phê"
+    },
+    {
+     "id": "a0",
+     "type": "attribute",
+     "value": "gần hồ",
+     "label": "gần hồ"
+    },
+    {
+     "id": "a1",
+     "type": "attribute",
+     "value": "view đẹp",
+     "label": "view đẹp"
+    },
+    {
+     "id": "loc",
+     "type": "district",
+     "value": "Hoàn Kiếm",
+     "label": "ở Hoàn Kiếm"
+    }
+   ],
+   "gold_satisfaction": {
+    "C003": {
+     "cat": 1.0,
+     "a0": 1.0,
+     "a1": 1.0,
+     "loc": 1.0
+    },
+    "C001": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "loc": 0.0
+    },
+    "C002": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "loc": 0.0
+    },
+    "C004": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "loc": 1.0
+    },
+    "C005": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "loc": 0.0
+    },
+    "C006": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 1.0,
+     "loc": 0.0
+    }
+   }
+  },
+  {
+   "qid": "H0038",
+   "query": "quán cà phê yên tĩnh có wifi giá rẻ ở Hoàn Kiếm",
+   "variant": "formal",
+   "difficulty": "hard",
+   "kind": "multi",
+   "gold": [
+    "C004"
+   ],
+   "n_constraints": 5,
+   "has_hard_negative": false,
+   "constraints": [
+    {
+     "id": "cat",
+     "type": "category",
+     "value": "Quán cà phê",
+     "label": "quán cà phê"
+    },
+    {
+     "id": "a0",
+     "type": "attribute",
+     "value": "yên tĩnh",
+     "label": "yên tĩnh"
+    },
+    {
+     "id": "a1",
+     "type": "attribute",
+     "value": "wifi",
+     "label": "có wifi"
+    },
+    {
+     "id": "loc",
+     "type": "district",
+     "value": "Hoàn Kiếm",
+     "label": "ở Hoàn Kiếm"
+    },
+    {
+     "id": "price",
+     "type": "price",
+     "value": "cheap",
+     "label": "giá rẻ"
+    }
+   ],
+   "gold_satisfaction": {
+    "C004": {
+     "cat": 1.0,
+     "a0": 1.0,
+     "a1": 1.0,
+     "loc": 1.0,
+     "price": 1.0
+    },
+    "C001": {
+     "cat": 1.0,
+     "a0": 1.0,
+     "a1": 1.0,
+     "loc": 0.0,
+     "price": 0.0
+    },
+    "C002": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 1.0,
+     "loc": 0.0,
+     "price": 1.0
+    },
+    "C003": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "loc": 1.0,
+     "price": 1.0
+    },
+    "C005": {
+     "cat": 1.0,
+     "a0": 1.0,
+     "a1": 1.0,
+     "loc": 0.0,
+     "price": 1.0
+    },
+    "C006": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "loc": 0.0,
+     "price": 1.0
+    }
+   }
+  },
+  {
+   "qid": "H0039",
+   "query": "quán cà phê yên tĩnh có wifi để làm việc ở Hoàn Kiếm",
+   "variant": "formal",
+   "difficulty": "hard",
+   "kind": "multi",
+   "gold": [
+    "C004"
+   ],
+   "n_constraints": 5,
+   "has_hard_negative": false,
+   "constraints": [
+    {
+     "id": "cat",
+     "type": "category",
+     "value": "Quán cà phê",
+     "label": "quán cà phê"
+    },
+    {
+     "id": "a0",
+     "type": "attribute",
+     "value": "yên tĩnh",
+     "label": "yên tĩnh"
+    },
+    {
+     "id": "a1",
+     "type": "attribute",
+     "value": "wifi",
+     "label": "có wifi"
+    },
+    {
+     "id": "a2",
+     "type": "attribute",
+     "value": "phù hợp làm việc",
+     "label": "để làm việc"
+    },
+    {
+     "id": "loc",
+     "type": "district",
+     "value": "Hoàn Kiếm",
+     "label": "ở Hoàn Kiếm"
+    }
+   ],
+   "gold_satisfaction": {
+    "C004": {
+     "cat": 1.0,
+     "a0": 1.0,
+     "a1": 1.0,
+     "a2": 1.0,
+     "loc": 1.0
+    },
+    "C001": {
+     "cat": 1.0,
+     "a0": 1.0,
+     "a1": 1.0,
+     "a2": 1.0,
+     "loc": 0.0
+    },
+    "C002": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 1.0,
+     "a2": 0.0,
+     "loc": 0.0
+    },
+    "C003": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "a2": 0.0,
+     "loc": 1.0
+    },
+    "C005": {
+     "cat": 1.0,
+     "a0": 1.0,
+     "a1": 1.0,
+     "a2": 1.0,
+     "loc": 0.0
+    },
+    "C006": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "a2": 0.0,
+     "loc": 0.0
+    }
+   }
+  },
+  {
+   "qid": "H0040",
+   "query": "quán cà phê có wifi để làm việc",
+   "variant": "formal",
+   "difficulty": "medium",
+   "kind": "multi",
+   "gold": [
+    "C001",
+    "C004",
+    "C005"
+   ],
+   "n_constraints": 3,
+   "has_hard_negative": true,
+   "constraints": [
+    {
+     "id": "cat",
+     "type": "category",
+     "value": "Quán cà phê",
+     "label": "quán cà phê"
+    },
+    {
+     "id": "a0",
+     "type": "attribute",
+     "value": "wifi",
+     "label": "có wifi"
+    },
+    {
+     "id": "a1",
+     "type": "attribute",
+     "value": "phù hợp làm việc",
+     "label": "để làm việc"
+    }
+   ],
+   "gold_satisfaction": {
+    "C001": {
+     "cat": 1.0,
+     "a0": 1.0,
+     "a1": 1.0
+    },
+    "C004": {
+     "cat": 1.0,
+     "a0": 1.0,
+     "a1": 1.0
+    },
+    "C005": {
+     "cat": 1.0,
+     "a0": 1.0,
+     "a1": 1.0
+    },
+    "C002": {
+     "cat": 1.0,
+     "a0": 1.0,
+     "a1": 0.0
+    },
+    "C003": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0
+    },
+    "C006": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0
+    }
+   }
+  },
+  {
+   "qid": "H0041",
+   "query": "quán cà phê có wifi để làm việc yên tĩnh",
+   "variant": "formal",
+   "difficulty": "hard",
+   "kind": "multi",
+   "gold": [
+    "C001",
+    "C004",
+    "C005"
+   ],
+   "n_constraints": 4,
+   "has_hard_negative": false,
+   "constraints": [
+    {
+     "id": "cat",
+     "type": "category",
+     "value": "Quán cà phê",
+     "label": "quán cà phê"
+    },
+    {
+     "id": "a0",
+     "type": "attribute",
+     "value": "wifi",
+     "label": "có wifi"
+    },
+    {
+     "id": "a1",
+     "type": "attribute",
+     "value": "phù hợp làm việc",
+     "label": "để làm việc"
+    },
+    {
+     "id": "a2",
+     "type": "attribute",
+     "value": "yên tĩnh",
+     "label": "yên tĩnh"
+    }
+   ],
+   "gold_satisfaction": {
+    "C001": {
+     "cat": 1.0,
+     "a0": 1.0,
+     "a1": 1.0,
+     "a2": 1.0
+    },
+    "C004": {
+     "cat": 1.0,
+     "a0": 1.0,
+     "a1": 1.0,
+     "a2": 1.0
+    },
+    "C005": {
+     "cat": 1.0,
+     "a0": 1.0,
+     "a1": 1.0,
+     "a2": 1.0
+    },
+    "C002": {
+     "cat": 1.0,
+     "a0": 1.0,
+     "a1": 0.0,
+     "a2": 0.0
+    },
+    "C003": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "a2": 0.0
+    },
+    "C006": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "a2": 0.0
+    }
+   }
+  },
+  {
+   "qid": "H0042",
+   "query": "quán cà phê ngoài trời view đẹp giá rẻ",
+   "variant": "formal",
+   "difficulty": "hard",
+   "kind": "multi",
+   "gold": [
+    "C006"
+   ],
+   "n_constraints": 4,
+   "has_hard_negative": false,
+   "constraints": [
+    {
+     "id": "cat",
+     "type": "category",
+     "value": "Quán cà phê",
+     "label": "quán cà phê"
+    },
+    {
+     "id": "a0",
+     "type": "attribute",
+     "value": "ngoài trời",
+     "label": "ngoài trời"
+    },
+    {
+     "id": "a1",
+     "type": "attribute",
+     "value": "view đẹp",
+     "label": "view đẹp"
+    },
+    {
+     "id": "price",
+     "type": "price",
+     "value": "cheap",
+     "label": "giá rẻ"
+    }
+   ],
+   "gold_satisfaction": {
+    "C006": {
+     "cat": 1.0,
+     "a0": 1.0,
+     "a1": 1.0,
+     "price": 1.0
+    },
+    "C001": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "price": 0.0
+    },
+    "C002": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "price": 1.0
+    },
+    "C003": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 1.0,
+     "price": 1.0
+    },
+    "C004": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "price": 1.0
+    },
+    "C005": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "price": 1.0
+    }
+   }
+  },
+  {
+   "qid": "H0043",
+   "query": "quán cà phê ngoài trời view đẹp cho cặp đôi",
+   "variant": "formal",
+   "difficulty": "hard",
+   "kind": "multi",
+   "gold": [
+    "C006"
+   ],
+   "n_constraints": 4,
+   "has_hard_negative": false,
+   "constraints": [
+    {
+     "id": "cat",
+     "type": "category",
+     "value": "Quán cà phê",
+     "label": "quán cà phê"
+    },
+    {
+     "id": "a0",
+     "type": "attribute",
+     "value": "ngoài trời",
+     "label": "ngoài trời"
+    },
+    {
+     "id": "a1",
+     "type": "attribute",
+     "value": "view đẹp",
+     "label": "view đẹp"
+    },
+    {
+     "id": "a2",
+     "type": "attribute",
+     "value": "phù hợp cặp đôi",
+     "label": "cho cặp đôi"
+    }
+   ],
+   "gold_satisfaction": {
+    "C006": {
+     "cat": 1.0,
+     "a0": 1.0,
+     "a1": 1.0,
+     "a2": 1.0
+    },
+    "C001": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "a2": 0.0
+    },
+    "C002": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "a2": 0.0
+    },
+    "C003": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 1.0,
+     "a2": 0.0
+    },
+    "C004": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "a2": 0.0
+    },
+    "C005": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "a2": 0.0
+    }
+   }
+  },
+  {
+   "qid": "H0044",
+   "query": "quán cà phê wifi mạnh có phòng họp giá rẻ ở Cầu Giấy",
+   "variant": "formal",
+   "difficulty": "hard",
+   "kind": "multi",
+   "gold": [
+    "C007"
+   ],
+   "n_constraints": 5,
+   "has_hard_negative": false,
+   "constraints": [
+    {
+     "id": "cat",
+     "type": "category",
+     "value": "Quán cà phê",
+     "label": "quán cà phê"
+    },
+    {
+     "id": "a0",
+     "type": "attribute",
+     "value": "wifi mạnh",
+     "label": "wifi mạnh"
+    },
+    {
+     "id": "a1",
+     "type": "attribute",
+     "value": "phòng họp",
+     "label": "có phòng họp"
+    },
+    {
+     "id": "loc",
+     "type": "district",
+     "value": "Cầu Giấy",
+     "label": "ở Cầu Giấy"
+    },
+    {
+     "id": "price",
+     "type": "price",
+     "value": "cheap",
+     "label": "giá rẻ"
+    }
+   ],
+   "gold_satisfaction": {
+    "C007": {
+     "cat": 1.0,
+     "a0": 1.0,
+     "a1": 1.0,
+     "loc": 1.0,
+     "price": 1.0
+    },
+    "C001": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "loc": 0.0,
+     "price": 0.0
+    },
+    "C002": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "loc": 0.0,
+     "price": 1.0
+    },
+    "C003": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "loc": 0.0,
+     "price": 1.0
+    },
+    "C004": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "loc": 0.0,
+     "price": 1.0
+    },
+    "C005": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "loc": 0.0,
+     "price": 1.0
+    },
+    "C006": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "loc": 0.0,
+     "price": 1.0
+    }
+   }
+  },
+  {
+   "qid": "H0045",
+   "query": "quán cà phê wifi mạnh có phòng họp có chỗ đậu xe giá rẻ ở Cầu Giấy",
+   "variant": "formal",
+   "difficulty": "hard",
+   "kind": "multi",
+   "gold": [
+    "C007"
+   ],
+   "n_constraints": 6,
+   "has_hard_negative": false,
+   "constraints": [
+    {
+     "id": "cat",
+     "type": "category",
+     "value": "Quán cà phê",
+     "label": "quán cà phê"
+    },
+    {
+     "id": "a0",
+     "type": "attribute",
+     "value": "wifi mạnh",
+     "label": "wifi mạnh"
+    },
+    {
+     "id": "a1",
+     "type": "attribute",
+     "value": "phòng họp",
+     "label": "có phòng họp"
+    },
+    {
+     "id": "a2",
+     "type": "attribute",
+     "value": "bãi đỗ xe",
+     "label": "có chỗ đậu xe"
+    },
+    {
+     "id": "loc",
+     "type": "district",
+     "value": "Cầu Giấy",
+     "label": "ở Cầu Giấy"
+    },
+    {
+     "id": "price",
+     "type": "price",
+     "value": "cheap",
+     "label": "giá rẻ"
+    }
+   ],
+   "gold_satisfaction": {
+    "C007": {
+     "cat": 1.0,
+     "a0": 1.0,
+     "a1": 1.0,
+     "a2": 1.0,
+     "loc": 1.0,
+     "price": 1.0
+    },
+    "C001": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "a2": 0.0,
+     "loc": 0.0,
+     "price": 0.0
+    },
+    "C002": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "a2": 0.0,
+     "loc": 0.0,
+     "price": 1.0
+    },
+    "C003": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "a2": 0.0,
+     "loc": 0.0,
+     "price": 1.0
+    },
+    "C004": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "a2": 0.0,
+     "loc": 0.0,
+     "price": 1.0
+    },
+    "C005": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "a2": 0.0,
+     "loc": 0.0,
+     "price": 1.0
+    },
+    "C006": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "a2": 0.0,
+     "loc": 0.0,
+     "price": 1.0
+    }
+   }
+  },
+  {
+   "qid": "H0046",
+   "query": "quán cà phê sân vườn có chỗ đậu xe",
+   "variant": "formal",
+   "difficulty": "medium",
+   "kind": "multi",
+   "gold": [
+    "C008"
+   ],
+   "n_constraints": 3,
+   "has_hard_negative": false,
+   "constraints": [
+    {
+     "id": "cat",
+     "type": "category",
+     "value": "Quán cà phê",
+     "label": "quán cà phê"
+    },
+    {
+     "id": "a0",
+     "type": "attribute",
+     "value": "sân vườn",
+     "label": "sân vườn"
+    },
+    {
+     "id": "a1",
+     "type": "attribute",
+     "value": "bãi đỗ xe",
+     "label": "có chỗ đậu xe"
+    }
+   ],
+   "gold_satisfaction": {
+    "C008": {
+     "cat": 1.0,
+     "a0": 1.0,
+     "a1": 1.0
+    },
+    "C001": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0
+    },
+    "C002": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0
+    },
+    "C003": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0
+    },
+    "C004": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0
+    },
+    "C005": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0
+    },
+    "C006": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0
+    }
+   }
+  },
+  {
+   "qid": "H0047",
+   "query": "quán cà phê sân vườn có chỗ đậu xe cho nhóm",
+   "variant": "formal",
+   "difficulty": "hard",
+   "kind": "multi",
+   "gold": [
+    "C008"
+   ],
+   "n_constraints": 4,
+   "has_hard_negative": false,
+   "constraints": [
+    {
+     "id": "cat",
+     "type": "category",
+     "value": "Quán cà phê",
+     "label": "quán cà phê"
+    },
+    {
+     "id": "a0",
+     "type": "attribute",
+     "value": "sân vườn",
+     "label": "sân vườn"
+    },
+    {
+     "id": "a1",
+     "type": "attribute",
+     "value": "bãi đỗ xe",
+     "label": "có chỗ đậu xe"
+    },
+    {
+     "id": "a2",
+     "type": "attribute",
+     "value": "phù hợp nhóm",
+     "label": "cho nhóm"
+    }
+   ],
+   "gold_satisfaction": {
+    "C008": {
+     "cat": 1.0,
+     "a0": 1.0,
+     "a1": 1.0,
+     "a2": 1.0
+    },
+    "C001": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "a2": 0.0
+    },
+    "C002": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "a2": 0.0
+    },
+    "C003": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "a2": 0.0
+    },
+    "C004": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "a2": 0.0
+    },
+    "C005": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "a2": 0.0
+    },
+    "C006": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "a2": 0.0
+    }
+   }
+  },
+  {
+   "qid": "H0048",
+   "query": "nhà hàng cho gia đình món Việt ở Hoàn Kiếm",
+   "variant": "formal",
+   "difficulty": "hard",
+   "kind": "multi",
+   "gold": [
+    "R001"
+   ],
+   "n_constraints": 4,
+   "has_hard_negative": false,
+   "constraints": [
+    {
+     "id": "cat",
+     "type": "category",
+     "value": "Nhà hàng",
+     "label": "nhà hàng"
+    },
+    {
+     "id": "a0",
+     "type": "attribute",
+     "value": "phù hợp gia đình",
+     "label": "cho gia đình"
+    },
+    {
+     "id": "a1",
+     "type": "attribute",
+     "value": "món Việt",
+     "label": "món Việt"
+    },
+    {
+     "id": "loc",
+     "type": "district",
+     "value": "Hoàn Kiếm",
+     "label": "ở Hoàn Kiếm"
+    }
+   ],
+   "gold_satisfaction": {
+    "R001": {
+     "cat": 1.0,
+     "a0": 1.0,
+     "a1": 1.0,
+     "loc": 1.0
+    },
+    "R002": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "loc": 0.0
+    },
+    "R003": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "loc": 0.0
+    },
+    "R004": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "loc": 0.0
+    },
+    "R005": {
+     "cat": 1.0,
+     "a0": 1.0,
+     "a1": 1.0,
+     "loc": 0.0
+    },
+    "R006": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "loc": 0.0
+    }
+   }
+  },
+  {
+   "qid": "H0049",
+   "query": "nhà hàng cho gia đình món Việt ở Hoàn Kiếm",
+   "variant": "formal",
+   "difficulty": "hard",
+   "kind": "multi",
+   "gold": [
+    "R001"
+   ],
+   "n_constraints": 4,
+   "has_hard_negative": false,
+   "constraints": [
+    {
+     "id": "cat",
+     "type": "category",
+     "value": "Nhà hàng",
+     "label": "nhà hàng"
+    },
+    {
+     "id": "a0",
+     "type": "attribute",
+     "value": "phù hợp gia đình",
+     "label": "cho gia đình"
+    },
+    {
+     "id": "a1",
+     "type": "attribute",
+     "value": "món Việt",
+     "label": "món Việt"
+    },
+    {
+     "id": "loc",
+     "type": "district",
+     "value": "Hoàn Kiếm",
+     "label": "ở Hoàn Kiếm"
+    }
+   ],
+   "gold_satisfaction": {
+    "R001": {
+     "cat": 1.0,
+     "a0": 1.0,
+     "a1": 1.0,
+     "loc": 1.0
+    },
+    "R002": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "loc": 0.0
+    },
+    "R003": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "loc": 0.0
+    },
+    "R004": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "loc": 0.0
+    },
+    "R005": {
+     "cat": 1.0,
+     "a0": 1.0,
+     "a1": 1.0,
+     "loc": 0.0
+    },
+    "R006": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "loc": 0.0
+    }
+   }
+  },
+  {
+   "qid": "H0050",
+   "query": "nhà hàng lãng mạn để hẹn hò ở Quận 1",
+   "variant": "formal",
+   "difficulty": "hard",
+   "kind": "multi",
+   "gold": [
+    "R002"
+   ],
+   "n_constraints": 4,
+   "has_hard_negative": false,
+   "constraints": [
+    {
+     "id": "cat",
+     "type": "category",
+     "value": "Nhà hàng",
+     "label": "nhà hàng"
+    },
+    {
+     "id": "a0",
+     "type": "attribute",
+     "value": "lãng mạn",
+     "label": "lãng mạn"
+    },
+    {
+     "id": "a1",
+     "type": "attribute",
+     "value": "phù hợp hẹn hò",
+     "label": "để hẹn hò"
+    },
+    {
+     "id": "loc",
+     "type": "district",
+     "value": "Quận 1",
+     "label": "ở Quận 1"
+    }
+   ],
+   "gold_satisfaction": {
+    "R002": {
+     "cat": 1.0,
+     "a0": 1.0,
+     "a1": 1.0,
+     "loc": 1.0
+    },
+    "R001": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "loc": 0.0
+    },
+    "R003": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "loc": 0.0
+    },
+    "R004": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "loc": 0.0
+    },
+    "R005": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "loc": 0.0
+    },
+    "R006": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "loc": 1.0
+    }
+   }
+  },
+  {
+   "qid": "H0051",
+   "query": "nhà hàng lãng mạn để hẹn hò ở Quận 1",
+   "variant": "formal",
+   "difficulty": "hard",
+   "kind": "multi",
+   "gold": [
+    "R002"
+   ],
+   "n_constraints": 4,
+   "has_hard_negative": false,
+   "constraints": [
+    {
+     "id": "cat",
+     "type": "category",
+     "value": "Nhà hàng",
+     "label": "nhà hàng"
+    },
+    {
+     "id": "a0",
+     "type": "attribute",
+     "value": "lãng mạn",
+     "label": "lãng mạn"
+    },
+    {
+     "id": "a1",
+     "type": "attribute",
+     "value": "phù hợp hẹn hò",
+     "label": "để hẹn hò"
+    },
+    {
+     "id": "loc",
+     "type": "district",
+     "value": "Quận 1",
+     "label": "ở Quận 1"
+    }
+   ],
+   "gold_satisfaction": {
+    "R002": {
+     "cat": 1.0,
+     "a0": 1.0,
+     "a1": 1.0,
+     "loc": 1.0
+    },
+    "R001": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "loc": 0.0
+    },
+    "R003": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "loc": 0.0
+    },
+    "R004": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "loc": 0.0
+    },
+    "R005": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "loc": 0.0
+    },
+    "R006": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "loc": 1.0
+    }
+   }
+  },
+  {
+   "qid": "H0052",
+   "query": "nhà hàng món Việt hải sản ở Sơn Trà",
+   "variant": "formal",
+   "difficulty": "hard",
+   "kind": "multi",
+   "gold": [
+    "R005"
+   ],
+   "n_constraints": 4,
+   "has_hard_negative": false,
+   "constraints": [
+    {
+     "id": "cat",
+     "type": "category",
+     "value": "Nhà hàng",
+     "label": "nhà hàng"
+    },
+    {
+     "id": "a0",
+     "type": "attribute",
+     "value": "món Việt",
+     "label": "món Việt"
+    },
+    {
+     "id": "a1",
+     "type": "attribute",
+     "value": "hải sản",
+     "label": "hải sản"
+    },
+    {
+     "id": "loc",
+     "type": "district",
+     "value": "Sơn Trà",
+     "label": "ở Sơn Trà"
+    }
+   ],
+   "gold_satisfaction": {
+    "R005": {
+     "cat": 1.0,
+     "a0": 1.0,
+     "a1": 1.0,
+     "loc": 1.0
+    },
+    "R001": {
+     "cat": 1.0,
+     "a0": 1.0,
+     "a1": 0.0,
+     "loc": 0.0
+    },
+    "R002": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "loc": 0.0
+    },
+    "R003": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "loc": 0.0
+    },
+    "R004": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "loc": 0.0
+    },
+    "R006": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "loc": 0.0
+    }
+   }
+  },
+  {
+   "qid": "H0053",
+   "query": "nhà hàng món Việt hải sản gần biển ở Sơn Trà",
+   "variant": "formal",
+   "difficulty": "hard",
+   "kind": "multi",
+   "gold": [
+    "R005"
+   ],
+   "n_constraints": 5,
+   "has_hard_negative": false,
+   "constraints": [
+    {
+     "id": "cat",
+     "type": "category",
+     "value": "Nhà hàng",
+     "label": "nhà hàng"
+    },
+    {
+     "id": "a0",
+     "type": "attribute",
+     "value": "món Việt",
+     "label": "món Việt"
+    },
+    {
+     "id": "a1",
+     "type": "attribute",
+     "value": "hải sản",
+     "label": "hải sản"
+    },
+    {
+     "id": "a2",
+     "type": "attribute",
+     "value": "gần biển",
+     "label": "gần biển"
+    },
+    {
+     "id": "loc",
+     "type": "district",
+     "value": "Sơn Trà",
+     "label": "ở Sơn Trà"
+    }
+   ],
+   "gold_satisfaction": {
+    "R005": {
+     "cat": 1.0,
+     "a0": 1.0,
+     "a1": 1.0,
+     "a2": 1.0,
+     "loc": 1.0
+    },
+    "R001": {
+     "cat": 1.0,
+     "a0": 1.0,
+     "a1": 0.0,
+     "a2": 0.0,
+     "loc": 0.0
+    },
+    "R002": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "a2": 0.0,
+     "loc": 0.0
+    },
+    "R003": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "a2": 0.0,
+     "loc": 0.0
+    },
+    "R004": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "a2": 0.0,
+     "loc": 0.0
+    },
+    "R006": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "a2": 0.0,
+     "loc": 0.0
+    }
+   }
+  },
+  {
+   "qid": "H0054",
+   "query": "nhà hàng cho nhóm giá rẻ ở Quận 1",
+   "variant": "formal",
+   "difficulty": "hard",
+   "kind": "multi",
+   "gold": [
+    "R006"
+   ],
+   "n_constraints": 4,
+   "has_hard_negative": false,
+   "constraints": [
+    {
+     "id": "cat",
+     "type": "category",
+     "value": "Nhà hàng",
+     "label": "nhà hàng"
+    },
+    {
+     "id": "a0",
+     "type": "attribute",
+     "value": "phù hợp nhóm",
+     "label": "cho nhóm"
+    },
+    {
+     "id": "loc",
+     "type": "district",
+     "value": "Quận 1",
+     "label": "ở Quận 1"
+    },
+    {
+     "id": "price",
+     "type": "price",
+     "value": "cheap",
+     "label": "giá rẻ"
+    }
+   ],
+   "gold_satisfaction": {
+    "R006": {
+     "cat": 1.0,
+     "a0": 1.0,
+     "loc": 1.0,
+     "price": 1.0
+    },
+    "R001": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "loc": 0.0,
+     "price": 0.0
+    },
+    "R002": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "loc": 1.0,
+     "price": 0.0
+    },
+    "R003": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "loc": 0.0,
+     "price": 1.0
+    },
+    "R004": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "loc": 0.0,
+     "price": 1.0
+    },
+    "R005": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "loc": 0.0,
+     "price": 0.0
+    }
+   }
+  },
+  {
+   "qid": "H0055",
+   "query": "nhà hàng cho nhóm giá rẻ ở Quận 1",
+   "variant": "formal",
+   "difficulty": "hard",
+   "kind": "multi",
+   "gold": [
+    "R006"
+   ],
+   "n_constraints": 4,
+   "has_hard_negative": false,
+   "constraints": [
+    {
+     "id": "cat",
+     "type": "category",
+     "value": "Nhà hàng",
+     "label": "nhà hàng"
+    },
+    {
+     "id": "a0",
+     "type": "attribute",
+     "value": "phù hợp nhóm",
+     "label": "cho nhóm"
+    },
+    {
+     "id": "loc",
+     "type": "district",
+     "value": "Quận 1",
+     "label": "ở Quận 1"
+    },
+    {
+     "id": "price",
+     "type": "price",
+     "value": "cheap",
+     "label": "giá rẻ"
+    }
+   ],
+   "gold_satisfaction": {
+    "R006": {
+     "cat": 1.0,
+     "a0": 1.0,
+     "loc": 1.0,
+     "price": 1.0
+    },
+    "R001": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "loc": 0.0,
+     "price": 0.0
+    },
+    "R002": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "loc": 1.0,
+     "price": 0.0
+    },
+    "R003": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "loc": 0.0,
+     "price": 1.0
+    },
+    "R004": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "loc": 0.0,
+     "price": 1.0
+    },
+    "R005": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "loc": 0.0,
+     "price": 0.0
+    }
+   }
+  },
+  {
+   "qid": "H0056",
+   "query": "nhà hàng cho gia đình yên tĩnh",
+   "variant": "formal",
+   "difficulty": "medium",
+   "kind": "multi",
+   "gold": [
+    "R007"
+   ],
+   "n_constraints": 3,
+   "has_hard_negative": false,
+   "constraints": [
+    {
+     "id": "cat",
+     "type": "category",
+     "value": "Nhà hàng",
+     "label": "nhà hàng"
+    },
+    {
+     "id": "a0",
+     "type": "attribute",
+     "value": "phù hợp gia đình",
+     "label": "cho gia đình"
+    },
+    {
+     "id": "a1",
+     "type": "attribute",
+     "value": "yên tĩnh",
+     "label": "yên tĩnh"
+    }
+   ],
+   "gold_satisfaction": {
+    "R007": {
+     "cat": 1.0,
+     "a0": 1.0,
+     "a1": 1.0
+    },
+    "R001": {
+     "cat": 1.0,
+     "a0": 1.0,
+     "a1": 0.0
+    },
+    "R002": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0
+    },
+    "R003": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0
+    },
+    "R004": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0
+    },
+    "R005": {
+     "cat": 1.0,
+     "a0": 1.0,
+     "a1": 0.0
+    },
+    "R006": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0
+    }
+   }
+  },
+  {
+   "qid": "H0057",
+   "query": "nhà hàng cho gia đình yên tĩnh đồ chay giá rẻ",
+   "variant": "formal",
+   "difficulty": "hard",
+   "kind": "multi",
+   "gold": [
+    "R007"
+   ],
+   "n_constraints": 5,
+   "has_hard_negative": false,
+   "constraints": [
+    {
+     "id": "cat",
+     "type": "category",
+     "value": "Nhà hàng",
+     "label": "nhà hàng"
+    },
+    {
+     "id": "a0",
+     "type": "attribute",
+     "value": "phù hợp gia đình",
+     "label": "cho gia đình"
+    },
+    {
+     "id": "a1",
+     "type": "attribute",
+     "value": "yên tĩnh",
+     "label": "yên tĩnh"
+    },
+    {
+     "id": "a2",
+     "type": "attribute",
+     "value": "món chay",
+     "label": "đồ chay"
+    },
+    {
+     "id": "price",
+     "type": "price",
+     "value": "cheap",
+     "label": "giá rẻ"
+    }
+   ],
+   "gold_satisfaction": {
+    "R007": {
+     "cat": 1.0,
+     "a0": 1.0,
+     "a1": 1.0,
+     "a2": 1.0,
+     "price": 1.0
+    },
+    "R001": {
+     "cat": 1.0,
+     "a0": 1.0,
+     "a1": 0.0,
+     "a2": 0.0,
+     "price": 0.0
+    },
+    "R002": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "a2": 0.0,
+     "price": 0.0
+    },
+    "R003": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "a2": 0.0,
+     "price": 1.0
+    },
+    "R004": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "a2": 0.0,
+     "price": 1.0
+    },
+    "R005": {
+     "cat": 1.0,
+     "a0": 1.0,
+     "a1": 0.0,
+     "a2": 0.0,
+     "price": 0.0
+    },
+    "R006": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "a2": 0.0,
+     "price": 1.0
+    }
+   }
+  },
+  {
+   "qid": "H0058",
+   "query": "nhà hàng lãng mạn rooftop ở Quận 1",
+   "variant": "formal",
+   "difficulty": "hard",
+   "kind": "multi",
+   "gold": [
+    "R008"
+   ],
+   "n_constraints": 4,
+   "has_hard_negative": false,
+   "constraints": [
+    {
+     "id": "cat",
+     "type": "category",
+     "value": "Nhà hàng",
+     "label": "nhà hàng"
+    },
+    {
+     "id": "a0",
+     "type": "attribute",
+     "value": "lãng mạn",
+     "label": "lãng mạn"
+    },
+    {
+     "id": "a1",
+     "type": "attribute",
+     "value": "rooftop",
+     "label": "rooftop"
+    },
+    {
+     "id": "loc",
+     "type": "district",
+     "value": "Quận 1",
+     "label": "ở Quận 1"
+    }
+   ],
+   "gold_satisfaction": {
+    "R008": {
+     "cat": 1.0,
+     "a0": 1.0,
+     "a1": 1.0,
+     "loc": 1.0
+    },
+    "R001": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "loc": 0.0
+    },
+    "R002": {
+     "cat": 1.0,
+     "a0": 1.0,
+     "a1": 0.0,
+     "loc": 1.0
+    },
+    "R003": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "loc": 0.0
+    },
+    "R004": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "loc": 0.0
+    },
+    "R005": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "loc": 0.0
+    },
+    "R006": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "loc": 1.0
+    }
+   }
+  },
+  {
+   "qid": "H0059",
+   "query": "nhà hàng lãng mạn rooftop view đẹp ở Quận 1",
+   "variant": "formal",
+   "difficulty": "hard",
+   "kind": "multi",
+   "gold": [
+    "R008"
+   ],
+   "n_constraints": 5,
+   "has_hard_negative": false,
+   "constraints": [
+    {
+     "id": "cat",
+     "type": "category",
+     "value": "Nhà hàng",
+     "label": "nhà hàng"
+    },
+    {
+     "id": "a0",
+     "type": "attribute",
+     "value": "lãng mạn",
+     "label": "lãng mạn"
+    },
+    {
+     "id": "a1",
+     "type": "attribute",
+     "value": "rooftop",
+     "label": "rooftop"
+    },
+    {
+     "id": "a2",
+     "type": "attribute",
+     "value": "view đẹp",
+     "label": "view đẹp"
+    },
+    {
+     "id": "loc",
+     "type": "district",
+     "value": "Quận 1",
+     "label": "ở Quận 1"
+    }
+   ],
+   "gold_satisfaction": {
+    "R008": {
+     "cat": 1.0,
+     "a0": 1.0,
+     "a1": 1.0,
+     "a2": 1.0,
+     "loc": 1.0
+    },
+    "R001": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "a2": 0.0,
+     "loc": 0.0
+    },
+    "R002": {
+     "cat": 1.0,
+     "a0": 1.0,
+     "a1": 0.0,
+     "a2": 0.0,
+     "loc": 1.0
+    },
+    "R003": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "a2": 0.0,
+     "loc": 0.0
+    },
+    "R004": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "a2": 0.0,
+     "loc": 0.0
+    },
+    "R005": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "a2": 0.0,
+     "loc": 0.0
+    },
+    "R006": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "a2": 0.0,
+     "loc": 1.0
+    }
+   }
+  },
+  {
+   "qid": "H0060",
+   "query": "nhà hàng cho nhóm ấm cúng",
+   "variant": "formal",
+   "difficulty": "medium",
+   "kind": "multi",
+   "gold": [
+    "R009"
+   ],
+   "n_constraints": 3,
+   "has_hard_negative": false,
+   "constraints": [
+    {
+     "id": "cat",
+     "type": "category",
+     "value": "Nhà hàng",
+     "label": "nhà hàng"
+    },
+    {
+     "id": "a0",
+     "type": "attribute",
+     "value": "phù hợp nhóm",
+     "label": "cho nhóm"
+    },
+    {
+     "id": "a1",
+     "type": "attribute",
+     "value": "ấm cúng",
+     "label": "ấm cúng"
+    }
+   ],
+   "gold_satisfaction": {
+    "R009": {
+     "cat": 1.0,
+     "a0": 1.0,
+     "a1": 1.0
+    },
+    "R001": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0
+    },
+    "R002": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0
+    },
+    "R003": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0
+    },
+    "R004": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0
+    },
+    "R005": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0
+    },
+    "R006": {
+     "cat": 1.0,
+     "a0": 1.0,
+     "a1": 0.0
+    }
+   }
+  },
+  {
+   "qid": "H0061",
+   "query": "nhà hàng cho nhóm ấm cúng",
+   "variant": "formal",
+   "difficulty": "medium",
+   "kind": "multi",
+   "gold": [
+    "R009"
+   ],
+   "n_constraints": 3,
+   "has_hard_negative": false,
+   "constraints": [
+    {
+     "id": "cat",
+     "type": "category",
+     "value": "Nhà hàng",
+     "label": "nhà hàng"
+    },
+    {
+     "id": "a0",
+     "type": "attribute",
+     "value": "phù hợp nhóm",
+     "label": "cho nhóm"
+    },
+    {
+     "id": "a1",
+     "type": "attribute",
+     "value": "ấm cúng",
+     "label": "ấm cúng"
+    }
+   ],
+   "gold_satisfaction": {
+    "R009": {
+     "cat": 1.0,
+     "a0": 1.0,
+     "a1": 1.0
+    },
+    "R001": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0
+    },
+    "R002": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0
+    },
+    "R003": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0
+    },
+    "R004": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0
+    },
+    "R005": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0
+    },
+    "R006": {
+     "cat": 1.0,
+     "a0": 1.0,
+     "a1": 0.0
+    }
+   }
+  },
+  {
+   "qid": "H0062",
+   "query": "nhà hàng cho trẻ em có chỗ đậu xe giá rẻ",
+   "variant": "formal",
+   "difficulty": "hard",
+   "kind": "multi",
+   "gold": [
+    "R010"
+   ],
+   "n_constraints": 4,
+   "has_hard_negative": true,
+   "constraints": [
+    {
+     "id": "cat",
+     "type": "category",
+     "value": "Nhà hàng",
+     "label": "nhà hàng"
+    },
+    {
+     "id": "a0",
+     "type": "attribute",
+     "value": "phù hợp trẻ em",
+     "label": "cho trẻ em"
+    },
+    {
+     "id": "a1",
+     "type": "attribute",
+     "value": "bãi đỗ xe",
+     "label": "có chỗ đậu xe"
+    },
+    {
+     "id": "price",
+     "type": "price",
+     "value": "cheap",
+     "label": "giá rẻ"
+    }
+   ],
+   "gold_satisfaction": {
+    "R010": {
+     "cat": 1.0,
+     "a0": 1.0,
+     "a1": 1.0,
+     "price": 1.0
+    },
+    "R001": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "price": 0.0
+    },
+    "R002": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "price": 0.0
+    },
+    "R003": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "price": 1.0
+    },
+    "R004": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "price": 1.0
+    },
+    "R005": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "price": 0.0
+    },
+    "R006": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "price": 1.0
+    }
+   }
+  },
+  {
+   "qid": "H0063",
+   "query": "nhà hàng cho trẻ em có chỗ đậu xe giá rẻ",
+   "variant": "formal",
+   "difficulty": "hard",
+   "kind": "multi",
+   "gold": [
+    "R010"
+   ],
+   "n_constraints": 4,
+   "has_hard_negative": true,
+   "constraints": [
+    {
+     "id": "cat",
+     "type": "category",
+     "value": "Nhà hàng",
+     "label": "nhà hàng"
+    },
+    {
+     "id": "a0",
+     "type": "attribute",
+     "value": "phù hợp trẻ em",
+     "label": "cho trẻ em"
+    },
+    {
+     "id": "a1",
+     "type": "attribute",
+     "value": "bãi đỗ xe",
+     "label": "có chỗ đậu xe"
+    },
+    {
+     "id": "price",
+     "type": "price",
+     "value": "cheap",
+     "label": "giá rẻ"
+    }
+   ],
+   "gold_satisfaction": {
+    "R010": {
+     "cat": 1.0,
+     "a0": 1.0,
+     "a1": 1.0,
+     "price": 1.0
+    },
+    "R001": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "price": 0.0
+    },
+    "R002": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "price": 0.0
+    },
+    "R003": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "price": 1.0
+    },
+    "R004": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "price": 1.0
+    },
+    "R005": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "price": 0.0
+    },
+    "R006": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "price": 1.0
+    }
+   }
+  },
+  {
+   "qid": "H0064",
+   "query": "khách sạn có hồ bơi gần biển ở Sơn Trà",
+   "variant": "formal",
+   "difficulty": "hard",
+   "kind": "multi",
+   "gold": [
+    "H001"
+   ],
+   "n_constraints": 4,
+   "has_hard_negative": false,
+   "constraints": [
+    {
+     "id": "cat",
+     "type": "category",
+     "value": "Khách sạn",
+     "label": "khách sạn"
+    },
+    {
+     "id": "a0",
+     "type": "attribute",
+     "value": "hồ bơi",
+     "label": "có hồ bơi"
+    },
+    {
+     "id": "a1",
+     "type": "attribute",
+     "value": "gần biển",
+     "label": "gần biển"
+    },
+    {
+     "id": "loc",
+     "type": "district",
+     "value": "Sơn Trà",
+     "label": "ở Sơn Trà"
+    }
+   ],
+   "gold_satisfaction": {
+    "H001": {
+     "cat": 1.0,
+     "a0": 1.0,
+     "a1": 1.0,
+     "loc": 1.0
+    },
+    "H002": {
+     "cat": 1.0,
+     "a0": 1.0,
+     "a1": 1.0,
+     "loc": 0.0
+    },
+    "H003": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "loc": 0.0
+    },
+    "H004": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "loc": 0.0
+    },
+    "H005": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "loc": 0.0
+    }
+   }
+  },
+  {
+   "qid": "H0065",
+   "query": "khách sạn có hồ bơi gần biển cho gia đình ở Sơn Trà",
+   "variant": "formal",
+   "difficulty": "hard",
+   "kind": "multi",
+   "gold": [
+    "H001"
+   ],
+   "n_constraints": 5,
+   "has_hard_negative": false,
+   "constraints": [
+    {
+     "id": "cat",
+     "type": "category",
+     "value": "Khách sạn",
+     "label": "khách sạn"
+    },
+    {
+     "id": "a0",
+     "type": "attribute",
+     "value": "hồ bơi",
+     "label": "có hồ bơi"
+    },
+    {
+     "id": "a1",
+     "type": "attribute",
+     "value": "gần biển",
+     "label": "gần biển"
+    },
+    {
+     "id": "a2",
+     "type": "attribute",
+     "value": "phù hợp gia đình",
+     "label": "cho gia đình"
+    },
+    {
+     "id": "loc",
+     "type": "district",
+     "value": "Sơn Trà",
+     "label": "ở Sơn Trà"
+    }
+   ],
+   "gold_satisfaction": {
+    "H001": {
+     "cat": 1.0,
+     "a0": 1.0,
+     "a1": 1.0,
+     "a2": 1.0,
+     "loc": 1.0
+    },
+    "H002": {
+     "cat": 1.0,
+     "a0": 1.0,
+     "a1": 1.0,
+     "a2": 0.0,
+     "loc": 0.0
+    },
+    "H003": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "a2": 0.0,
+     "loc": 0.0
+    },
+    "H004": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "a2": 0.0,
+     "loc": 0.0
+    },
+    "H005": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "a2": 0.0,
+     "loc": 0.0
+    }
+   }
+  },
+  {
+   "qid": "H0066",
+   "query": "khách sạn có hồ bơi gần biển",
+   "variant": "formal",
+   "difficulty": "medium",
+   "kind": "multi",
+   "gold": [
+    "H001",
+    "H002"
+   ],
+   "n_constraints": 3,
+   "has_hard_negative": true,
+   "constraints": [
+    {
+     "id": "cat",
+     "type": "category",
+     "value": "Khách sạn",
+     "label": "khách sạn"
+    },
+    {
+     "id": "a0",
+     "type": "attribute",
+     "value": "hồ bơi",
+     "label": "có hồ bơi"
+    },
+    {
+     "id": "a1",
+     "type": "attribute",
+     "value": "gần biển",
+     "label": "gần biển"
+    }
+   ],
+   "gold_satisfaction": {
+    "H001": {
+     "cat": 1.0,
+     "a0": 1.0,
+     "a1": 1.0
+    },
+    "H002": {
+     "cat": 1.0,
+     "a0": 1.0,
+     "a1": 1.0
+    },
+    "H003": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0
+    },
+    "H004": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0
+    },
+    "H005": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0
+    }
+   }
+  },
+  {
+   "qid": "H0067",
+   "query": "khách sạn có hồ bơi gần biển cho cặp đôi",
+   "variant": "formal",
+   "difficulty": "hard",
+   "kind": "multi",
+   "gold": [
+    "H002"
+   ],
+   "n_constraints": 4,
+   "has_hard_negative": false,
+   "constraints": [
+    {
+     "id": "cat",
+     "type": "category",
+     "value": "Khách sạn",
+     "label": "khách sạn"
+    },
+    {
+     "id": "a0",
+     "type": "attribute",
+     "value": "hồ bơi",
+     "label": "có hồ bơi"
+    },
+    {
+     "id": "a1",
+     "type": "attribute",
+     "value": "gần biển",
+     "label": "gần biển"
+    },
+    {
+     "id": "a2",
+     "type": "attribute",
+     "value": "phù hợp cặp đôi",
+     "label": "cho cặp đôi"
+    }
+   ],
+   "gold_satisfaction": {
+    "H002": {
+     "cat": 1.0,
+     "a0": 1.0,
+     "a1": 1.0,
+     "a2": 1.0
+    },
+    "H001": {
+     "cat": 1.0,
+     "a0": 1.0,
+     "a1": 1.0,
+     "a2": 0.0
+    },
+    "H003": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "a2": 0.0
+    },
+    "H004": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "a2": 0.0
+    },
+    "H005": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "a2": 0.0
+    }
+   }
+  },
+  {
+   "qid": "H0068",
+   "query": "khách sạn có phòng họp wifi mạnh ở Cầu Giấy",
+   "variant": "formal",
+   "difficulty": "hard",
+   "kind": "multi",
+   "gold": [
+    "H003"
+   ],
+   "n_constraints": 4,
+   "has_hard_negative": false,
+   "constraints": [
+    {
+     "id": "cat",
+     "type": "category",
+     "value": "Khách sạn",
+     "label": "khách sạn"
+    },
+    {
+     "id": "a0",
+     "type": "attribute",
+     "value": "phòng họp",
+     "label": "có phòng họp"
+    },
+    {
+     "id": "a1",
+     "type": "attribute",
+     "value": "wifi mạnh",
+     "label": "wifi mạnh"
+    },
+    {
+     "id": "loc",
+     "type": "district",
+     "value": "Cầu Giấy",
+     "label": "ở Cầu Giấy"
+    }
+   ],
+   "gold_satisfaction": {
+    "H003": {
+     "cat": 1.0,
+     "a0": 1.0,
+     "a1": 1.0,
+     "loc": 1.0
+    },
+    "H001": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "loc": 0.0
+    },
+    "H002": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "loc": 0.0
+    },
+    "H004": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "loc": 0.0
+    },
+    "H005": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "loc": 0.0
+    }
+   }
+  },
+  {
+   "qid": "H0069",
+   "query": "khách sạn có phòng họp wifi mạnh ở Cầu Giấy",
+   "variant": "formal",
+   "difficulty": "hard",
+   "kind": "multi",
+   "gold": [
+    "H003"
+   ],
+   "n_constraints": 4,
+   "has_hard_negative": false,
+   "constraints": [
+    {
+     "id": "cat",
+     "type": "category",
+     "value": "Khách sạn",
+     "label": "khách sạn"
+    },
+    {
+     "id": "a0",
+     "type": "attribute",
+     "value": "phòng họp",
+     "label": "có phòng họp"
+    },
+    {
+     "id": "a1",
+     "type": "attribute",
+     "value": "wifi mạnh",
+     "label": "wifi mạnh"
+    },
+    {
+     "id": "loc",
+     "type": "district",
+     "value": "Cầu Giấy",
+     "label": "ở Cầu Giấy"
+    }
+   ],
+   "gold_satisfaction": {
+    "H003": {
+     "cat": 1.0,
+     "a0": 1.0,
+     "a1": 1.0,
+     "loc": 1.0
+    },
+    "H001": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "loc": 0.0
+    },
+    "H002": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "loc": 0.0
+    },
+    "H004": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "loc": 0.0
+    },
+    "H005": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "loc": 0.0
+    }
+   }
+  },
+  {
+   "qid": "H0070",
+   "query": "khách sạn sống ảo sân vườn giá rẻ",
+   "variant": "formal",
+   "difficulty": "hard",
+   "kind": "multi",
+   "gold": [
+    "H004"
+   ],
+   "n_constraints": 4,
+   "has_hard_negative": false,
+   "constraints": [
+    {
+     "id": "cat",
+     "type": "category",
+     "value": "Khách sạn",
+     "label": "khách sạn"
+    },
+    {
+     "id": "a0",
+     "type": "attribute",
+     "value": "check-in",
+     "label": "sống ảo"
+    },
+    {
+     "id": "a1",
+     "type": "attribute",
+     "value": "sân vườn",
+     "label": "sân vườn"
+    },
+    {
+     "id": "price",
+     "type": "price",
+     "value": "cheap",
+     "label": "giá rẻ"
+    }
+   ],
+   "gold_satisfaction": {
+    "H004": {
+     "cat": 1.0,
+     "a0": 1.0,
+     "a1": 1.0,
+     "price": 1.0
+    },
+    "H001": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "price": 0.0
+    },
+    "H002": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "price": 0.0
+    },
+    "H003": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "price": 0.0
+    },
+    "H005": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "price": 0.0
+    }
+   }
+  },
+  {
+   "qid": "H0071",
+   "query": "khách sạn sống ảo sân vườn cho nhóm",
+   "variant": "formal",
+   "difficulty": "hard",
+   "kind": "multi",
+   "gold": [
+    "H004"
+   ],
+   "n_constraints": 4,
+   "has_hard_negative": false,
+   "constraints": [
+    {
+     "id": "cat",
+     "type": "category",
+     "value": "Khách sạn",
+     "label": "khách sạn"
+    },
+    {
+     "id": "a0",
+     "type": "attribute",
+     "value": "check-in",
+     "label": "sống ảo"
+    },
+    {
+     "id": "a1",
+     "type": "attribute",
+     "value": "sân vườn",
+     "label": "sân vườn"
+    },
+    {
+     "id": "a2",
+     "type": "attribute",
+     "value": "phù hợp nhóm",
+     "label": "cho nhóm"
+    }
+   ],
+   "gold_satisfaction": {
+    "H004": {
+     "cat": 1.0,
+     "a0": 1.0,
+     "a1": 1.0,
+     "a2": 1.0
+    },
+    "H001": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "a2": 0.0
+    },
+    "H002": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "a2": 0.0
+    },
+    "H003": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "a2": 0.0
+    },
+    "H005": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "a2": 0.0
+    }
+   }
+  },
+  {
+   "qid": "H0072",
+   "query": "điểm tham quan ngoài trời cho trẻ em giá rẻ ở Quận 1",
+   "variant": "formal",
+   "difficulty": "hard",
+   "kind": "multi",
+   "gold": [
+    "A001"
+   ],
+   "n_constraints": 5,
+   "has_hard_negative": false,
+   "constraints": [
+    {
+     "id": "cat",
+     "type": "category",
+     "value": "Điểm tham quan",
+     "label": "điểm tham quan"
+    },
+    {
+     "id": "a0",
+     "type": "attribute",
+     "value": "ngoài trời",
+     "label": "ngoài trời"
+    },
+    {
+     "id": "a1",
+     "type": "attribute",
+     "value": "phù hợp trẻ em",
+     "label": "cho trẻ em"
+    },
+    {
+     "id": "loc",
+     "type": "district",
+     "value": "Quận 1",
+     "label": "ở Quận 1"
+    },
+    {
+     "id": "price",
+     "type": "price",
+     "value": "cheap",
+     "label": "giá rẻ"
+    }
+   ],
+   "gold_satisfaction": {
+    "A001": {
+     "cat": 1.0,
+     "a0": 1.0,
+     "a1": 1.0,
+     "loc": 1.0,
+     "price": 1.0
+    },
+    "A003": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "loc": 0.0,
+     "price": 0.0
+    },
+    "A004": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "loc": 0.0,
+     "price": 1.0
+    }
+   }
+  },
+  {
+   "qid": "H0073",
+   "query": "điểm tham quan ngoài trời cho trẻ em giá rẻ ở Quận 1",
+   "variant": "formal",
+   "difficulty": "hard",
+   "kind": "multi",
+   "gold": [
+    "A001"
+   ],
+   "n_constraints": 5,
+   "has_hard_negative": false,
+   "constraints": [
+    {
+     "id": "cat",
+     "type": "category",
+     "value": "Điểm tham quan",
+     "label": "điểm tham quan"
+    },
+    {
+     "id": "a0",
+     "type": "attribute",
+     "value": "ngoài trời",
+     "label": "ngoài trời"
+    },
+    {
+     "id": "a1",
+     "type": "attribute",
+     "value": "phù hợp trẻ em",
+     "label": "cho trẻ em"
+    },
+    {
+     "id": "loc",
+     "type": "district",
+     "value": "Quận 1",
+     "label": "ở Quận 1"
+    },
+    {
+     "id": "price",
+     "type": "price",
+     "value": "cheap",
+     "label": "giá rẻ"
+    }
+   ],
+   "gold_satisfaction": {
+    "A001": {
+     "cat": 1.0,
+     "a0": 1.0,
+     "a1": 1.0,
+     "loc": 1.0,
+     "price": 1.0
+    },
+    "A003": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "loc": 0.0,
+     "price": 0.0
+    },
+    "A004": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "loc": 0.0,
+     "price": 1.0
+    }
+   }
+  },
+  {
+   "qid": "H0074",
+   "query": "công viên ngoài trời cho trẻ em giá rẻ",
+   "variant": "formal",
+   "difficulty": "hard",
+   "kind": "multi",
+   "gold": [
+    "A002"
+   ],
+   "n_constraints": 4,
+   "has_hard_negative": false,
+   "constraints": [
+    {
+     "id": "cat",
+     "type": "category",
+     "value": "Công viên",
+     "label": "công viên"
+    },
+    {
+     "id": "a0",
+     "type": "attribute",
+     "value": "ngoài trời",
+     "label": "ngoài trời"
+    },
+    {
+     "id": "a1",
+     "type": "attribute",
+     "value": "phù hợp trẻ em",
+     "label": "cho trẻ em"
+    },
+    {
+     "id": "price",
+     "type": "price",
+     "value": "cheap",
+     "label": "giá rẻ"
+    }
+   ],
+   "gold_satisfaction": {
+    "A002": {
+     "cat": 1.0,
+     "a0": 1.0,
+     "a1": 1.0,
+     "price": 1.0
+    }
+   }
+  },
+  {
+   "qid": "H0075",
+   "query": "công viên ngoài trời cho trẻ em giá rẻ",
+   "variant": "formal",
+   "difficulty": "hard",
+   "kind": "multi",
+   "gold": [
+    "A002"
+   ],
+   "n_constraints": 4,
+   "has_hard_negative": false,
+   "constraints": [
+    {
+     "id": "cat",
+     "type": "category",
+     "value": "Công viên",
+     "label": "công viên"
+    },
+    {
+     "id": "a0",
+     "type": "attribute",
+     "value": "ngoài trời",
+     "label": "ngoài trời"
+    },
+    {
+     "id": "a1",
+     "type": "attribute",
+     "value": "phù hợp trẻ em",
+     "label": "cho trẻ em"
+    },
+    {
+     "id": "price",
+     "type": "price",
+     "value": "cheap",
+     "label": "giá rẻ"
+    }
+   ],
+   "gold_satisfaction": {
+    "A002": {
+     "cat": 1.0,
+     "a0": 1.0,
+     "a1": 1.0,
+     "price": 1.0
+    }
+   }
+  },
+  {
+   "qid": "H0076",
+   "query": "điểm tham quan view đẹp sống ảo",
+   "variant": "formal",
+   "difficulty": "medium",
+   "kind": "multi",
+   "gold": [
+    "A003"
+   ],
+   "n_constraints": 3,
+   "has_hard_negative": false,
+   "constraints": [
+    {
+     "id": "cat",
+     "type": "category",
+     "value": "Điểm tham quan",
+     "label": "điểm tham quan"
+    },
+    {
+     "id": "a0",
+     "type": "attribute",
+     "value": "view đẹp",
+     "label": "view đẹp"
+    },
+    {
+     "id": "a1",
+     "type": "attribute",
+     "value": "check-in",
+     "label": "sống ảo"
+    }
+   ],
+   "gold_satisfaction": {
+    "A003": {
+     "cat": 1.0,
+     "a0": 1.0,
+     "a1": 1.0
+    },
+    "A001": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0
+    },
+    "A004": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 1.0
+    }
+   }
+  },
+  {
+   "qid": "H0077",
+   "query": "điểm tham quan view đẹp sống ảo",
+   "variant": "formal",
+   "difficulty": "medium",
+   "kind": "multi",
+   "gold": [
+    "A003"
+   ],
+   "n_constraints": 3,
+   "has_hard_negative": false,
+   "constraints": [
+    {
+     "id": "cat",
+     "type": "category",
+     "value": "Điểm tham quan",
+     "label": "điểm tham quan"
+    },
+    {
+     "id": "a0",
+     "type": "attribute",
+     "value": "view đẹp",
+     "label": "view đẹp"
+    },
+    {
+     "id": "a1",
+     "type": "attribute",
+     "value": "check-in",
+     "label": "sống ảo"
+    }
+   ],
+   "gold_satisfaction": {
+    "A003": {
+     "cat": 1.0,
+     "a0": 1.0,
+     "a1": 1.0
+    },
+    "A001": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0
+    },
+    "A004": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 1.0
+    }
+   }
+  },
+  {
+   "qid": "H0078",
+   "query": "điểm tham quan gần hồ sống ảo",
+   "variant": "formal",
+   "difficulty": "medium",
+   "kind": "multi",
+   "gold": [
+    "A004"
+   ],
+   "n_constraints": 3,
+   "has_hard_negative": false,
+   "constraints": [
+    {
+     "id": "cat",
+     "type": "category",
+     "value": "Điểm tham quan",
+     "label": "điểm tham quan"
+    },
+    {
+     "id": "a0",
+     "type": "attribute",
+     "value": "gần hồ",
+     "label": "gần hồ"
+    },
+    {
+     "id": "a1",
+     "type": "attribute",
+     "value": "check-in",
+     "label": "sống ảo"
+    }
+   ],
+   "gold_satisfaction": {
+    "A004": {
+     "cat": 1.0,
+     "a0": 1.0,
+     "a1": 1.0
+    },
+    "A001": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0
+    },
+    "A003": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 1.0
+    }
+   }
+  },
+  {
+   "qid": "H0079",
+   "query": "điểm tham quan gần hồ sống ảo giá rẻ",
+   "variant": "formal",
+   "difficulty": "hard",
+   "kind": "multi",
+   "gold": [
+    "A004"
+   ],
+   "n_constraints": 4,
+   "has_hard_negative": false,
+   "constraints": [
+    {
+     "id": "cat",
+     "type": "category",
+     "value": "Điểm tham quan",
+     "label": "điểm tham quan"
+    },
+    {
+     "id": "a0",
+     "type": "attribute",
+     "value": "gần hồ",
+     "label": "gần hồ"
+    },
+    {
+     "id": "a1",
+     "type": "attribute",
+     "value": "check-in",
+     "label": "sống ảo"
+    },
+    {
+     "id": "price",
+     "type": "price",
+     "value": "cheap",
+     "label": "giá rẻ"
+    }
+   ],
+   "gold_satisfaction": {
+    "A004": {
+     "cat": 1.0,
+     "a0": 1.0,
+     "a1": 1.0,
+     "price": 1.0
+    },
+    "A001": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "price": 1.0
+    },
+    "A003": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 1.0,
+     "price": 0.0
+    }
+   }
+  },
+  {
+   "qid": "H0080",
+   "query": "trung tâm thương mại có chỗ đậu xe",
+   "variant": "formal",
+   "difficulty": "medium",
+   "kind": "multi",
+   "gold": [
+    "A005",
+    "M002"
+   ],
+   "n_constraints": 2,
+   "has_hard_negative": true,
+   "constraints": [
+    {
+     "id": "cat",
+     "type": "category",
+     "value": "Trung tâm thương mại",
+     "label": "trung tâm thương mại"
+    },
+    {
+     "id": "a0",
+     "type": "attribute",
+     "value": "bãi đỗ xe",
+     "label": "có chỗ đậu xe"
+    }
+   ],
+   "gold_satisfaction": {
+    "A005": {
+     "cat": 1.0,
+     "a0": 1.0
+    },
+    "M002": {
+     "cat": 1.0,
+     "a0": 1.0
+    },
+    "M001": {
+     "cat": 1.0,
+     "a0": 0.0
+    }
+   }
+  },
+  {
+   "qid": "H0081",
+   "query": "trung tâm thương mại có chỗ đậu xe",
+   "variant": "formal",
+   "difficulty": "medium",
+   "kind": "multi",
+   "gold": [
+    "A005",
+    "M002"
+   ],
+   "n_constraints": 2,
+   "has_hard_negative": true,
+   "constraints": [
+    {
+     "id": "cat",
+     "type": "category",
+     "value": "Trung tâm thương mại",
+     "label": "trung tâm thương mại"
+    },
+    {
+     "id": "a0",
+     "type": "attribute",
+     "value": "bãi đỗ xe",
+     "label": "có chỗ đậu xe"
+    }
+   ],
+   "gold_satisfaction": {
+    "A005": {
+     "cat": 1.0,
+     "a0": 1.0
+    },
+    "M002": {
+     "cat": 1.0,
+     "a0": 1.0
+    },
+    "M001": {
+     "cat": 1.0,
+     "a0": 0.0
+    }
+   }
+  },
+  {
+   "qid": "H0082",
+   "query": "atm gần phố đi bộ ở Quận 1",
+   "variant": "formal",
+   "difficulty": "medium",
+   "kind": "multi",
+   "gold": [
+    "S001"
+   ],
+   "n_constraints": 3,
+   "has_hard_negative": false,
+   "constraints": [
+    {
+     "id": "cat",
+     "type": "category",
+     "value": "ATM",
+     "label": "atm"
+    },
+    {
+     "id": "a0",
+     "type": "attribute",
+     "value": "gần phố đi bộ",
+     "label": "gần phố đi bộ"
+    },
+    {
+     "id": "loc",
+     "type": "district",
+     "value": "Quận 1",
+     "label": "ở Quận 1"
+    }
+   ],
+   "gold_satisfaction": {
+    "S001": {
+     "cat": 1.0,
+     "a0": 1.0,
+     "loc": 1.0
+    },
+    "S002": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "loc": 0.0
+    }
+   }
+  },
+  {
+   "qid": "H0083",
+   "query": "atm gần phố đi bộ giá rẻ ở Quận 1",
+   "variant": "formal",
+   "difficulty": "hard",
+   "kind": "multi",
+   "gold": [
+    "S001"
+   ],
+   "n_constraints": 4,
+   "has_hard_negative": false,
+   "constraints": [
+    {
+     "id": "cat",
+     "type": "category",
+     "value": "ATM",
+     "label": "atm"
+    },
+    {
+     "id": "a0",
+     "type": "attribute",
+     "value": "gần phố đi bộ",
+     "label": "gần phố đi bộ"
+    },
+    {
+     "id": "loc",
+     "type": "district",
+     "value": "Quận 1",
+     "label": "ở Quận 1"
+    },
+    {
+     "id": "price",
+     "type": "price",
+     "value": "cheap",
+     "label": "giá rẻ"
+    }
+   ],
+   "gold_satisfaction": {
+    "S001": {
+     "cat": 1.0,
+     "a0": 1.0,
+     "loc": 1.0,
+     "price": 1.0
+    },
+    "S002": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "loc": 0.0,
+     "price": 1.0
+    }
+   }
+  },
+  {
+   "qid": "H0084",
+   "query": "atm gần hồ giá rẻ ở Hoàn Kiếm",
+   "variant": "formal",
+   "difficulty": "hard",
+   "kind": "multi",
+   "gold": [
+    "S002"
+   ],
+   "n_constraints": 4,
+   "has_hard_negative": false,
+   "constraints": [
+    {
+     "id": "cat",
+     "type": "category",
+     "value": "ATM",
+     "label": "atm"
+    },
+    {
+     "id": "a0",
+     "type": "attribute",
+     "value": "gần hồ",
+     "label": "gần hồ"
+    },
+    {
+     "id": "loc",
+     "type": "district",
+     "value": "Hoàn Kiếm",
+     "label": "ở Hoàn Kiếm"
+    },
+    {
+     "id": "price",
+     "type": "price",
+     "value": "cheap",
+     "label": "giá rẻ"
+    }
+   ],
+   "gold_satisfaction": {
+    "S002": {
+     "cat": 1.0,
+     "a0": 1.0,
+     "loc": 1.0,
+     "price": 1.0
+    },
+    "S001": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "loc": 0.0,
+     "price": 1.0
+    }
+   }
+  },
+  {
+   "qid": "H0085",
+   "query": "atm gần hồ giá rẻ ở Hoàn Kiếm",
+   "variant": "formal",
+   "difficulty": "hard",
+   "kind": "multi",
+   "gold": [
+    "S002"
+   ],
+   "n_constraints": 4,
+   "has_hard_negative": false,
+   "constraints": [
+    {
+     "id": "cat",
+     "type": "category",
+     "value": "ATM",
+     "label": "atm"
+    },
+    {
+     "id": "a0",
+     "type": "attribute",
+     "value": "gần hồ",
+     "label": "gần hồ"
+    },
+    {
+     "id": "loc",
+     "type": "district",
+     "value": "Hoàn Kiếm",
+     "label": "ở Hoàn Kiếm"
+    },
+    {
+     "id": "price",
+     "type": "price",
+     "value": "cheap",
+     "label": "giá rẻ"
+    }
+   ],
+   "gold_satisfaction": {
+    "S002": {
+     "cat": 1.0,
+     "a0": 1.0,
+     "loc": 1.0,
+     "price": 1.0
+    },
+    "S001": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "loc": 0.0,
+     "price": 1.0
+    }
+   }
+  },
+  {
+   "qid": "H0086",
+   "query": "trạm sạc điện có chỗ đậu xe giá rẻ",
+   "variant": "formal",
+   "difficulty": "medium",
+   "kind": "multi",
+   "gold": [
+    "S004"
+   ],
+   "n_constraints": 3,
+   "has_hard_negative": false,
+   "constraints": [
+    {
+     "id": "cat",
+     "type": "category",
+     "value": "Trạm sạc điện",
+     "label": "trạm sạc điện"
+    },
+    {
+     "id": "a0",
+     "type": "attribute",
+     "value": "bãi đỗ xe",
+     "label": "có chỗ đậu xe"
+    },
+    {
+     "id": "price",
+     "type": "price",
+     "value": "cheap",
+     "label": "giá rẻ"
+    }
+   ],
+   "gold_satisfaction": {
+    "S004": {
+     "cat": 1.0,
+     "a0": 1.0,
+     "price": 1.0
+    }
+   }
+  },
+  {
+   "qid": "H0087",
+   "query": "trạm sạc điện có chỗ đậu xe",
+   "variant": "formal",
+   "difficulty": "medium",
+   "kind": "multi",
+   "gold": [
+    "S004"
+   ],
+   "n_constraints": 2,
+   "has_hard_negative": false,
+   "constraints": [
+    {
+     "id": "cat",
+     "type": "category",
+     "value": "Trạm sạc điện",
+     "label": "trạm sạc điện"
+    },
+    {
+     "id": "a0",
+     "type": "attribute",
+     "value": "bãi đỗ xe",
+     "label": "có chỗ đậu xe"
+    }
+   ],
+   "gold_satisfaction": {
+    "S004": {
+     "cat": 1.0,
+     "a0": 1.0
+    }
+   }
+  },
+  {
+   "qid": "H0088",
+   "query": "trung tâm thương mại có chỗ đậu xe",
+   "variant": "formal",
+   "difficulty": "medium",
+   "kind": "multi",
+   "gold": [
+    "A005",
+    "M002"
+   ],
+   "n_constraints": 2,
+   "has_hard_negative": true,
+   "constraints": [
+    {
+     "id": "cat",
+     "type": "category",
+     "value": "Trung tâm thương mại",
+     "label": "trung tâm thương mại"
+    },
+    {
+     "id": "a0",
+     "type": "attribute",
+     "value": "bãi đỗ xe",
+     "label": "có chỗ đậu xe"
+    }
+   ],
+   "gold_satisfaction": {
+    "A005": {
+     "cat": 1.0,
+     "a0": 1.0
+    },
+    "M002": {
+     "cat": 1.0,
+     "a0": 1.0
+    },
+    "M001": {
+     "cat": 1.0,
+     "a0": 0.0
+    }
+   }
+  },
+  {
+   "qid": "H0089",
+   "query": "trung tâm thương mại có chỗ đậu xe",
+   "variant": "formal",
+   "difficulty": "medium",
+   "kind": "multi",
+   "gold": [
+    "A005",
+    "M002"
+   ],
+   "n_constraints": 2,
+   "has_hard_negative": true,
+   "constraints": [
+    {
+     "id": "cat",
+     "type": "category",
+     "value": "Trung tâm thương mại",
+     "label": "trung tâm thương mại"
+    },
+    {
+     "id": "a0",
+     "type": "attribute",
+     "value": "bãi đỗ xe",
+     "label": "có chỗ đậu xe"
+    }
+   ],
+   "gold_satisfaction": {
+    "A005": {
+     "cat": 1.0,
+     "a0": 1.0
+    },
+    "M002": {
+     "cat": 1.0,
+     "a0": 1.0
+    },
+    "M001": {
+     "cat": 1.0,
+     "a0": 0.0
+    }
+   }
+  },
+  {
+   "qid": "H0090",
+   "query": "sân vvườn",
+   "variant": "typo",
+   "difficulty": "medium",
+   "kind": "single",
+   "gold": [
+    "C008",
+    "H004"
+   ],
+   "n_constraints": 1,
+   "has_hard_negative": false
+  },
+  {
+   "qid": "H0091",
+   "query": "khch sạn có phòng họp wifi mạnh ở Cầu Giấy",
+   "variant": "typo",
+   "difficulty": "hard",
+   "kind": "multi",
+   "gold": [
+    "H003"
+   ],
+   "n_constraints": 4,
+   "has_hard_negative": false,
+   "constraints": [
+    {
+     "id": "cat",
+     "type": "category",
+     "value": "Khách sạn",
+     "label": "khách sạn"
+    },
+    {
+     "id": "a0",
+     "type": "attribute",
+     "value": "phòng họp",
+     "label": "có phòng họp"
+    },
+    {
+     "id": "a1",
+     "type": "attribute",
+     "value": "wifi mạnh",
+     "label": "wifi mạnh"
+    },
+    {
+     "id": "loc",
+     "type": "district",
+     "value": "Cầu Giấy",
+     "label": "ở Cầu Giấy"
+    }
+   ],
+   "gold_satisfaction": {
+    "H003": {
+     "cat": 1.0,
+     "a0": 1.0,
+     "a1": 1.0,
+     "loc": 1.0
+    },
+    "H001": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "loc": 0.0
+    },
+    "H002": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "loc": 0.0
+    },
+    "H004": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "loc": 0.0
+    },
+    "H005": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "loc": 0.0
+    }
+   }
+  },
+  {
+   "qid": "H0092",
+   "query": "quan ca phe san vuon co cho dau xe cho nhom",
+   "variant": "nodiac",
+   "difficulty": "hard",
+   "kind": "multi",
+   "gold": [
+    "C008"
+   ],
+   "n_constraints": 4,
+   "has_hard_negative": false,
+   "constraints": [
+    {
+     "id": "cat",
+     "type": "category",
+     "value": "Quán cà phê",
+     "label": "quán cà phê"
+    },
+    {
+     "id": "a0",
+     "type": "attribute",
+     "value": "sân vườn",
+     "label": "sân vườn"
+    },
+    {
+     "id": "a1",
+     "type": "attribute",
+     "value": "bãi đỗ xe",
+     "label": "có chỗ đậu xe"
+    },
+    {
+     "id": "a2",
+     "type": "attribute",
+     "value": "phù hợp nhóm",
+     "label": "cho nhóm"
+    }
+   ],
+   "gold_satisfaction": {
+    "C008": {
+     "cat": 1.0,
+     "a0": 1.0,
+     "a1": 1.0,
+     "a2": 1.0
+    },
+    "C001": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "a2": 0.0
+    },
+    "C002": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "a2": 0.0
+    },
+    "C003": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "a2": 0.0
+    },
+    "C004": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "a2": 0.0
+    },
+    "C005": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "a2": 0.0
+    },
+    "C006": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "a2": 0.0
+    }
+   }
+  },
+  {
+   "qid": "H0093",
+   "query": "cho gia dinh",
+   "variant": "nodiac",
+   "difficulty": "medium",
+   "kind": "single",
+   "gold": [
+    "R001",
+    "R005",
+    "R007",
+    "H001"
+   ],
+   "n_constraints": 1,
+   "has_hard_negative": true
+  },
+  {
+   "qid": "H0094",
+   "query": "khch sạn sống ảo sân vườn giá rẻ",
+   "variant": "typo",
+   "difficulty": "hard",
+   "kind": "multi",
+   "gold": [
+    "H004"
+   ],
+   "n_constraints": 4,
+   "has_hard_negative": false,
+   "constraints": [
+    {
+     "id": "cat",
+     "type": "category",
+     "value": "Khách sạn",
+     "label": "khách sạn"
+    },
+    {
+     "id": "a0",
+     "type": "attribute",
+     "value": "check-in",
+     "label": "sống ảo"
+    },
+    {
+     "id": "a1",
+     "type": "attribute",
+     "value": "sân vườn",
+     "label": "sân vườn"
+    },
+    {
+     "id": "price",
+     "type": "price",
+     "value": "cheap",
+     "label": "giá rẻ"
+    }
+   ],
+   "gold_satisfaction": {
+    "H004": {
+     "cat": 1.0,
+     "a0": 1.0,
+     "a1": 1.0,
+     "price": 1.0
+    },
+    "H001": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "price": 0.0
+    },
+    "H002": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "price": 0.0
+    },
+    "H003": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "price": 0.0
+    },
+    "H005": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "price": 0.0
+    }
+   }
+  },
+  {
+   "qid": "H0095",
+   "query": "khach san",
+   "variant": "nodiac",
+   "difficulty": "medium",
+   "kind": "single",
+   "gold": [
+    "H001",
+    "H002",
+    "H003",
+    "H004",
+    "H005"
+   ],
+   "n_constraints": 1,
+   "has_hard_negative": true
+  },
+  {
+   "qid": "H0096",
+   "query": "trung tâm tthương mại có chỗ đậu xe",
+   "variant": "typo",
+   "difficulty": "medium",
+   "kind": "multi",
+   "gold": [
+    "A005",
+    "M002"
+   ],
+   "n_constraints": 2,
+   "has_hard_negative": true,
+   "constraints": [
+    {
+     "id": "cat",
+     "type": "category",
+     "value": "Trung tâm thương mại",
+     "label": "trung tâm thương mại"
+    },
+    {
+     "id": "a0",
+     "type": "attribute",
+     "value": "bãi đỗ xe",
+     "label": "có chỗ đậu xe"
+    }
+   ],
+   "gold_satisfaction": {
+    "A005": {
+     "cat": 1.0,
+     "a0": 1.0
+    },
+    "M002": {
+     "cat": 1.0,
+     "a0": 1.0
+    },
+    "M001": {
+     "cat": 1.0,
+     "a0": 0.0
+    }
+   }
+  },
+  {
+   "qid": "H0097",
+   "query": "quan ca phe yen tinh co wifi de lam viec o Hoan Kiem",
+   "variant": "nodiac",
+   "difficulty": "hard",
+   "kind": "multi",
+   "gold": [
+    "C004"
+   ],
+   "n_constraints": 5,
+   "has_hard_negative": false,
+   "constraints": [
+    {
+     "id": "cat",
+     "type": "category",
+     "value": "Quán cà phê",
+     "label": "quán cà phê"
+    },
+    {
+     "id": "a0",
+     "type": "attribute",
+     "value": "yên tĩnh",
+     "label": "yên tĩnh"
+    },
+    {
+     "id": "a1",
+     "type": "attribute",
+     "value": "wifi",
+     "label": "có wifi"
+    },
+    {
+     "id": "a2",
+     "type": "attribute",
+     "value": "phù hợp làm việc",
+     "label": "để làm việc"
+    },
+    {
+     "id": "loc",
+     "type": "district",
+     "value": "Hoàn Kiếm",
+     "label": "ở Hoàn Kiếm"
+    }
+   ],
+   "gold_satisfaction": {
+    "C004": {
+     "cat": 1.0,
+     "a0": 1.0,
+     "a1": 1.0,
+     "a2": 1.0,
+     "loc": 1.0
+    },
+    "C001": {
+     "cat": 1.0,
+     "a0": 1.0,
+     "a1": 1.0,
+     "a2": 1.0,
+     "loc": 0.0
+    },
+    "C002": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 1.0,
+     "a2": 0.0,
+     "loc": 0.0
+    },
+    "C003": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "a2": 0.0,
+     "loc": 1.0
+    },
+    "C005": {
+     "cat": 1.0,
+     "a0": 1.0,
+     "a1": 1.0,
+     "a2": 1.0,
+     "loc": 0.0
+    },
+    "C006": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "a2": 0.0,
+     "loc": 0.0
+    }
+   }
+  },
+  {
+   "qid": "H0098",
+   "query": "đđiểm tham quan",
+   "variant": "typo",
+   "difficulty": "medium",
+   "kind": "single",
+   "gold": [
+    "A001",
+    "A003",
+    "A004"
+   ],
+   "n_constraints": 1,
+   "has_hard_negative": false
+  },
+  {
+   "qid": "H0099",
+   "query": "qquán cà phê gần phố đi bộ có wifi giá rẻ ở Quận 1",
+   "variant": "typo",
+   "difficulty": "hard",
+   "kind": "multi",
+   "gold": [
+    "C002"
+   ],
+   "n_constraints": 5,
+   "has_hard_negative": false,
+   "constraints": [
+    {
+     "id": "cat",
+     "type": "category",
+     "value": "Quán cà phê",
+     "label": "quán cà phê"
+    },
+    {
+     "id": "a0",
+     "type": "attribute",
+     "value": "gần phố đi bộ",
+     "label": "gần phố đi bộ"
+    },
+    {
+     "id": "a1",
+     "type": "attribute",
+     "value": "wifi",
+     "label": "có wifi"
+    },
+    {
+     "id": "loc",
+     "type": "district",
+     "value": "Quận 1",
+     "label": "ở Quận 1"
+    },
+    {
+     "id": "price",
+     "type": "price",
+     "value": "cheap",
+     "label": "giá rẻ"
+    }
+   ],
+   "gold_satisfaction": {
+    "C002": {
+     "cat": 1.0,
+     "a0": 1.0,
+     "a1": 1.0,
+     "loc": 1.0,
+     "price": 1.0
+    },
+    "C001": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 1.0,
+     "loc": 1.0,
+     "price": 0.0
+    },
+    "C003": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "loc": 0.0,
+     "price": 1.0
+    },
+    "C004": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 1.0,
+     "loc": 0.0,
+     "price": 1.0
+    },
+    "C005": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 1.0,
+     "loc": 0.0,
+     "price": 1.0
+    },
+    "C006": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "loc": 0.0,
+     "price": 1.0
+    }
+   }
+  },
+  {
+   "qid": "H0100",
+   "query": "khach san co ho boi gan bien cho cap doi",
+   "variant": "nodiac",
+   "difficulty": "hard",
+   "kind": "multi",
+   "gold": [
+    "H002"
+   ],
+   "n_constraints": 4,
+   "has_hard_negative": false,
+   "constraints": [
+    {
+     "id": "cat",
+     "type": "category",
+     "value": "Khách sạn",
+     "label": "khách sạn"
+    },
+    {
+     "id": "a0",
+     "type": "attribute",
+     "value": "hồ bơi",
+     "label": "có hồ bơi"
+    },
+    {
+     "id": "a1",
+     "type": "attribute",
+     "value": "gần biển",
+     "label": "gần biển"
+    },
+    {
+     "id": "a2",
+     "type": "attribute",
+     "value": "phù hợp cặp đôi",
+     "label": "cho cặp đôi"
+    }
+   ],
+   "gold_satisfaction": {
+    "H002": {
+     "cat": 1.0,
+     "a0": 1.0,
+     "a1": 1.0,
+     "a2": 1.0
+    },
+    "H001": {
+     "cat": 1.0,
+     "a0": 1.0,
+     "a1": 1.0,
+     "a2": 0.0
+    },
+    "H003": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "a2": 0.0
+    },
+    "H004": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "a2": 0.0
+    },
+    "H005": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "a2": 0.0
+    }
+   }
+  },
+  {
+   "qid": "H0101",
+   "query": "tram sac dien co cho dau xe",
+   "variant": "nodiac",
+   "difficulty": "medium",
+   "kind": "multi",
+   "gold": [
+    "S004"
+   ],
+   "n_constraints": 2,
+   "has_hard_negative": false,
+   "constraints": [
+    {
+     "id": "cat",
+     "type": "category",
+     "value": "Trạm sạc điện",
+     "label": "trạm sạc điện"
+    },
+    {
+     "id": "a0",
+     "type": "attribute",
+     "value": "bãi đỗ xe",
+     "label": "có chỗ đậu xe"
+    }
+   ],
+   "gold_satisfaction": {
+    "S004": {
+     "cat": 1.0,
+     "a0": 1.0
+    }
+   }
+  },
+  {
+   "qid": "H0102",
+   "query": "rrooftop",
+   "variant": "typo",
+   "difficulty": "medium",
+   "kind": "single",
+   "gold": [
+    "R008"
+   ],
+   "n_constraints": 1,
+   "has_hard_negative": false
+  },
+  {
+   "qid": "H0103",
+   "query": "quan ca phe san vuon co cho dau xe",
+   "variant": "nodiac",
+   "difficulty": "hard",
+   "kind": "multi",
+   "gold": [
+    "C008"
+   ],
+   "n_constraints": 3,
+   "has_hard_negative": false,
+   "constraints": [
+    {
+     "id": "cat",
+     "type": "category",
+     "value": "Quán cà phê",
+     "label": "quán cà phê"
+    },
+    {
+     "id": "a0",
+     "type": "attribute",
+     "value": "sân vườn",
+     "label": "sân vườn"
+    },
+    {
+     "id": "a1",
+     "type": "attribute",
+     "value": "bãi đỗ xe",
+     "label": "có chỗ đậu xe"
+    }
+   ],
+   "gold_satisfaction": {
+    "C008": {
+     "cat": 1.0,
+     "a0": 1.0,
+     "a1": 1.0
+    },
+    "C001": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0
+    },
+    "C002": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0
+    },
+    "C003": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0
+    },
+    "C004": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0
+    },
+    "C005": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0
+    },
+    "C006": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0
+    }
+   }
+  },
+  {
+   "qid": "H0104",
+   "query": "qquán cà phê ở Hà Nội",
+   "variant": "typo",
+   "difficulty": "medium",
+   "kind": "single-loc",
+   "gold": [
+    "C003",
+    "C004",
+    "C007"
+   ],
+   "n_constraints": 2,
+   "has_hard_negative": true,
+   "constraints": [
+    {
+     "id": "cat",
+     "type": "category",
+     "value": "Quán cà phê",
+     "label": "quán cà phê"
+    },
+    {
+     "id": "loc",
+     "type": "city",
+     "value": "Hà Nội",
+     "label": "ở Hà Nội"
+    }
+   ],
+   "gold_satisfaction": {
+    "C003": {
+     "cat": 1.0,
+     "loc": 1.0
+    },
+    "C004": {
+     "cat": 1.0,
+     "loc": 1.0
+    },
+    "C007": {
+     "cat": 1.0,
+     "loc": 1.0
+    },
+    "C001": {
+     "cat": 1.0,
+     "loc": 0.0
+    },
+    "C002": {
+     "cat": 1.0,
+     "loc": 0.0
+    },
+    "C005": {
+     "cat": 1.0,
+     "loc": 0.0
+    },
+    "C006": {
+     "cat": 1.0,
+     "loc": 0.0
+    }
+   }
+  },
+  {
+   "qid": "H0105",
+   "query": "kkhách sạn có phòng họp wifi mạnh ở Cầu Giấy",
+   "variant": "typo",
+   "difficulty": "hard",
+   "kind": "multi",
+   "gold": [
+    "H003"
+   ],
+   "n_constraints": 4,
+   "has_hard_negative": false,
+   "constraints": [
+    {
+     "id": "cat",
+     "type": "category",
+     "value": "Khách sạn",
+     "label": "khách sạn"
+    },
+    {
+     "id": "a0",
+     "type": "attribute",
+     "value": "phòng họp",
+     "label": "có phòng họp"
+    },
+    {
+     "id": "a1",
+     "type": "attribute",
+     "value": "wifi mạnh",
+     "label": "wifi mạnh"
+    },
+    {
+     "id": "loc",
+     "type": "district",
+     "value": "Cầu Giấy",
+     "label": "ở Cầu Giấy"
+    }
+   ],
+   "gold_satisfaction": {
+    "H003": {
+     "cat": 1.0,
+     "a0": 1.0,
+     "a1": 1.0,
+     "loc": 1.0
+    },
+    "H001": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "loc": 0.0
+    },
+    "H002": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "loc": 0.0
+    },
+    "H004": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "loc": 0.0
+    },
+    "H005": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "loc": 0.0
+    }
+   }
+  },
+  {
+   "qid": "H0106",
+   "query": "atm gần hồ giá rẻ ở Hon Kiếm",
+   "variant": "typo",
+   "difficulty": "hard",
+   "kind": "multi",
+   "gold": [
+    "S002"
+   ],
+   "n_constraints": 4,
+   "has_hard_negative": false,
+   "constraints": [
+    {
+     "id": "cat",
+     "type": "category",
+     "value": "ATM",
+     "label": "atm"
+    },
+    {
+     "id": "a0",
+     "type": "attribute",
+     "value": "gần hồ",
+     "label": "gần hồ"
+    },
+    {
+     "id": "loc",
+     "type": "district",
+     "value": "Hoàn Kiếm",
+     "label": "ở Hoàn Kiếm"
+    },
+    {
+     "id": "price",
+     "type": "price",
+     "value": "cheap",
+     "label": "giá rẻ"
+    }
+   ],
+   "gold_satisfaction": {
+    "S002": {
+     "cat": 1.0,
+     "a0": 1.0,
+     "loc": 1.0,
+     "price": 1.0
+    },
+    "S001": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "loc": 0.0,
+     "price": 1.0
+    }
+   }
+  },
+  {
+   "qid": "H0107",
+   "query": "khch sạn có hồ bơi gần biển cho gia đình ở Sơn Trà",
+   "variant": "typo",
+   "difficulty": "hard",
+   "kind": "multi",
+   "gold": [
+    "H001"
+   ],
+   "n_constraints": 5,
+   "has_hard_negative": false,
+   "constraints": [
+    {
+     "id": "cat",
+     "type": "category",
+     "value": "Khách sạn",
+     "label": "khách sạn"
+    },
+    {
+     "id": "a0",
+     "type": "attribute",
+     "value": "hồ bơi",
+     "label": "có hồ bơi"
+    },
+    {
+     "id": "a1",
+     "type": "attribute",
+     "value": "gần biển",
+     "label": "gần biển"
+    },
+    {
+     "id": "a2",
+     "type": "attribute",
+     "value": "phù hợp gia đình",
+     "label": "cho gia đình"
+    },
+    {
+     "id": "loc",
+     "type": "district",
+     "value": "Sơn Trà",
+     "label": "ở Sơn Trà"
+    }
+   ],
+   "gold_satisfaction": {
+    "H001": {
+     "cat": 1.0,
+     "a0": 1.0,
+     "a1": 1.0,
+     "a2": 1.0,
+     "loc": 1.0
+    },
+    "H002": {
+     "cat": 1.0,
+     "a0": 1.0,
+     "a1": 1.0,
+     "a2": 0.0,
+     "loc": 0.0
+    },
+    "H003": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "a2": 0.0,
+     "loc": 0.0
+    },
+    "H004": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "a2": 0.0,
+     "loc": 0.0
+    },
+    "H005": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "a2": 0.0,
+     "loc": 0.0
+    }
+   }
+  },
+  {
+   "qid": "H0108",
+   "query": "quan ca phe ngoai troi view dep cho cap doi",
+   "variant": "nodiac",
+   "difficulty": "hard",
+   "kind": "multi",
+   "gold": [
+    "C006"
+   ],
+   "n_constraints": 4,
+   "has_hard_negative": false,
+   "constraints": [
+    {
+     "id": "cat",
+     "type": "category",
+     "value": "Quán cà phê",
+     "label": "quán cà phê"
+    },
+    {
+     "id": "a0",
+     "type": "attribute",
+     "value": "ngoài trời",
+     "label": "ngoài trời"
+    },
+    {
+     "id": "a1",
+     "type": "attribute",
+     "value": "view đẹp",
+     "label": "view đẹp"
+    },
+    {
+     "id": "a2",
+     "type": "attribute",
+     "value": "phù hợp cặp đôi",
+     "label": "cho cặp đôi"
+    }
+   ],
+   "gold_satisfaction": {
+    "C006": {
+     "cat": 1.0,
+     "a0": 1.0,
+     "a1": 1.0,
+     "a2": 1.0
+    },
+    "C001": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "a2": 0.0
+    },
+    "C002": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "a2": 0.0
+    },
+    "C003": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 1.0,
+     "a2": 0.0
+    },
+    "C004": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "a2": 0.0
+    },
+    "C005": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "a2": 0.0
+    }
+   }
+  },
+  {
+   "qid": "H0109",
+   "query": "cong vien ngoai troi cho tre em gia re",
+   "variant": "nodiac",
+   "difficulty": "hard",
+   "kind": "multi",
+   "gold": [
+    "A002"
+   ],
+   "n_constraints": 4,
+   "has_hard_negative": false,
+   "constraints": [
+    {
+     "id": "cat",
+     "type": "category",
+     "value": "Công viên",
+     "label": "công viên"
+    },
+    {
+     "id": "a0",
+     "type": "attribute",
+     "value": "ngoài trời",
+     "label": "ngoài trời"
+    },
+    {
+     "id": "a1",
+     "type": "attribute",
+     "value": "phù hợp trẻ em",
+     "label": "cho trẻ em"
+    },
+    {
+     "id": "price",
+     "type": "price",
+     "value": "cheap",
+     "label": "giá rẻ"
+    }
+   ],
+   "gold_satisfaction": {
+    "A002": {
+     "cat": 1.0,
+     "a0": 1.0,
+     "a1": 1.0,
+     "price": 1.0
+    }
+   }
+  },
+  {
+   "qid": "H0110",
+   "query": "hai san",
+   "variant": "nodiac",
+   "difficulty": "medium",
+   "kind": "single",
+   "gold": [
+    "R005"
+   ],
+   "n_constraints": 1,
+   "has_hard_negative": true
+  },
+  {
+   "qid": "H0111",
+   "query": "quan ca phe o Da Lat",
+   "variant": "nodiac",
+   "difficulty": "medium",
+   "kind": "single-loc",
+   "gold": [
+    "C006"
+   ],
+   "n_constraints": 2,
+   "has_hard_negative": true,
+   "constraints": [
+    {
+     "id": "cat",
+     "type": "category",
+     "value": "Quán cà phê",
+     "label": "quán cà phê"
+    },
+    {
+     "id": "loc",
+     "type": "city",
+     "value": "Đà Lạt",
+     "label": "ở Đà Lạt"
+    }
+   ],
+   "gold_satisfaction": {
+    "C006": {
+     "cat": 1.0,
+     "loc": 1.0
+    },
+    "C001": {
+     "cat": 1.0,
+     "loc": 0.0
+    },
+    "C002": {
+     "cat": 1.0,
+     "loc": 0.0
+    },
+    "C003": {
+     "cat": 1.0,
+     "loc": 0.0
+    },
+    "C004": {
+     "cat": 1.0,
+     "loc": 0.0
+    },
+    "C005": {
+     "cat": 1.0,
+     "loc": 0.0
+    }
+   }
+  },
+  {
+   "qid": "H0112",
+   "query": "nha hang mon Viet hai san o Son Tra",
+   "variant": "nodiac",
+   "difficulty": "hard",
+   "kind": "multi",
+   "gold": [
+    "R005"
+   ],
+   "n_constraints": 4,
+   "has_hard_negative": false,
+   "constraints": [
+    {
+     "id": "cat",
+     "type": "category",
+     "value": "Nhà hàng",
+     "label": "nhà hàng"
+    },
+    {
+     "id": "a0",
+     "type": "attribute",
+     "value": "món Việt",
+     "label": "món Việt"
+    },
+    {
+     "id": "a1",
+     "type": "attribute",
+     "value": "hải sản",
+     "label": "hải sản"
+    },
+    {
+     "id": "loc",
+     "type": "district",
+     "value": "Sơn Trà",
+     "label": "ở Sơn Trà"
+    }
+   ],
+   "gold_satisfaction": {
+    "R005": {
+     "cat": 1.0,
+     "a0": 1.0,
+     "a1": 1.0,
+     "loc": 1.0
+    },
+    "R001": {
+     "cat": 1.0,
+     "a0": 1.0,
+     "a1": 0.0,
+     "loc": 0.0
+    },
+    "R002": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "loc": 0.0
+    },
+    "R003": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "loc": 0.0
+    },
+    "R004": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "loc": 0.0
+    },
+    "R006": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "loc": 0.0
+    }
+   }
+  },
+  {
+   "qid": "H0113",
+   "query": "quan ca phe o Da Nang",
+   "variant": "nodiac",
+   "difficulty": "medium",
+   "kind": "single-loc",
+   "gold": [
+    "C005"
+   ],
+   "n_constraints": 2,
+   "has_hard_negative": true,
+   "constraints": [
+    {
+     "id": "cat",
+     "type": "category",
+     "value": "Quán cà phê",
+     "label": "quán cà phê"
+    },
+    {
+     "id": "loc",
+     "type": "city",
+     "value": "Đà Nẵng",
+     "label": "ở Đà Nẵng"
+    }
+   ],
+   "gold_satisfaction": {
+    "C005": {
+     "cat": 1.0,
+     "loc": 1.0
+    },
+    "C001": {
+     "cat": 1.0,
+     "loc": 0.0
+    },
+    "C002": {
+     "cat": 1.0,
+     "loc": 0.0
+    },
+    "C003": {
+     "cat": 1.0,
+     "loc": 0.0
+    },
+    "C004": {
+     "cat": 1.0,
+     "loc": 0.0
+    },
+    "C006": {
+     "cat": 1.0,
+     "loc": 0.0
+    }
+   }
+  },
+  {
+   "qid": "H0114",
+   "query": "cho nnhóm",
+   "variant": "typo",
+   "difficulty": "medium",
+   "kind": "single",
+   "gold": [
+    "C008",
+    "R006",
+    "R009",
+    "H004"
+   ],
+   "n_constraints": 1,
+   "has_hard_negative": false
+  },
+  {
+   "qid": "H0115",
+   "query": "khach san co ho boi gan bien o Son Tra",
+   "variant": "nodiac",
+   "difficulty": "hard",
+   "kind": "multi",
+   "gold": [
+    "H001"
+   ],
+   "n_constraints": 4,
+   "has_hard_negative": false,
+   "constraints": [
+    {
+     "id": "cat",
+     "type": "category",
+     "value": "Khách sạn",
+     "label": "khách sạn"
+    },
+    {
+     "id": "a0",
+     "type": "attribute",
+     "value": "hồ bơi",
+     "label": "có hồ bơi"
+    },
+    {
+     "id": "a1",
+     "type": "attribute",
+     "value": "gần biển",
+     "label": "gần biển"
+    },
+    {
+     "id": "loc",
+     "type": "district",
+     "value": "Sơn Trà",
+     "label": "ở Sơn Trà"
+    }
+   ],
+   "gold_satisfaction": {
+    "H001": {
+     "cat": 1.0,
+     "a0": 1.0,
+     "a1": 1.0,
+     "loc": 1.0
+    },
+    "H002": {
+     "cat": 1.0,
+     "a0": 1.0,
+     "a1": 1.0,
+     "loc": 0.0
+    },
+    "H003": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "loc": 0.0
+    },
+    "H004": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "loc": 0.0
+    },
+    "H005": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "loc": 0.0
+    }
+   }
+  },
+  {
+   "qid": "H0116",
+   "query": "ssống ảo",
+   "variant": "typo",
+   "difficulty": "medium",
+   "kind": "single",
+   "gold": [
+    "C006",
+    "H004",
+    "A003",
+    "A004"
+   ],
+   "n_constraints": 1,
+   "has_hard_negative": false
+  },
+  {
+   "qid": "H0117",
+   "query": "đim tham quan gần hồ sống ảo",
+   "variant": "typo",
+   "difficulty": "hard",
+   "kind": "multi",
+   "gold": [
+    "A004"
+   ],
+   "n_constraints": 3,
+   "has_hard_negative": false,
+   "constraints": [
+    {
+     "id": "cat",
+     "type": "category",
+     "value": "Điểm tham quan",
+     "label": "điểm tham quan"
+    },
+    {
+     "id": "a0",
+     "type": "attribute",
+     "value": "gần hồ",
+     "label": "gần hồ"
+    },
+    {
+     "id": "a1",
+     "type": "attribute",
+     "value": "check-in",
+     "label": "sống ảo"
+    }
+   ],
+   "gold_satisfaction": {
+    "A004": {
+     "cat": 1.0,
+     "a0": 1.0,
+     "a1": 1.0
+    },
+    "A001": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0
+    },
+    "A003": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 1.0
+    }
+   }
+  },
+  {
+   "qid": "H0118",
+   "query": "benh vien",
+   "variant": "nodiac",
+   "difficulty": "medium",
+   "kind": "single",
+   "gold": [
+    "S005",
+    "S006"
+   ],
+   "n_constraints": 1,
+   "has_hard_negative": false
+  },
+  {
+   "qid": "H0119",
+   "query": "nha hang cho nhom am cung",
+   "variant": "nodiac",
+   "difficulty": "hard",
+   "kind": "multi",
+   "gold": [
+    "R009"
+   ],
+   "n_constraints": 3,
+   "has_hard_negative": false,
+   "constraints": [
+    {
+     "id": "cat",
+     "type": "category",
+     "value": "Nhà hàng",
+     "label": "nhà hàng"
+    },
+    {
+     "id": "a0",
+     "type": "attribute",
+     "value": "phù hợp nhóm",
+     "label": "cho nhóm"
+    },
+    {
+     "id": "a1",
+     "type": "attribute",
+     "value": "ấm cúng",
+     "label": "ấm cúng"
+    }
+   ],
+   "gold_satisfaction": {
+    "R009": {
+     "cat": 1.0,
+     "a0": 1.0,
+     "a1": 1.0
+    },
+    "R001": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0
+    },
+    "R002": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0
+    },
+    "R003": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0
+    },
+    "R004": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0
+    },
+    "R005": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0
+    },
+    "R006": {
+     "cat": 1.0,
+     "a0": 1.0,
+     "a1": 0.0
+    }
+   }
+  },
+  {
+   "qid": "H0120",
+   "query": "nha hang lang man de hen ho o Quan 1",
+   "variant": "nodiac",
+   "difficulty": "hard",
+   "kind": "multi",
+   "gold": [
+    "R002"
+   ],
+   "n_constraints": 4,
+   "has_hard_negative": false,
+   "constraints": [
+    {
+     "id": "cat",
+     "type": "category",
+     "value": "Nhà hàng",
+     "label": "nhà hàng"
+    },
+    {
+     "id": "a0",
+     "type": "attribute",
+     "value": "lãng mạn",
+     "label": "lãng mạn"
+    },
+    {
+     "id": "a1",
+     "type": "attribute",
+     "value": "phù hợp hẹn hò",
+     "label": "để hẹn hò"
+    },
+    {
+     "id": "loc",
+     "type": "district",
+     "value": "Quận 1",
+     "label": "ở Quận 1"
+    }
+   ],
+   "gold_satisfaction": {
+    "R002": {
+     "cat": 1.0,
+     "a0": 1.0,
+     "a1": 1.0,
+     "loc": 1.0
+    },
+    "R001": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "loc": 0.0
+    },
+    "R003": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "loc": 0.0
+    },
+    "R004": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "loc": 0.0
+    },
+    "R005": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "loc": 0.0
+    },
+    "R006": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "loc": 1.0
+    }
+   }
+  },
+  {
+   "qid": "H0121",
+   "query": "co ho boi",
+   "variant": "nodiac",
+   "difficulty": "medium",
+   "kind": "single",
+   "gold": [
+    "H001",
+    "H002"
+   ],
+   "n_constraints": 1,
+   "has_hard_negative": true
+  },
+  {
+   "qid": "H0122",
+   "query": "atm gan pho di bo gia re o Quan 1",
+   "variant": "nodiac",
+   "difficulty": "hard",
+   "kind": "multi",
+   "gold": [
+    "S001"
+   ],
+   "n_constraints": 4,
+   "has_hard_negative": false,
+   "constraints": [
+    {
+     "id": "cat",
+     "type": "category",
+     "value": "ATM",
+     "label": "atm"
+    },
+    {
+     "id": "a0",
+     "type": "attribute",
+     "value": "gần phố đi bộ",
+     "label": "gần phố đi bộ"
+    },
+    {
+     "id": "loc",
+     "type": "district",
+     "value": "Quận 1",
+     "label": "ở Quận 1"
+    },
+    {
+     "id": "price",
+     "type": "price",
+     "value": "cheap",
+     "label": "giá rẻ"
+    }
+   ],
+   "gold_satisfaction": {
+    "S001": {
+     "cat": 1.0,
+     "a0": 1.0,
+     "loc": 1.0,
+     "price": 1.0
+    },
+    "S002": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "loc": 0.0,
+     "price": 1.0
+    }
+   }
+  },
+  {
+   "qid": "H0123",
+   "query": "gần bbiển",
+   "variant": "typo",
+   "difficulty": "medium",
+   "kind": "single",
+   "gold": [
+    "R005",
+    "H001",
+    "H002"
+   ],
+   "n_constraints": 1,
+   "has_hard_negative": true
+  },
+  {
+   "qid": "H0124",
+   "query": "yen tinh",
+   "variant": "nodiac",
+   "difficulty": "medium",
+   "kind": "single",
+   "gold": [
+    "C001",
+    "C004",
+    "C005",
+    "C007",
+    "R007"
+   ],
+   "n_constraints": 1,
+   "has_hard_negative": true
+  },
+  {
+   "qid": "H0125",
+   "query": "quan ca phe wifi manh co phong hop co cho dau xe gia re o Cau Giay",
+   "variant": "nodiac",
+   "difficulty": "hard",
+   "kind": "multi",
+   "gold": [
+    "C007"
+   ],
+   "n_constraints": 6,
+   "has_hard_negative": false,
+   "constraints": [
+    {
+     "id": "cat",
+     "type": "category",
+     "value": "Quán cà phê",
+     "label": "quán cà phê"
+    },
+    {
+     "id": "a0",
+     "type": "attribute",
+     "value": "wifi mạnh",
+     "label": "wifi mạnh"
+    },
+    {
+     "id": "a1",
+     "type": "attribute",
+     "value": "phòng họp",
+     "label": "có phòng họp"
+    },
+    {
+     "id": "a2",
+     "type": "attribute",
+     "value": "bãi đỗ xe",
+     "label": "có chỗ đậu xe"
+    },
+    {
+     "id": "loc",
+     "type": "district",
+     "value": "Cầu Giấy",
+     "label": "ở Cầu Giấy"
+    },
+    {
+     "id": "price",
+     "type": "price",
+     "value": "cheap",
+     "label": "giá rẻ"
+    }
+   ],
+   "gold_satisfaction": {
+    "C007": {
+     "cat": 1.0,
+     "a0": 1.0,
+     "a1": 1.0,
+     "a2": 1.0,
+     "loc": 1.0,
+     "price": 1.0
+    },
+    "C001": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "a2": 0.0,
+     "loc": 0.0,
+     "price": 0.0
+    },
+    "C002": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "a2": 0.0,
+     "loc": 0.0,
+     "price": 1.0
+    },
+    "C003": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "a2": 0.0,
+     "loc": 0.0,
+     "price": 1.0
+    },
+    "C004": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "a2": 0.0,
+     "loc": 0.0,
+     "price": 1.0
+    },
+    "C005": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "a2": 0.0,
+     "loc": 0.0,
+     "price": 1.0
+    },
+    "C006": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "a2": 0.0,
+     "loc": 0.0,
+     "price": 1.0
+    }
+   }
+  },
+  {
+   "qid": "H0126",
+   "query": "atm gan pho di bo o Quan 1",
+   "variant": "nodiac",
+   "difficulty": "hard",
+   "kind": "multi",
+   "gold": [
+    "S001"
+   ],
+   "n_constraints": 3,
+   "has_hard_negative": false,
+   "constraints": [
+    {
+     "id": "cat",
+     "type": "category",
+     "value": "ATM",
+     "label": "atm"
+    },
+    {
+     "id": "a0",
+     "type": "attribute",
+     "value": "gần phố đi bộ",
+     "label": "gần phố đi bộ"
+    },
+    {
+     "id": "loc",
+     "type": "district",
+     "value": "Quận 1",
+     "label": "ở Quận 1"
+    }
+   ],
+   "gold_satisfaction": {
+    "S001": {
+     "cat": 1.0,
+     "a0": 1.0,
+     "loc": 1.0
+    },
+    "S002": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "loc": 0.0
+    }
+   }
+  },
+  {
+   "qid": "H0127",
+   "query": "nhà hàg cho trẻ em có chỗ đậu xe giá rẻ",
+   "variant": "typo",
+   "difficulty": "hard",
+   "kind": "multi",
+   "gold": [
+    "R010"
+   ],
+   "n_constraints": 4,
+   "has_hard_negative": true,
+   "constraints": [
+    {
+     "id": "cat",
+     "type": "category",
+     "value": "Nhà hàng",
+     "label": "nhà hàng"
+    },
+    {
+     "id": "a0",
+     "type": "attribute",
+     "value": "phù hợp trẻ em",
+     "label": "cho trẻ em"
+    },
+    {
+     "id": "a1",
+     "type": "attribute",
+     "value": "bãi đỗ xe",
+     "label": "có chỗ đậu xe"
+    },
+    {
+     "id": "price",
+     "type": "price",
+     "value": "cheap",
+     "label": "giá rẻ"
+    }
+   ],
+   "gold_satisfaction": {
+    "R010": {
+     "cat": 1.0,
+     "a0": 1.0,
+     "a1": 1.0,
+     "price": 1.0
+    },
+    "R001": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "price": 0.0
+    },
+    "R002": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "price": 0.0
+    },
+    "R003": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "price": 1.0
+    },
+    "R004": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "price": 1.0
+    },
+    "R005": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "price": 0.0
+    },
+    "R006": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "price": 1.0
+    }
+   }
+  },
+  {
+   "qid": "H0128",
+   "query": "diem tham quan ngoai troi cho tre em gia re o Quan 1",
+   "variant": "nodiac",
+   "difficulty": "hard",
+   "kind": "multi",
+   "gold": [
+    "A001"
+   ],
+   "n_constraints": 5,
+   "has_hard_negative": false,
+   "constraints": [
+    {
+     "id": "cat",
+     "type": "category",
+     "value": "Điểm tham quan",
+     "label": "điểm tham quan"
+    },
+    {
+     "id": "a0",
+     "type": "attribute",
+     "value": "ngoài trời",
+     "label": "ngoài trời"
+    },
+    {
+     "id": "a1",
+     "type": "attribute",
+     "value": "phù hợp trẻ em",
+     "label": "cho trẻ em"
+    },
+    {
+     "id": "loc",
+     "type": "district",
+     "value": "Quận 1",
+     "label": "ở Quận 1"
+    },
+    {
+     "id": "price",
+     "type": "price",
+     "value": "cheap",
+     "label": "giá rẻ"
+    }
+   ],
+   "gold_satisfaction": {
+    "A001": {
+     "cat": 1.0,
+     "a0": 1.0,
+     "a1": 1.0,
+     "loc": 1.0,
+     "price": 1.0
+    },
+    "A003": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "loc": 0.0,
+     "price": 0.0
+    },
+    "A004": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "loc": 0.0,
+     "price": 1.0
+    }
+   }
+  },
+  {
+   "qid": "H0129",
+   "query": "nhà hàg cho trẻ em có chỗ đậu xe giá rẻ",
+   "variant": "typo",
+   "difficulty": "hard",
+   "kind": "multi",
+   "gold": [
+    "R010"
+   ],
+   "n_constraints": 4,
+   "has_hard_negative": true,
+   "constraints": [
+    {
+     "id": "cat",
+     "type": "category",
+     "value": "Nhà hàng",
+     "label": "nhà hàng"
+    },
+    {
+     "id": "a0",
+     "type": "attribute",
+     "value": "phù hợp trẻ em",
+     "label": "cho trẻ em"
+    },
+    {
+     "id": "a1",
+     "type": "attribute",
+     "value": "bãi đỗ xe",
+     "label": "có chỗ đậu xe"
+    },
+    {
+     "id": "price",
+     "type": "price",
+     "value": "cheap",
+     "label": "giá rẻ"
+    }
+   ],
+   "gold_satisfaction": {
+    "R010": {
+     "cat": 1.0,
+     "a0": 1.0,
+     "a1": 1.0,
+     "price": 1.0
+    },
+    "R001": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "price": 0.0
+    },
+    "R002": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "price": 0.0
+    },
+    "R003": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "price": 1.0
+    },
+    "R004": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "price": 1.0
+    },
+    "R005": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "price": 0.0
+    },
+    "R006": {
+     "cat": 1.0,
+     "a0": 0.0,
+     "a1": 0.0,
+     "price": 1.0
+    }
+   }
+  },
+  {
+   "qid": "H0130",
+   "query": "quán ăn trên đường đi Hạ Long",
+   "variant": "formal",
+   "difficulty": "trap",
+   "kind": "context-not-filter",
+   "gold": [],
+   "n_constraints": 0,
+   "has_hard_negative": false
+  },
+  {
+   "qid": "H0131",
+   "query": "cafe không quá đông để họp nhóm",
+   "variant": "formal",
+   "difficulty": "trap",
+   "kind": "negation",
+   "gold": [],
+   "n_constraints": 0,
+   "has_hard_negative": false
+  },
+  {
+   "qid": "H0132",
+   "query": "quán bún bò",
+   "variant": "formal",
+   "difficulty": "trap",
+   "kind": "real-word-no-typo",
+   "gold": [],
+   "n_constraints": 0,
+   "has_hard_negative": false
+  },
+  {
+   "qid": "H0133",
+   "query": "vinmec ở đâu",
+   "variant": "formal",
+   "difficulty": "trap",
+   "kind": "proper-noun",
+   "gold": [],
+   "n_constraints": 0,
+   "has_hard_negative": false
+  }
+ ]
+}

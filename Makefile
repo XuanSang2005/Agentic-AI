@@ -14,6 +14,9 @@ eval:
 stress:
 	$(PY) -m eval.stress_queries
 
+bench:
+	$(PY) eval/score_hard_benchmark.py
+
 openapi:
 	$(PY) -m src.api.export_openapi
 
@@ -26,4 +29,4 @@ verify-data:
 test:
 	$(PY) -m pytest tests/ -q
 
-.PHONY: install api eval stress openapi deploy-hf verify-data test
+.PHONY: install api eval stress bench openapi deploy-hf verify-data test
