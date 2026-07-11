@@ -207,6 +207,16 @@ def load_pois() -> list[POI]:
     return _pois_from_xlsx()
 
 
+def current_data_version() -> int:
+    """data_version dùng chung trong Postgres (Phase 5) — KHÔNG cache: poller
+    đọc trực tiếp mỗi lần. Chưa có row (DB trước migration 002) → 0."""
+    import psycopg
+
+    with psycopg.connect(config.database_url()) as conn:
+        row = conn.execute("SELECT value FROM meta WHERE key = 'data_version'").fetchone()
+        return int(row[0]) if row else 0
+
+
 def load_eval() -> list[EvalQuery]:
     """Public_Evaluation → list[EvalQuery]. expected_ids tách ";", signals tách ","."""
     return [

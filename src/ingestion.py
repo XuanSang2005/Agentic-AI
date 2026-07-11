@@ -98,7 +98,16 @@ def validate_batch(records: list[dict]) -> tuple[list[PoiIn], list[dict]]:
 _INGEST_LOCK_KEY = 4242
 
 
-def upsert_pois(pois: list[PoiIn], statuses: list[str]) -> None:
+# Bump data_version ATOMIC với upsert (cùng transaction — rollback thì version
+# không tăng). ON CONFLICT lo cả trường hợp DB cũ chưa có row (migration 002).
+_BUMP_VERSION = """
+    INSERT INTO meta (key, value) VALUES ('data_version', 2)
+    ON CONFLICT (key) DO UPDATE SET value = meta.value + 1
+    RETURNING value
+"""
+
+
+def upsert_pois(pois: list[PoiIn], statuses: list[str]) -> int:
     """Ghi cả batch trong MỘT transaction — lỗi giữa chừng → psycopg tự rollback
     sạch (with connect: commit khi thoát êm, rollback khi exception nổi lên).
     statuses: kết quả verify per-record (cùng thứ tự pois) — 4b chạy verify
@@ -107,7 +116,10 @@ def upsert_pois(pois: list[PoiIn], statuses: list[str]) -> None:
     Advisory lock (xact-scoped, tự nhả khi commit/rollback) serialize các batch
     đồng thời: hai batch cùng tính MAX(row_order)+1 sẽ đụng UNIQUE — batch sau
     CHỜ thay vì rollback oan. Verify chạy TRƯỚC (ngoài lock) nên lock chỉ giữ
-    trong lúc ghi DB, không giữ suốt AWS call."""
+    trong lúc ghi DB, không giữ suốt AWS call.
+
+    Trả về data_version MỚI (bump trong CÙNG transaction — Phase 5): commit là
+    data + version tăng cùng nhau; rollback thì cả hai cùng không."""
     import json
 
     import psycopg
@@ -129,3 +141,4 @@ def upsert_pois(pois: list[PoiIn], statuses: list[str]) -> None:
                     _text(p.poi_id).startswith("G"),  # cùng luật is_synthetic với loader
                     status,
                 ))
+        return int(conn.execute(_BUMP_VERSION).fetchone()[0])

@@ -9,11 +9,12 @@ Trả kèm signal breakdown cho từng kết quả khi explain=True (explainabil
 """
 from __future__ import annotations
 
+import logging
 import threading
 from dataclasses import asdict, dataclass, field
 from typing import Protocol, runtime_checkable
 
-from src.data_loader import POI, load_pois
+from src.data_loader import POI, current_data_version, load_pois
 from src.ranking.reranker import RerankRetriever
 from src.ranking.signals import haversine_km
 from src.retrieval.bm25 import BM25Retriever
@@ -97,6 +98,11 @@ class SearchService:
         # Warmup: model encode query load lazy — ép load NGAY tại startup để
         # request đầu tiên không gánh ~7s (embedding corpus thì đã có .npy cache).
         self._index.reranker.search("warmup", k=1)
+        # Phase 5 — version của index đang giữ (chỉ nguồn postgres; xlsx tĩnh → None)
+        self._loaded_version: int | None = (
+            current_data_version() if config.DATA_SOURCE == "postgres" else None)
+        self._poller: threading.Thread | None = None
+        self._poll_stop: threading.Event | None = None
 
     @property
     def n_pois(self) -> int:
@@ -117,6 +123,63 @@ class SearchService:
                                model=old.dense.loaded_model)
             self._index = new  # atomic swap — từ đây request mới đọc index mới
             return {"pois": len(new.pois), "encoded_new": new.dense.n_encoded}
+
+    # --- Phase 5: version dùng chung + reload đa-instance ---
+
+    @property
+    def loaded_version(self) -> int | None:
+        return self._loaded_version
+
+    def set_loaded_version(self, version: int) -> None:
+        """Ingestion tại-chỗ gọi SAU khi reindex thành công — instance nhận batch
+        không phải chờ poll; reindex fail thì ĐỪNG gọi (version cũ giữ nguyên →
+        poll sau thấy lệch sẽ tự reload lại, self-healing)."""
+        self._loaded_version = version
+
+    def check_and_reload_once(self) -> dict:
+        """MỘT vòng poll: đọc data_version từ Postgres, mới hơn bản đang giữ →
+        reload qua đúng atomic swap của reindex(). Test gọi thẳng hàm này
+        (poll-once, deterministic) thay vì chạy vòng lặp thật."""
+        if config.DATA_SOURCE != "postgres":
+            return {"reloaded": False, "skipped": "nguồn xlsx tĩnh — không cần version"}
+        remote = current_data_version()
+        loaded = self._loaded_version
+        if loaded is not None and remote <= loaded:
+            return {"reloaded": False, "version": remote}
+        # Đọc version TRƯỚC khi reindex: nếu có bump chen giữa, data load được
+        # mới hơn version ghi nhận → vòng poll sau reload thêm lần nữa (an toàn).
+        self.reindex()
+        self._loaded_version = remote
+        return {"reloaded": True, "version": remote, "was": loaded}
+
+    def start_version_poller(self, interval_seconds: float | None = None) -> None:
+        """Daemon thread poll version mỗi N giây (config) — chỉ nguồn postgres,
+        không chặn serve, không chặn shutdown; tắt sạch bằng stop_version_poller."""
+        if config.DATA_SOURCE != "postgres" or self._poller is not None:
+            return
+        interval = (interval_seconds if interval_seconds is not None
+                    else config.settings().search.version_poll_seconds)
+        stop = threading.Event()
+
+        def _loop() -> None:
+            while not stop.wait(interval):  # Event.wait = sleep NGẮT ĐƯỢC khi stop
+                try:
+                    self.check_and_reload_once()
+                except Exception:  # DB chớp nhoáng — poll sau thử lại, đừng chết thread
+                    logging.getLogger("tasco.search").exception("version poll fail")
+
+        self._poll_stop = stop
+        self._poller = threading.Thread(target=_loop, daemon=True,
+                                        name="tasco-version-poller")
+        self._poller.start()
+
+    def stop_version_poller(self) -> None:
+        if self._poller is None:
+            return
+        self._poll_stop.set()
+        self._poller.join(timeout=5)
+        self._poller = None
+        self._poll_stop = None
 
     def search(
         self,

@@ -49,10 +49,11 @@ def main() -> None:
     pois = _pois_from_xlsx()
     url = config.database_url()
     with psycopg.connect(url) as conn:
-        # Áp schema nếu bảng chưa có (docker-compose tự áp lúc init; đường khác thì đây)
-        schema = (Path(__file__).resolve().parent.parent
-                  / "migrations" / "001_init.sql").read_text(encoding="utf-8")
-        conn.execute(schema)
+        # Áp TOÀN BỘ migrations theo thứ tự (docker-compose tự áp lúc init;
+        # đường khác — brew/cloud — thì đây). Mọi file đều idempotent.
+        migrations_dir = Path(__file__).resolve().parent.parent / "migrations"
+        for sql_file in sorted(migrations_dir.glob("*.sql")):
+            conn.execute(sql_file.read_text(encoding="utf-8"))
         with conn.cursor() as cur:
             for i, p in enumerate(pois):
                 cur.execute(_UPSERT, (

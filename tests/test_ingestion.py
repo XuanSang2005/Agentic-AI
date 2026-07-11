@@ -55,6 +55,9 @@ def client():
 
     npy_before = set(config.EMBEDDING_CACHE_DIR.glob("*.npy"))
     with TestClient(api_main.app) as c:
+        # Tắt poller mà lifespan start — test điều khiển reload bằng poll-ONCE
+        # (deterministic); test_u tự start/stop poller riêng để kiểm daemon.
+        api_main._get_service().stop_version_poller()
         yield c
     geocode.set_client(None)
 
@@ -296,3 +299,121 @@ def test_p_advisory_lock_serializes_and_releases(client):
         n_locks = conn.execute(
             "SELECT count(*) FROM pg_locks WHERE locktype = 'advisory'").fetchone()[0]
     assert n_locks == 0, "advisory lock phải tự nhả khi transaction kết thúc"
+
+
+# --- Phase 5: data_version dùng chung + reload đa-instance ---
+
+
+def _db_version() -> int:
+    from src.data_loader import current_data_version
+    return current_data_version()
+
+
+def test_q_version_bumps_with_commit_not_with_rollback(client):
+    """Gate 5a: ingest commit → version +1 đúng 1 lần/batch; batch rollback
+    (lỗi DB) → version KHÔNG tăng; report + _loaded_version mang version mới."""
+    from src.api import main as api_main
+
+    v0 = _db_version()
+    report = client.post("/admin/pois/batch", json=[
+        dict(_BATCH[0], poi_id="ZTEST16", name="Ztestcafe Mười Sáu"),
+        dict(_BATCH[0], poi_id="ZTEST17", name="Ztestcafe Mười Bảy"),
+    ]).json()
+    assert _db_version() == v0 + 1, "1 batch (2 record) = bump đúng 1 lần"
+    assert report["data_version"] == v0 + 1
+    assert api_main._get_service().loaded_version == v0 + 1
+
+    # Batch lỗi DB (INT4 overflow) → rollback → version giữ nguyên
+    resp = client.post("/admin/pois/batch", json=[
+        dict(_BATCH[0], poi_id="ZTEST18", review_count=2**40)])
+    assert resp.status_code == 500
+    assert _db_version() == v0 + 1, "rollback thì version KHÔNG tăng (atomic với data)"
+
+
+def test_r_poll_once_reloads_when_remote_version_newer(client):
+    """Gate 5b: 'instance khác' ghi DB + bump version (gọi thẳng upsert_pois,
+    không qua endpoint → instance này KHÔNG tự reindex) → poll-once phát hiện
+    version mới → reload, thấy POI mới, _loaded_version cập nhật."""
+    from src import ingestion
+    from src.api import main as api_main
+
+    svc = api_main._get_service()
+    n_before = svc.n_pois
+    valid, rejected = ingestion.validate_batch([
+        dict(_BATCH[0], poi_id="ZTEST19", name="Ztestcafe Mười Chín")])
+    assert not rejected
+    new_version = ingestion.upsert_pois(valid, ["verified"])  # ghi thẳng DB
+    assert svc.loaded_version < new_version  # instance này chưa biết gì
+
+    out = svc.check_and_reload_once()
+    assert out["reloaded"] is True and out["version"] == new_version
+    assert svc.loaded_version == new_version
+    assert svc.n_pois == n_before + 1  # index đã thấy POI của "instance khác"
+    ids = [r["id"] for r in
+           client.get("/v1/search", params={"q": "ztestcafe mười chín"}).json()["results"]]
+    assert any("ZTEST19" in i for i in ids)
+
+
+def test_s_poll_once_skips_when_version_unchanged(client, monkeypatch):
+    """Gate 5c: version không đổi → poll-once KHÔNG rebuild (reindex không
+    được gọi — không tốn compute)."""
+    from src.api import main as api_main
+
+    svc = api_main._get_service()
+
+    def _must_not_be_called():
+        raise AssertionError("reindex KHÔNG được gọi khi version không đổi")
+    monkeypatch.setattr(svc, "reindex", _must_not_be_called)
+
+    out = svc.check_and_reload_once()
+    assert out["reloaded"] is False and out["version"] == svc.loaded_version
+
+
+def test_t_search_serves_old_snapshot_during_reload(client, monkeypatch):
+    """Gate 5d: reload đang chạy (kẹt ở load_pois) → search vẫn trả kết quả
+    bình thường từ snapshot cũ, không lỗi, không nửa vời."""
+    import threading
+
+    from src import search as search_mod
+    from src.api import main as api_main
+
+    svc = api_main._get_service()
+    release = threading.Event()
+    real_load = search_mod.load_pois
+
+    def slow_load():
+        release.wait(timeout=30)  # kẹt reload tại đây, deterministic
+        return real_load()
+    monkeypatch.setattr(search_mod, "load_pois", slow_load)
+
+    before = [r["id"] for r in
+              client.get("/v1/search", params={"q": "quán cà phê yên tĩnh"}).json()["results"]]
+    t = threading.Thread(target=svc.reindex)
+    t.start()
+    try:
+        # reload đang kẹt giữa chừng — search vẫn phục vụ snapshot cũ y nguyên
+        during = [r["id"] for r in
+                  client.get("/v1/search", params={"q": "quán cà phê yên tĩnh"}).json()["results"]]
+        assert during == before
+    finally:
+        release.set()
+        t.join(timeout=60)
+    assert not t.is_alive(), "reindex phải hoàn tất sau khi thả khoá"
+
+
+def test_u_poller_thread_daemon_and_clean_shutdown(client):
+    """Gate 5e: poller là daemon (không chặn shutdown) và tắt sạch, không rò
+    thread. Lifespan đã start 1 poller — kiểm nó rồi stop/start lại thủ công."""
+    import threading
+
+    from src.api import main as api_main
+
+    svc = api_main._get_service()
+    svc.stop_version_poller()  # tắt poller của lifespan (nếu đang chạy)
+    svc.start_version_poller(interval_seconds=60)  # interval dài — không fire trong test
+    poller = next(t for t in threading.enumerate() if t.name == "tasco-version-poller")
+    assert poller.daemon is True
+    svc.stop_version_poller()
+    assert not poller.is_alive(), "stop phải join sạch thread"
+    assert not any(t.name == "tasco-version-poller" for t in threading.enumerate())
+    svc.start_version_poller()  # trả lại trạng thái như lifespan để teardown bình thường

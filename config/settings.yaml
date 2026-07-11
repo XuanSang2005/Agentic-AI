@@ -40,6 +40,7 @@ search:
   default_limit: 10  # limit mặc định của SearchService.search
   k_internal: 50     # k nội bộ > limit để post-filter (category/radius/bbox) không đói kết quả
   api_max_limit: 20  # "max recommended 20" theo docs/tasco_api.pdf
+  version_poll_seconds: 10  # chu kỳ poll data_version (Phase 5, chỉ nguồn postgres)
 
 retrieval:
   n_candidates: 30   # đủ sâu: 60 câu eval đều có đáp án trong top-30 BM25 (recall@30 ~1.0)

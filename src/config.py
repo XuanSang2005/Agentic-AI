@@ -53,6 +53,7 @@ class SearchCfg:
     default_limit: int
     k_internal: int
     api_max_limit: int
+    version_poll_seconds: int
 
 
 @dataclass(frozen=True)

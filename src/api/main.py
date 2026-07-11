@@ -45,8 +45,10 @@ def _get_service() -> SearchService:
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    _get_service()  # build index + load embedding cache 1 lần lúc startup
+    svc = _get_service()  # build index + load embedding cache 1 lần lúc startup
+    svc.start_version_poller()  # Phase 5 — no-op khi DATA_SOURCE=xlsx
     yield
+    svc.stop_version_poller()
 
 
 app = FastAPI(
@@ -151,15 +153,20 @@ def ingest_pois_batch(request: Request, records: list[dict] = Body(...),
     }
     if valid:
         try:
-            # 1 transaction — lỗi là rollback sạch (status theo verify per-record)
-            ingestion.upsert_pois(valid, [v["status"] for v in verifications])
+            # 1 transaction — lỗi là rollback sạch (status theo verify per-record;
+            # data_version bump cùng transaction — Phase 5)
+            new_version = ingestion.upsert_pois(valid, [v["status"] for v in verifications])
         except Exception as e:
             # KHÔNG reindex: index phải khớp đúng thứ đã commit (= không gì cả)
             return _error(500, "ingestion_db_error",
                           "Batch rolled back, không record nào được ghi", request,
                           details={"reason": str(e).strip()})
+        report["data_version"] = new_version
         try:
             report["reindex"] = _get_service().reindex()
+            # Instance này đã ở version mới — không chờ poll; instance KHÁC
+            # bắt kịp qua poller (eventual, trễ ≤ version_poll_seconds).
+            _get_service().set_loaded_version(new_version)
         except Exception as e:
             # DB ĐÃ commit → ingest thành công thật; index stale chỉ tạm thời
             # (tự lành khi restart — load từ DB). Trả 500 ở đây gây hiểu nhầm
