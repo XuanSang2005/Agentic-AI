@@ -63,6 +63,11 @@ class POI:
     tags: list[str] = field(default_factory=list)
     description: str = ""
     is_synthetic: bool = False  # id bắt đầu bằng "G" — CHỈ để chẩn đoán trong eval
+    # Trạng thái verify (Phase 4b) — CHỈ để HIỂN THỊ (policy A), không lọc/không
+    # vào ranking/document. xlsx không có cột này → default "active" (khớp
+    # default cột Postgres — equivalence 2 nguồn giữ nguyên); POI ingest qua
+    # /admin mang verified/unverified thật.
+    status: str = "active"
     # Text field dựng sẵn cho retrieval — BM25 và dense sau này DÙNG CHUNG:
     document: str = ""       # giữ nguyên dấu — để hiển thị / embed
     norm_document: str = ""  # normalize_vi(document) — để BM25 match
@@ -159,7 +164,7 @@ def _pois_from_xlsx() -> list[POI]:
 _PG_QUERY = """
     SELECT poi_id, name, brand, category, sub_category, city, district, address,
            lat, lon, rating, review_count, popularity_score, price_level,
-           opening_hours, attributes, tags, description
+           opening_hours, attributes, tags, description, status
     FROM pois
     ORDER BY row_order
 """
@@ -197,6 +202,7 @@ def _pois_from_postgres() -> list[POI]:
         attributes=[str(a) for a in (r[15] or [])],
         tags=[str(t) for t in (r[16] or [])],
         description=_text(r[17]),
+        status=_text(r[18]),
     )) for r in _load_pg_rows()]
 
 

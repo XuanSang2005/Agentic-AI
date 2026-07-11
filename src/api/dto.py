@@ -31,6 +31,9 @@ class PlaceResult(BaseModel):
     score: float
     source: str = "mock"                   # data synthetic của hackathon
     tags: list[str] = []
+    # Trạng thái verify — HIỂN THỊ thuần (policy A, không lọc/không vào ranking):
+    # verified | unverified (POI ingest qua /admin) | active (data cũ chưa qua verify)
+    status: Optional[str] = None
     explanation: Optional[dict] = None        # chỉ set khi ?explain=true
 
 
@@ -75,5 +78,6 @@ def to_place_result(hit: SearchHit) -> PlaceResult:
         score=hit.score,
         source="mock",
         tags=poi.tags,
+        status=poi.status or None,
         explanation=hit.explanation,
     )

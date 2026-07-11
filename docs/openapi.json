@@ -6,11 +6,70 @@
     "version": "1.0.0"
   },
   "paths": {
+    "/admin/pois/batch": {
+      "post": {
+        "summary": "Ingest Pois Batch",
+        "description": "Batch ingest POI: validate từng record (4a) → VERIFY qua AWS Location\n(4b, đồng bộ, trước commit) → upsert Postgres trong 1 transaction (4a) →\nreindex MỘT LẦN atomic swap (4a). Auth: Bearer ADMIN_TOKEN (Phase 6).\n\nPartial-success: record méo bị reject kèm lý do, record hợp lệ vẫn vào;\nverify là \"flag không reject\" — AWS lỗi/score thấp → vẫn ghi với\nstatus='unverified' + reason; lỗi DB giữa batch → rollback sạch + KHÔNG\nreindex (verify xong không cứu được atomicity — vẫn rollback như 4a).",
+        "operationId": "ingest_pois_batch_admin_pois_batch_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "items": {
+                  "additionalProperties": true,
+                  "type": "object"
+                },
+                "type": "array",
+                "title": "Records"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/health": {
       "get": {
         "summary": "Health",
-        "description": "Health check — kèm thông tin chế độ deterministic/offline.",
+        "description": "LIVENESS: process sống → 200 NGAY, kể cả khi index CHƯA build xong\n(không phụ thuộc _get_service — không trigger build). LB dùng để biết\n\"đừng kill\"; đã sẵn sàng nhận traffic hay chưa là việc của /ready.",
         "operationId": "health_health_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/ready": {
+      "get": {
+        "summary": "Ready",
+        "description": "READINESS: 200 CHỈ khi index đã build + warmup xong (và Postgres chạm\nđược, khi DATA_SOURCE=postgres). Lúc startup ~7s → 503 để LB chưa gửi\ntraffic tới. DB check nhẹ tay: SELECT 1, timeout ngắn.",
+        "operationId": "ready_ready_get",
         "responses": {
           "200": {
             "description": "Successful Response",
@@ -291,6 +350,17 @@
             "type": "array",
             "title": "Tags",
             "default": []
+          },
+          "status": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Status"
           },
           "explanation": {
             "anyOf": [

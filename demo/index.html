@@ -368,6 +368,16 @@
     background: var(--green-soft); border-radius: 7px; padding: 3px 8px;
     flex: 0 0 auto;
   }
+  /* Badge trạng thái verify — hiển thị thuần (policy A), cạnh tên POI */
+  .vbadge {
+    position: relative;
+    display: inline-flex; align-items: center; gap: 4px;
+    font-size: 11px; font-weight: 600; letter-spacing: .02em;
+    border-radius: 6px; padding: 2px 7px; flex: 0 0 auto;
+  }
+  .vbadge svg { flex: 0 0 auto; }
+  .vbadge.ok { color: var(--green-dark); background: var(--green-soft); }
+  .vbadge.warn { color: var(--amber); background: rgba(224, 145, 58, .12); }
   .ctoken {
     position: relative;
     display: inline-flex; align-items: center; gap: 5px;
@@ -398,7 +408,7 @@
     padding-left: 5px;
   }
   /* Tooltip thuần CSS (đọc data-tip — không tự tính gì) */
-  .ctoken::after {
+  .ctoken::after, .vbadge::after {
     content: attr(data-tip);
     position: absolute; left: 50%; bottom: calc(100% + 6px);
     transform: translateX(-50%);
@@ -409,7 +419,7 @@
     transition: opacity .15s ease-out;
     z-index: 5;
   }
-  .ctoken:hover::after { opacity: 1; }
+  .ctoken:hover::after, .vbadge:hover::after { opacity: 1; }
 
   /* ===== footer ===== */
   footer { margin-top: 44px; padding: 18px 0 22px; }
@@ -702,10 +712,19 @@ function renderResults(data, planCoord) {
         </div>`;
     }
 
+    // Badge verify (policy A — hiển thị, không lọc): chỉ POI đã qua verify
+    // (verified/unverified); data cũ status 'active'/rỗng → không badge.
+    let vbadgeHtml = "";
+    if (res.status === "verified")
+      vbadgeHtml = `<span class="vbadge ok" data-tip="Address cross-checked via geocoding">${ICON_CHECK}verified</span>`;
+    else if (res.status === "unverified")
+      vbadgeHtml = `<span class="vbadge warn" data-tip="Coordinates not matching geocoded address - needs review">${ICON_HALF}unverified</span>`;
+
     card.innerHTML = `
       <div class="card-top">
         <span class="rank">${i + 1}</span>
         <span class="name">${esc(res.name)}</span>
+        ${vbadgeHtml}
         <span class="score-col">
           <span class="score">${res.score.toFixed(3)}</span>
           <span class="score-label">relevance</span>

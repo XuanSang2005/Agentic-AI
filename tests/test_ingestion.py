@@ -122,6 +122,19 @@ def test_c_new_poi_visible_in_search(client):
     assert client.get("/health").json()["pois"] == 113
 
 
+def test_c2_search_response_carries_verify_status(client):
+    """Badge policy A: response mang status HIỂN THỊ — POI ingest = verified
+    (mock happy), POI seed cũ = active; ranking/thứ tự không đụng (gate eval lo)."""
+    results = client.get("/v1/search",
+                         params={"q": "ztestcafe quận 1", "limit": 5}).json()["results"]
+    by_id = {r["id"]: r for r in results}
+    ztest = next(r for i, r in by_id.items() if "ZTEST" in i)
+    assert ztest["status"] == "verified"
+    old = [r for i, r in by_id.items() if "ZTEST" not in i]
+    assert old and all(r["status"] == "active" for r in old), \
+        "POI seed (chưa qua verify) phải mang status=active — UI không hiện badge"
+
+
 def test_d_idempotent_reingest(client):
     """Gate d: push lại cùng batch → upsert, không trùng, row_order giữ nguyên."""
     before = _db_rows(_ZPREFIX + "%")
