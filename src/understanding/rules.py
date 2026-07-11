@@ -16,14 +16,6 @@ from src import config
 from src.data_loader import load_pois, normalize_vi
 from src.understanding.query_plan import QueryPlan
 
-# --- City: pattern trên text đã bỏ dấu. Thứ tự = ưu tiên khi (hiếm) match nhiều city.
-_CITY_PATTERNS: list[tuple[str, re.Pattern]] = [
-    ("Hà Nội", re.compile(r"(?<![a-z0-9])(ha noi|hanoi|hn)(?![a-z0-9])")),
-    ("TP.HCM", re.compile(r"(?<![a-z0-9])(tp\.? ?hcm|hcm|sai gon|saigon|ho chi minh|sg)(?![a-z0-9])")),
-    ("Đà Nẵng", re.compile(r"(?<![a-z0-9])(da nang|danang)(?![a-z0-9])")),
-    ("Đà Lạt", re.compile(r"(?<![a-z0-9])(da lat|dalat)(?![a-z0-9])")),
-]
-
 # --- Polarity: "không quá đông / không ồn / vắng" → cần yên tĩnh + PHỦ ĐỊNH đông khách.
 _NEG_QUIET = re.compile(
     r"khong (qua )?(dong|on)( khach| duc| nguoi| ao)?|vang ve|it nguoi|it dong")
@@ -35,6 +27,29 @@ _POP = re.compile(r"(?<![a-z0-9])(noi tieng|famous|best|ngon|hot|dang di|dang de
 def _boundary_pattern(surface: str) -> re.Pattern:
     """Surface (đã normalize) → regex word-boundary; escape để '24/7', 'tp.hcm' an toàn."""
     return re.compile(rf"(?<![a-z0-9]){re.escape(surface)}(?![a-z0-9])")
+
+
+@lru_cache(maxsize=1)
+def _city_rules() -> list[tuple[str, tuple[re.Pattern, ...]]]:
+    """[(city, patterns)] — LAI: danh sách city SINH TỪ DATA ({p.city} — thêm POI
+    thành phố mới là tự nhận), alias/viết tắt khai tay trong config/city_aliases.yaml.
+
+    Form khớp mỗi city = normalize(canonical) ∪ normalize(alias) — cùng
+    word-boundary với mọi rule khác ("sg" không ăn giữa từ). Thứ tự ưu tiên khi
+    match nhiều city = thứ tự key trong yaml; city ngoài yaml xếp sau (sort tên).
+    Alias của city không có trong data bị bỏ qua — config chỉ trang trí, không
+    tự thêm city.
+    """
+    data_cities = {p.city for p in load_pois() if p.city}
+    aliases = yaml.safe_load(config.CITY_ALIASES_YAML.read_text(encoding="utf-8")) or {}
+    ordered = [c for c in aliases if c in data_cities]
+    ordered += sorted(data_cities - set(aliases))
+    rules = []
+    for city in ordered:
+        surfaces = {normalize_vi(city)} | {normalize_vi(str(a))
+                                           for a in aliases.get(city, [])}
+        rules.append((city, tuple(_boundary_pattern(s) for s in sorted(surfaces))))
+    return rules
 
 
 @lru_cache(maxsize=1)
@@ -198,8 +213,8 @@ def extract_plan(query: str) -> QueryPlan:
     norm = normalize_vi(query)
     plan = QueryPlan(query=query, norm_query=norm)
 
-    for city, pat in _CITY_PATTERNS:
-        if pat.search(norm):
+    for city, pats in _city_rules():
+        if any(p.search(norm) for p in pats):
             plan.city = city
             break
 

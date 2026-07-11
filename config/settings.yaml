@@ -15,6 +15,7 @@ paths:
   gazetteer: lexicon/gazetteer.yaml
   categories: lexicon/categories.yaml
   abbreviations: config/abbreviations.yaml
+  city_aliases: config/city_aliases.yaml
   embedding_cache_dir: data/cache      # .npy cache — gitignore, xoá là tự build lại
   reports_dir: eval/reports
   readme_md: README.md

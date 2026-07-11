@@ -33,6 +33,7 @@ class PathsCfg:
     gazetteer: Path
     categories: Path
     abbreviations: Path
+    city_aliases: Path
     embedding_cache_dir: Path
     reports_dir: Path
     readme_md: Path
@@ -157,6 +158,7 @@ ATTRIBUTE_CONCEPTS_YAML = _S.paths.attribute_concepts
 GAZETTEER_YAML = _S.paths.gazetteer
 CATEGORIES_YAML = _S.paths.categories
 ABBREVIATIONS_YAML = _S.paths.abbreviations
+CITY_ALIASES_YAML = _S.paths.city_aliases
 
 # Tên sheet trong xlsx (đã verify bằng eval/verify_dataset.py)
 SHEET_POI = _S.sheets.poi

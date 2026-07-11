@@ -1,0 +1,17 @@
+# Alias / viết tắt city (nhóm B — khai tay, non-dev sửa được).
+#
+# DANH SÁCH city canonical KHÔNG nằm ở đây — sinh từ data ({p.city} trong
+# POI_Dataset): thêm POI thành phố mới là tự nhận diện, không sửa code.
+# File này chỉ bổ sung DẠNG VIẾT KHÁC cho từng city:
+#   - Key PHẢI y hệt chuỗi city trong data ("TP.HCM", "Hà Nội"...); key không
+#     có trong data bị bỏ qua.
+#   - Dạng bỏ-dấu của canonical tự sinh ("Hà Nội" → "ha noi", "TP.HCM" →
+#     "tp.hcm") — KHÔNG cần khai lại. Nhưng "tphcm"/"tp hcm"/"tp. hcm" không
+#     tự suy ra được từ "TP.HCM" → phải khai tường minh ở đây.
+#   - THỨ TỰ KEY = thứ tự ưu tiên khi 1 câu match nhiều city (giữ nguyên thứ
+#     tự của regex cũ). City mới trong data chưa có ở đây xếp sau, sort theo tên.
+#   - Match whole-word trên text đã normalize_vi — alias viết thường không dấu.
+Hà Nội: [hanoi, hn]
+TP.HCM: [tp hcm, "tp. hcm", tphcm, hcm, sai gon, saigon, ho chi minh, sg]
+Đà Nẵng: [danang]
+Đà Lạt: [dalat]
