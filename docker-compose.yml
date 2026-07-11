@@ -1,0 +1,29 @@
+# Postgres cho dev cục bộ (Phase 3 — nguồn data thay thế xlsx, opt-in).
+#
+#   docker compose up -d          # chờ healthy
+#   make db-seed                  # xlsx → Postgres (chạy 1 lần)
+#   DATA_SOURCE=postgres make eval
+#
+# Port 5433 phía host để không đụng Postgres cài sẵn (brew thường chiếm 5432).
+# Schema tự áp lúc init (migrations/ mount vào /docker-entrypoint-initdb.d).
+services:
+  postgres:
+    image: postgres:16.4-alpine
+    container_name: tasco-postgres
+    environment:
+      POSTGRES_USER: tasco
+      POSTGRES_PASSWORD: tasco       # dev-only; production dùng secret manager
+      POSTGRES_DB: tasco
+    ports:
+      - "5433:5432"
+    volumes:
+      - tasco_pgdata:/var/lib/postgresql/data
+      - ./migrations:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U tasco -d tasco"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+volumes:
+  tasco_pgdata:

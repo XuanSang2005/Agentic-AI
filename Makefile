@@ -23,10 +23,16 @@ openapi:
 deploy-hf:
 	$(PY) deploy/deploy_hf.py $(SPACE)
 
+db-up:
+	docker compose up -d
+
+db-seed:
+	$(PY) scripts/seed_postgres.py
+
 verify-data:
 	$(PY) eval/verify_dataset.py
 
 test:
 	$(PY) -m pytest tests/ -q
 
-.PHONY: install api eval stress bench openapi deploy-hf verify-data test
+.PHONY: install api eval stress bench openapi deploy-hf db-up db-seed verify-data test

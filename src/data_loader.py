@@ -1,7 +1,15 @@
-"""Load POI_Dataset + Public_Evaluation từ data/*.xlsx thành POI documents.
+"""Load POI_Dataset + Public_Evaluation thành POI documents — nguồn chọn qua env.
 
 Nguồn sự thật duy nhất về data — mọi lớp trên (BM25, dense, filter, rerank, eval)
-đọc qua module này, không tự mở xlsx.
+đọc qua module này, không tự mở xlsx / query DB.
+
+POI đọc được từ 2 nguồn TƯƠNG ĐƯƠNG (equivalence-gated, tests/test_postgres_equivalence.py):
+- DATA_SOURCE=xlsx (mặc định): data/*.xlsx qua openpyxl — offline, không cần gì thêm.
+- DATA_SOURCE=postgres (opt-in): bảng pois (migrations/001_init.sql, seed bằng
+  scripts/seed_postgres.py). ORDER BY row_order = vị trí dòng xlsx gốc — thứ tự
+  corpus quyết định hash embedding cache, KHÔNG được đổi. document/norm_document/
+  is_synthetic luôn derive bằng CÙNG code path (_finalize) bất kể nguồn.
+Public_Evaluation luôn đọc từ xlsx — eval harness là tooling offline, ngoài scope DB.
 
 - GIỮ NGUYÊN dấu tiếng Việt trong document lưu trữ; chỉ bỏ dấu ở tầng matcher
   (normalize_vi là util chuẩn hóa dùng chung cho MỌI bước so khớp).
@@ -101,46 +109,102 @@ def _load_workbook_rows() -> dict[str, list[dict]]:
     return {name: _rows_of(wb[name]) for name in wb.sheetnames}
 
 
+def _finalize(poi: POI) -> POI:
+    """Derived fields — CODE PATH DUY NHẤT cho mọi nguồn (xlsx/postgres): đổi cách
+    ghép document ở đây là đổi hash embedding cache, phải re-encode."""
+    poi.is_synthetic = poi.id.startswith("G")
+    # Document ghép các field ngữ nghĩa (không address/brand — để location/brand
+    # xử lý có chủ đích ở L1/L2, không nhiễu lexical).
+    poi.document = " ".join(part for part in [
+        poi.name,
+        poi.category,
+        poi.sub_category,
+        poi.district,
+        poi.city,
+        " ".join(poi.attributes),
+        " ".join(poi.tags),
+        poi.description,
+    ] if part)
+    poi.norm_document = normalize_vi(poi.document)
+    return poi
+
+
+def _pois_from_xlsx() -> list[POI]:
+    """POI_Dataset (xlsx) → list[POI], giữ nguyên thứ tự dòng, KHÔNG lọc dòng G."""
+    return [_finalize(POI(
+        id=_text(r["poi_id"]),
+        name=_text(r["poi_name"]),
+        brand=_text(r["brand"]),
+        category=_text(r["category"]),
+        sub_category=_text(r["sub_category"]),
+        city=_text(r["city"]),
+        district=_text(r["district"]),
+        address=_text(r["address"]),
+        lat=float(r["latitude"] or 0.0),
+        lon=float(r["longitude"] or 0.0),
+        rating=float(r["rating"] or 0.0),
+        review_count=int(r["review_count"] or 0),
+        popularity=float(r["popularity_score"] or 0.0),
+        price_level=int(r["price_level"] or 0),
+        opening_hours=_text(r["opening_hours"]),
+        attributes=_split_list(r["attributes"]),
+        tags=_split_list(r["tags"]),
+        description=_text(r["description"]),
+    )) for r in _load_workbook_rows()[config.SHEET_POI]]
+
+
+# Cột SELECT theo đúng thứ tự field POI; ORDER BY row_order (vị trí dòng xlsx gốc)
+# — KHÔNG phải poi_id: xlsx xếp C→R→H→A→S→M→G, sort id sẽ đảo corpus và phá
+# hash embedding cache dù data y hệt.
+_PG_QUERY = """
+    SELECT poi_id, name, brand, category, sub_category, city, district, address,
+           lat, lon, rating, review_count, popularity_score, price_level,
+           opening_hours, attributes, tags, description
+    FROM pois
+    ORDER BY row_order
+"""
+
+
+@lru_cache(maxsize=1)
+def _load_pg_rows() -> tuple[tuple, ...]:
+    """Fetch bảng pois đúng 1 lần/process (mirror _load_workbook_rows phía xlsx)."""
+    import psycopg  # import tại chỗ: nhánh xlsx không cần driver
+
+    with psycopg.connect(config.database_url()) as conn:
+        return tuple(conn.execute(_PG_QUERY).fetchall())
+
+
+def _pois_from_postgres() -> list[POI]:
+    """Bảng pois → list[POI] — ép kiểu Y HỆT nhánh xlsx: NULL xử như ô rỗng
+    (_text → ""), số về float/int Python (float8 round-trip đúng bit, không Decimal),
+    jsonb array → list[str]."""
+    return [_finalize(POI(
+        id=_text(r[0]),
+        name=_text(r[1]),
+        brand=_text(r[2]),
+        category=_text(r[3]),
+        sub_category=_text(r[4]),
+        city=_text(r[5]),
+        district=_text(r[6]),
+        address=_text(r[7]),
+        lat=float(r[8] or 0.0),
+        lon=float(r[9] or 0.0),
+        rating=float(r[10] or 0.0),
+        review_count=int(r[11] or 0),
+        popularity=float(r[12] or 0.0),
+        price_level=int(r[13] or 0),
+        opening_hours=_text(r[14]),
+        attributes=[str(a) for a in (r[15] or [])],
+        tags=[str(t) for t in (r[16] or [])],
+        description=_text(r[17]),
+    )) for r in _load_pg_rows()]
+
+
 def load_pois() -> list[POI]:
-    """POI_Dataset → list[POI], giữ nguyên thứ tự dòng, KHÔNG lọc dòng G."""
-    pois = []
-    for r in _load_workbook_rows()[config.SHEET_POI]:
-        poi = POI(
-            id=_text(r["poi_id"]),
-            name=_text(r["poi_name"]),
-            brand=_text(r["brand"]),
-            category=_text(r["category"]),
-            sub_category=_text(r["sub_category"]),
-            city=_text(r["city"]),
-            district=_text(r["district"]),
-            address=_text(r["address"]),
-            lat=float(r["latitude"] or 0.0),
-            lon=float(r["longitude"] or 0.0),
-            rating=float(r["rating"] or 0.0),
-            review_count=int(r["review_count"] or 0),
-            popularity=float(r["popularity_score"] or 0.0),
-            price_level=int(r["price_level"] or 0),
-            opening_hours=_text(r["opening_hours"]),
-            attributes=_split_list(r["attributes"]),
-            tags=_split_list(r["tags"]),
-            description=_text(r["description"]),
-        )
-        poi.is_synthetic = poi.id.startswith("G")
-        # Document ghép các field ngữ nghĩa (không address/brand — để location/brand
-        # xử lý có chủ đích ở L1/L2, không nhiễu lexical).
-        poi.document = " ".join(part for part in [
-            poi.name,
-            poi.category,
-            poi.sub_category,
-            poi.district,
-            poi.city,
-            " ".join(poi.attributes),
-            " ".join(poi.tags),
-            poi.description,
-        ] if part)
-        poi.norm_document = normalize_vi(poi.document)
-        pois.append(poi)
-    return pois
+    """list[POI] Y HỆT bất kể nguồn — chọn qua env DATA_SOURCE (xlsx | postgres)."""
+    if config.DATA_SOURCE == "postgres":
+        return _pois_from_postgres()
+    return _pois_from_xlsx()
 
 
 def load_eval() -> list[EvalQuery]:

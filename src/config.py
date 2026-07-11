@@ -196,6 +196,16 @@ DETERMINISTIC_MODE = _env_flag("DETERMINISTIC_MODE", _S.features["deterministic_
 ENABLE_TYPO_FIX = _env_flag("TASCO_TYPO_FIX", _S.features["typo_fix"])
 
 
+# Nguồn POI data: "xlsx" (mặc định — offline, không phá gì) | "postgres" (opt-in).
+DATA_SOURCE = os.environ.get("DATA_SOURCE", "xlsx")
+
+
+def database_url() -> str:
+    """Connection string Postgres — secret, CHỈ từ env. Default khớp docker-compose
+    dev (port 5433, user/pass tasco) — production PHẢI đặt DATABASE_URL thật."""
+    return os.environ.get("DATABASE_URL", "postgresql://tasco:tasco@localhost:5433/tasco")
+
+
 def bearer_token() -> str:
     """Secret auth service — đọc mỗi lần gọi (test set env sau import vẫn ăn)."""
     return os.environ.get("TASCO_BEARER_TOKEN", "")

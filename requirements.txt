@@ -12,3 +12,6 @@ rank_bm25
 pyvi
 pytest
 httpx
+
+# Phase 3: Postgres data source (DATA_SOURCE=postgres)
+psycopg[binary]==3.2.4
