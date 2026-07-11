@@ -130,10 +130,60 @@ def _has_diacritics(word: str) -> bool:
     return normalize_vi(word) != word.lower()
 
 
+# Ký tự rác cuối âm tiết: chữ KHÔNG kết thúc âm tiết thuần Việt (pattern gõ
+# Telex thiếu IME — f/j là phím dấu huyền/nặng). Cố ý KHÔNG gồm s/r/x
+# (kết thúc từ tiếng Anh quá phổ biến: hotels, bar, box...).
+_TRAILING_JUNK = frozenset("fjzw")
+
+
+def _resolve(core: str, prev_k: str | None, next_k: str | None) -> str | None:
+    """Luật single-typo hiện có: two-tier + unique-candidate + bigram tie-break.
+
+    Trả dạng có dấu nếu resolve được DUY NHẤT, else None. Giả định caller đã
+    kiểm tra core ∉ KNOWN và các điều kiện len/digit.
+    """
+    known, targets, targets_accented, bigrams = _vocabs()
+    key = normalize_vi(core)
+    if _has_diacritics(core):
+        # Không-gian CÓ DẤU: phân biệt cao — typo có dấu sửa được an toàn
+        candidates = {t for t in targets_accented if _edit1(core.lower(), t)}
+    else:
+        # Không-gian bỏ dấu: nhiều hàng xóm — thường bị luật (c) chặn, chấp nhận
+        candidates = {targets[k] for k in targets if _edit1(key, k)}
+    if len(candidates) >= 2:
+        # Tie-break bằng NGỮ CẢNH: chỉ nhận ứng viên tạo bigram target THẬT
+        # với từ liền kề ("nhà hàg": "nhà hàng" ∈ bigram, "nhà hàn" ∉ → chọn hàng).
+        # Vẫn phải DUY NHẤT sau lọc — không đoán mò.
+        candidates = {c for c in candidates
+                      if (prev_k, normalize_vi(c)) in bigrams
+                      or (normalize_vi(c), next_k) in bigrams}
+    return next(iter(candidates)) if len(candidates) == 1 else None
+
+
+def strip_trailing_junk(core: str, prev_k: str | None, next_k: str | None) -> str | None:
+    """Double-typo "ký tự rác cuối token" ("hangf") → QUY VỀ single-typo.
+
+    KHÔNG nới edit distance — bỏ TỐI ĐA 1 ký tự rác {f,j,z,w} cuối token, rồi
+    phần còn lại phải "đi tiếp được" bằng đúng luật cũ:
+      - khớp vocab trực tiếp (lấy dạng có dấu từ targets — "hang"→"hàng"), hoặc
+      - resolve single-typo hợp lệ (unique/two-tier/bigram).
+    Không thỏa → trả None (giữ nguyên token). Caller đã đảm bảo core ∉ KNOWN —
+    "jazz"/"view"/brand khớp vocab không bao giờ tới đây.
+    """
+    if len(core) < 4 or core[-1].lower() not in _TRAILING_JUNK:
+        return None  # stripped phải còn ≥3 ký tự — giữ tinh thần luật (d)
+    _, targets, _, _ = _vocabs()
+    stripped = core[:-1]
+    skey = normalize_vi(stripped)
+    if skey in _vocabs()[0]:            # khớp vocab trực tiếp
+        return targets.get(skey, stripped)  # ngoài targets (từ description) → giữ dạng gõ
+    return _resolve(stripped, prev_k, next_k)  # hoặc thành ứng viên single-typo hợp lệ
+
+
 @lru_cache(maxsize=512)
 def correct_typos(text: str) -> str:
     """Sửa typo theo luật bảo thủ; không có gì đáng sửa → trả nguyên (idempotent)."""
-    known, targets, targets_accented, bigrams = _vocabs()
+    known, _, _, _ = _vocabs()
     tokens = text.split()
     keys = [normalize_vi(t.strip(".,;:!?()\"'")) for t in tokens]
     out: list[str] = []
@@ -144,23 +194,12 @@ def correct_typos(text: str) -> str:
                 or key in known):
             out.append(token)
             continue
-        if _has_diacritics(core):
-            # Không-gian CÓ DẤU: phân biệt cao — typo có dấu sửa được an toàn
-            candidates = {t for t in targets_accented if _edit1(core.lower(), t)}
-        else:
-            # Không-gian bỏ dấu: nhiều hàng xóm — thường bị luật (c) chặn, chấp nhận
-            candidates = {targets[k] for k in targets if _edit1(key, k)}
-        if len(candidates) >= 2:
-            # Tie-break bằng NGỮ CẢNH: chỉ nhận ứng viên tạo bigram target THẬT
-            # với từ liền kề ("nhà hàg": "nhà hàng" ∈ bigram, "nhà hàn" ∉ → chọn hàng).
-            # Vẫn phải DUY NHẤT sau lọc — không đoán mò.
-            prev_k = keys[i - 1] if i > 0 else None
-            next_k = keys[i + 1] if i + 1 < len(keys) else None
-            candidates = {c for c in candidates
-                          if (prev_k, normalize_vi(c)) in bigrams
-                          or (normalize_vi(c), next_k) in bigrams}
-        if len(candidates) == 1:
-            out.append(token.replace(core, next(iter(candidates))))
-        else:
-            out.append(token)  # 0 hoặc ≥2 ứng viên → thà bỏ sót còn hơn sửa nhầm
+        prev_k = keys[i - 1] if i > 0 else None
+        next_k = keys[i + 1] if i + 1 < len(keys) else None
+        # 1) luật single-typo nguyên bản trước — hành vi cũ giữ NGUYÊN 100%;
+        # 2) thất bại mới thử strip ký tự rác cuối (double-typo → single-typo).
+        fixed = _resolve(core, prev_k, next_k)
+        if fixed is None:
+            fixed = strip_trailing_junk(core, prev_k, next_k)
+        out.append(token.replace(core, fixed) if fixed else token)
     return " ".join(out)

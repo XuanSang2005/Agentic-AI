@@ -140,6 +140,28 @@ def test_typo_correction():
     assert fix("cafe không quá đông") == "cafe không quá đông"  # function word "quá"
 
 
+def test_double_typo_strip_trailing_junk():
+    """Double-typo "ký tự rác cuối" quy về single-typo — không nới edit distance."""
+    from src.ranking.reranker import preprocess_query as pq
+    from src.understanding.typo_fix import correct_typos as fix
+
+    # Sửa đúng (qua chain đầy đủ expand→restore→typo)
+    assert pq("nhaf hangf") == "nhà hàng"
+    assert pq("khach sanj") == "khách sạn"
+    assert pq("cf") == "cà phê"  # abbreviation vẫn chạy trước, không bị typo đụng
+    # BẪY — giữ nguyên tuyệt đối:
+    assert fix("jazz") == "jazz"                      # strip xong không đi tiếp được
+    assert fix("bbq") == "bbq"                        # 'q' không phải ký tự rác
+    assert fix("grabfood") == "grabfood"              # brand, không kết thúc rác
+    assert fix("view đẹp") == "view đẹp"              # 'view' kết thúc w nhưng KHỚP vocab
+    assert fix("nghe nhạc jazz") == "nghe nhạc jazz"
+    assert fix("asdfw") == "asdfw"                    # strip rồi vẫn bí → nguyên
+    # Bẫy cũ vẫn phải sống sau khi thêm strip:
+    assert fix("bún bò") == "bún bò"
+    assert fix("vinmec ở đâu") == "vinmec ở đâu"
+    assert fix("nhà hàn quốc") == "nhà hàn quốc"
+
+
 def test_typo_flag_off(monkeypatch):
     """Tắt được bằng 1 flag — preprocess không đụng gì khi ENABLE_TYPO_FIX=False."""
     from src import config
