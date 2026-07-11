@@ -42,9 +42,14 @@ def _has_diacritics(text: str) -> bool:
 
 def _accented_phrases() -> list[str]:
     """Mọi cụm CÓ DẤU trong domain: lexicon + gazetteer + field POI + description."""
-    # Alias city nằm trong regex của rules.py (không có trong YAML/data) — khai báo tay,
-    # không thì "sai gon" bị vote nhầm thành "sài gọn" (từ surface "nhanh gọn")
-    phrases: list[str] = ["sài gòn", "hồ chí minh", "hà nội", "đà nẵng", "đà lạt"]
+    # Tên/alias city CÓ DẤU lấy từ config/city_aliases.yaml (một nguồn duy nhất —
+    # trước đây khai tay trùng lặp). CHỈ lấy dạng có dấu: alias ascii ("hanoi",
+    # "sg") mà vote sẽ tự map về chính nó, đè phiếu của dạng có dấu → hỏng restore.
+    cities = yaml.safe_load(config.CITY_ALIASES_YAML.read_text(encoding="utf-8")) or {}
+    phrases: list[str] = [
+        str(p) for key, aliases in cities.items()
+        for p in [key, *(aliases or [])] if _has_diacritics(str(p))
+    ]
 
     cats = yaml.safe_load(config.CATEGORIES_YAML.read_text(encoding="utf-8"))
     for entry in cats.values():

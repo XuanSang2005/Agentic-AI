@@ -532,6 +532,7 @@ const PRESETS = [
   "ks gần biển đà nẵng",
 ];
 const HERO = PRESETS[1];
+const RESULT_LIMIT = 3;  // số kết quả hiển thị mỗi query
 
 // Green ramp theo design — signal lớn nhất đậm nhất, nhạt dần
 const GREENS = ["#0F6B45", "#1E9E6A", "#3DBE8C", "#74D4AE", "#ADE6CF", "#D6F0E4"];
@@ -792,7 +793,7 @@ async function run(query) {
   inflight = new AbortController();
   const t0 = performance.now();
   try {
-    const url = `/v1/search?${new URLSearchParams({ q: query, limit: 3, explain: true })}`;
+    const url = `/v1/search?${new URLSearchParams({ q: query, limit: RESULT_LIMIT, explain: true })}`;
     const resp = await fetch(url, { signal: inflight.signal });
     if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
     const data = await resp.json();

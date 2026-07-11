@@ -16,12 +16,19 @@ from src import config
 from src.data_loader import load_pois, normalize_vi
 from src.understanding.query_plan import QueryPlan
 
-# --- Polarity: "không quá đông / không ồn / vắng" → cần yên tĩnh + PHỦ ĐỊNH đông khách.
-_NEG_QUIET = re.compile(
-    r"khong (qua )?(dong|on)( khach| duc| nguoi| ao)?|vang ve|it nguoi|it dong")
+# --- Polarity & popularity: NGỮ PHÁP luật nằm đây, WORDLIST nằm ở
+# config/settings.yaml (understanding.crowd_terms/quiet_phrases/popularity_cues)
+# — non-dev thêm từ không phải sửa code. Từ ở dạng ĐÃ BỎ DẤU.
+_UND = config.settings().understanding
 
-# --- Popularity: cờ bật popularity_score, KHÔNG phải attribute.
-_POP = re.compile(r"(?<![a-z0-9])(noi tieng|famous|best|ngon|hot|dang di|dang den)(?![a-z0-9])")
+# "không quá đông / không ồn / vắng vẻ..." → cần yên tĩnh + PHỦ ĐỊNH đông khách.
+_NEG_QUIET = re.compile(
+    rf"khong (qua )?({'|'.join(map(re.escape, _UND.crowd_terms))})"
+    rf"( khach| duc| nguoi| ao)?|{'|'.join(map(re.escape, _UND.quiet_phrases))}")
+
+# Cờ bật popularity_score, KHÔNG phải attribute.
+_POP = re.compile(
+    rf"(?<![a-z0-9])({'|'.join(map(re.escape, _UND.popularity_cues))})(?![a-z0-9])")
 
 
 def _boundary_pattern(surface: str) -> re.Pattern:
@@ -108,11 +115,12 @@ def _concept_rules() -> list[tuple[re.Pattern, str]]:
 
 
 # --- Landmark (gazetteer) + district ---
-# Cue bắt buộc trước landmark: "gần/near/cạnh/sát/quanh" trong cửa sổ N ký tự
-# (config: understanding.landmark_near_cue_window).
+# Cue bắt buộc trước landmark (danh sách + cửa sổ N ký tự đều từ config:
+# understanding.landmark_near_cues / landmark_near_cue_window).
 # Bẫy P009: "trên đường đi hạ long" không có cue "gần" → không resolve, đúng chủ đích.
-_NEAR_CUE = re.compile(r"(?<![a-z0-9])(gan|near|canh|sat|quanh)(?![a-z0-9])")
-_NEAR_CUE_WINDOW = config.settings().understanding.landmark_near_cue_window
+_NEAR_CUE = re.compile(
+    rf"(?<![a-z0-9])({'|'.join(map(re.escape, _UND.landmark_near_cues))})(?![a-z0-9])")
+_NEAR_CUE_WINDOW = _UND.landmark_near_cue_window
 
 
 @lru_cache(maxsize=1)

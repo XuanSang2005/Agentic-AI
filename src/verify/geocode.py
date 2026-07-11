@@ -52,7 +52,8 @@ class HttpGeocodeClient:
                          else config.aws_location_api_key())
         region = region or config.aws_region()
         self._url = f"https://places.geo.{region}.amazonaws.com/v2/geocode"
-        self._http = http or httpx.Client(timeout=10.0)
+        self._http = http or httpx.Client(
+            timeout=config.settings().verify.http_timeout_seconds)
 
     def geocode(self, **body):
         if not self._api_key:

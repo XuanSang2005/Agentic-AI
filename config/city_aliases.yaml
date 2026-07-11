@@ -10,8 +10,11 @@
 #     tự suy ra được từ "TP.HCM" → phải khai tường minh ở đây.
 #   - THỨ TỰ KEY = thứ tự ưu tiên khi 1 câu match nhiều city (giữ nguyên thứ
 #     tự của regex cũ). City mới trong data chưa có ở đây xếp sau, sort theo tên.
-#   - Match whole-word trên text đã normalize_vi — alias viết thường không dấu.
+#   - Match whole-word trên text đã normalize_vi (bỏ dấu) — nên alias viết
+#     CÓ DẤU hay không đều match như nhau. Alias nào có dạng chuẩn CÓ DẤU
+#     ("sài gòn") thì khai dạng có dấu: diacritics restore harvest từ đây
+#     (một nguồn tri thức duy nhất, không khai tay lần hai trong .py).
 Hà Nội: [hanoi, hn]
-TP.HCM: [tp hcm, "tp. hcm", tphcm, hcm, sai gon, saigon, ho chi minh, sg]
+TP.HCM: [tp hcm, "tp. hcm", tphcm, hcm, sài gòn, saigon, hồ chí minh, sg]
 Đà Nẵng: [danang]
 Đà Lạt: [dalat]

@@ -121,7 +121,8 @@ def score_constraint(poi: POI, c: Constraint) -> float:
         o, close = hours
         if close == 1440 or close < o or close >= _CONS.late_close_full_minutes:
             return 1.0
-        return 0.5 if close >= _CONS.late_close_partial_minutes else 0.0
+        return (_CONS.time_partial_score
+                if close >= _CONS.late_close_partial_minutes else 0.0)
 
     if c.type == "price":
         max_level = _PRICE_MAX_LEVEL[c.key]
@@ -135,12 +136,13 @@ def score_constraint(poi: POI, c: Constraint) -> float:
             if km <= _CONS.near_km_full:
                 return 1.0
             if km <= _CONS.near_km_partial:
-                return 0.7
-            return 0.2 if poi.city == c.data.get("city") else 0.0
+                return _CONS.location_partial_score
+            return _CONS.location_same_city_score if poi.city == c.data.get("city") else 0.0
         if "district" in c.data:
             if poi.district == c.data["district"] and poi.city == (c.data.get("city") or poi.city):
                 return 1.0
-            return 0.5 if poi.city == c.data.get("city") else 0.0
+            return (_CONS.location_city_fallback_score
+                    if poi.city == c.data.get("city") else 0.0)
         return 1.0 if poi.city == c.data.get("city") else 0.0
 
     return 0.0

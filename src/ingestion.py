@@ -23,7 +23,7 @@ from __future__ import annotations
 from pydantic import BaseModel, ConfigDict, Field, ValidationError
 
 from src import config
-from src.data_loader import _text
+from src.data_loader import _text, is_synthetic_id
 
 
 class PoiIn(BaseModel):
@@ -138,7 +138,7 @@ def upsert_pois(pois: list[PoiIn], statuses: list[str]) -> int:
                     json.dumps([_text(a) for a in p.attributes], ensure_ascii=False),
                     json.dumps([_text(t) for t in p.tags], ensure_ascii=False),
                     _text(p.description),
-                    _text(p.poi_id).startswith("G"),  # cùng luật is_synthetic với loader
+                    is_synthetic_id(_text(p.poi_id)),  # cùng 1 hàm với loader (DRY)
                     status,
                 ))
         return int(conn.execute(_BUMP_VERSION).fetchone()[0])

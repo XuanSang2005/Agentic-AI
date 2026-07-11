@@ -80,9 +80,18 @@ rerank_weights:
     pop: 0.02
 
 understanding:
-  # Cửa sổ (số ký tự) trước landmark phải chứa cue "gần/near/cạnh/sát/quanh"
+  # Cửa sổ (số ký tự) trước landmark phải chứa 1 cue trong landmark_near_cues
   # thì mới resolve — bẫy P009 "trên đường đi hạ long" không có cue → bỏ qua.
   landmark_near_cue_window: 15
+  # Wordlist trigger (dạng ĐÃ BỎ DẤU — match trên text normalize). Cấu trúc
+  # ngữ pháp của luật (word-boundary, "không (quá)...") vẫn nằm trong rules.py;
+  # đây chỉ là danh sách từ để non-dev bổ sung không phải sửa code.
+  landmark_near_cues: [gan, near, canh, sat, quanh]
+  popularity_cues: [noi tieng, famous, best, ngon, hot, dang di, dang den]
+  # "không (quá) <crowd_terms> (khách/đúc/người/ào)?" → yên tĩnh + phủ định đông
+  # ⚠ "on" phải QUOTE — YAML 1.1 parse on/off/yes/no trần thành boolean
+  crowd_terms: [dong, "on"]
+  quiet_phrases: [vang ve, it nguoi, it dong]
   diacritics:
     max_gram: 4        # greedy longest-match phrase 4→2 gram
     min_coverage: 0.5  # tỉ lệ token phục-hồi-được dưới ngưỡng → coi là câu ngoại ngữ, không restore
@@ -100,12 +109,16 @@ constraints:
   price_max_level:           # price_level trong data: 1..4
     gia_re: 2
     mien_phi: 1
-  # "mở khuya": đóng ≥ 23:00 → thỏa 1.0; ≥ 22:00 → 0.5 (thỏa một phần)
+  # "mở khuya": đóng ≥ 23:00 → thỏa 1.0; ≥ 22:00 → thỏa một phần
   late_close_full_minutes: 1380    # 23:00
   late_close_partial_minutes: 1320 # 22:00
-  # location theo landmark coord: ≤ near_km_full → 1.0; ≤ near_km_partial → 0.7
+  time_partial_score: 0.5          # điểm khi chỉ đạt mốc partial (22:00–23:00)
+  # location theo landmark coord: ≤ near_km_full → 1.0; ≤ near_km_partial → partial
   near_km_full: 1.0
   near_km_partial: 3.0
+  location_partial_score: 0.7      # trong bán kính partial
+  location_same_city_score: 0.2    # ngoài bán kính nhưng đúng city (theo coord)
+  location_city_fallback_score: 0.5  # constraint district: khác quận nhưng đúng city
 
 # Ingestion endpoint (POST /admin/pois/batch)
 ingestion:
@@ -125,6 +138,7 @@ verify:
   place_types: [PointAddress, PointOfInterest, Street]  # Street: địa danh không số nhà (vd A002)
   max_workers: 10              # verify song song có giới hạn (dưới rate limit AWS)
   throttle_retry_delays: [1, 2, 4]  # backoff (giây) khi ThrottlingException
+  http_timeout_seconds: 10     # timeout mỗi HTTP call tới Geocode v2
 
 # Feature flags — default ở đây; env override từng cái (xem .env.example)
 features:

@@ -95,6 +95,10 @@ class TypoCfg:
 @dataclass(frozen=True)
 class UnderstandingCfg:
     landmark_near_cue_window: int
+    landmark_near_cues: tuple[str, ...]
+    popularity_cues: tuple[str, ...]
+    crowd_terms: tuple[str, ...]
+    quiet_phrases: tuple[str, ...]
     diacritics: DiacriticsCfg
     typo: TypoCfg
 
@@ -107,8 +111,12 @@ class ConstraintsCfg:
     price_max_level: dict[str, int]
     late_close_full_minutes: int
     late_close_partial_minutes: int
+    time_partial_score: float
     near_km_full: float
     near_km_partial: float
+    location_partial_score: float
+    location_same_city_score: float
+    location_city_fallback_score: float
 
 
 @dataclass(frozen=True)
@@ -124,6 +132,7 @@ class VerifyCfg:
     place_types: tuple[str, ...]
     max_workers: int
     throttle_retry_delays: tuple[float, ...]
+    http_timeout_seconds: float
 
 
 @dataclass(frozen=True)
@@ -158,6 +167,10 @@ def settings() -> Settings:
                         for profile, weights in raw["rerank_weights"].items()},
         understanding=UnderstandingCfg(
             landmark_near_cue_window=int(und["landmark_near_cue_window"]),
+            landmark_near_cues=tuple(str(c) for c in und["landmark_near_cues"]),
+            popularity_cues=tuple(str(c) for c in und["popularity_cues"]),
+            crowd_terms=tuple(str(c) for c in und["crowd_terms"]),
+            quiet_phrases=tuple(str(c) for c in und["quiet_phrases"]),
             diacritics=DiacriticsCfg(
                 max_gram=int(und["diacritics"]["max_gram"]),
                 min_coverage=float(und["diacritics"]["min_coverage"]),
@@ -175,8 +188,12 @@ def settings() -> Settings:
             price_max_level={str(k): int(v) for k, v in cons["price_max_level"].items()},
             late_close_full_minutes=int(cons["late_close_full_minutes"]),
             late_close_partial_minutes=int(cons["late_close_partial_minutes"]),
+            time_partial_score=float(cons["time_partial_score"]),
             near_km_full=float(cons["near_km_full"]),
             near_km_partial=float(cons["near_km_partial"]),
+            location_partial_score=float(cons["location_partial_score"]),
+            location_same_city_score=float(cons["location_same_city_score"]),
+            location_city_fallback_score=float(cons["location_city_fallback_score"]),
         ),
         ingestion=IngestionCfg(
             max_batch_size=int(raw["ingestion"]["max_batch_size"]),
@@ -188,6 +205,7 @@ def settings() -> Settings:
             place_types=tuple(str(t) for t in raw["verify"]["place_types"]),
             max_workers=int(raw["verify"]["max_workers"]),
             throttle_retry_delays=tuple(float(d) for d in raw["verify"]["throttle_retry_delays"]),
+            http_timeout_seconds=float(raw["verify"]["http_timeout_seconds"]),
         ),
         features={str(k): bool(v) for k, v in raw["features"].items()},
     )

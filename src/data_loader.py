@@ -114,10 +114,15 @@ def _load_workbook_rows() -> dict[str, list[dict]]:
     return {name: _rows_of(wb[name]) for name in wb.sheetnames}
 
 
+def is_synthetic_id(poi_id: str) -> bool:
+    """Luật nhận diện dòng G synthetic — NGUỒN DUY NHẤT (loader + ingestion dùng chung)."""
+    return poi_id.startswith("G")
+
+
 def _finalize(poi: POI) -> POI:
     """Derived fields — CODE PATH DUY NHẤT cho mọi nguồn (xlsx/postgres): đổi cách
     ghép document ở đây là đổi hash embedding cache, phải re-encode."""
-    poi.is_synthetic = poi.id.startswith("G")
+    poi.is_synthetic = is_synthetic_id(poi.id)
     # Document ghép các field ngữ nghĩa (không address/brand — để location/brand
     # xử lý có chủ đích ở L1/L2, không nhiễu lexical).
     poi.document = " ".join(part for part in [
