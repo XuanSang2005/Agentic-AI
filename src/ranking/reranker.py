@@ -7,6 +7,7 @@ from __future__ import annotations
 
 from src.data_loader import POI
 from src.ranking import signals
+from src.understanding.abbreviations import expand_abbreviations
 from src.understanding.rules import extract_plan
 
 # Trọng số mặc định (Bước 1 — chưa distance). bm25 = điểm base đã chuẩn hóa theo max
@@ -93,6 +94,9 @@ class RerankRetriever:
         fallback khi query text không tự resolve được location (landmark/district giữ
         ưu tiên). Eval không truyền → không ảnh hưởng con số eval.
         """
+        # Viết tắt expand Ở ĐÂY — đầu pipeline, TRƯỚC mọi nhánh: bm25/dense/rules
+        # đều nhận bản đầy đủ có dấu. Idempotent (câu không viết tắt → nguyên).
+        query = expand_abbreviations(query)
         n_all = len(self._by_id)
         bm25_all = self._base.search_scored(query, k=n_all)
         dense_all = self._dense.search_scored(query, k=n_all)
@@ -134,6 +138,7 @@ class RerankRetriever:
     def search(self, query: str, k: int = 10) -> list[str]:
         if self._dense is not None:
             return [pid for pid, _, _ in self._score_pool(query)[:k]]
+        query = expand_abbreviations(query)  # path không dense cũng expand đầu pipeline
         plan = extract_plan(query)
         cands = self._candidates(query)
         if not cands:

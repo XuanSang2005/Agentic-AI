@@ -17,6 +17,7 @@ from src.ranking.reranker import RerankRetriever
 from src.ranking.signals import haversine_km
 from src.retrieval.bm25 import BM25Retriever
 from src.retrieval.dense import DenseRetriever
+from src.understanding.abbreviations import expand_abbreviations
 from src.understanding.diacritics import restore_diacritics
 from src.understanding.rules import concept_label, extract_plan, landmark_label
 
@@ -69,13 +70,17 @@ class SearchService:
         user_coord = (lat, lon) if lat is not None and lon is not None else None
         ranked = self._reranker.search_explained(query, k=max(limit, k_internal),
                                                  user_coord=user_coord)
-        plan_dict = interpreted = normalized_query = None
+        plan_dict = interpreted = normalized_query = expanded_query = None
         if explain:
-            plan = extract_plan(query)
+            # Chuỗi hiểu câu: expand viết tắt (mọi nhánh) → restore dấu (nhánh dense).
+            # Plan build từ bản ĐÃ expand — khớp đúng thứ reranker nhìn thấy.
+            expanded = expand_abbreviations(query)
+            expanded_query = expanded if expanded != query else None
+            plan = extract_plan(expanded)
             plan_dict = {key: (sorted(v) if isinstance(v, set) else v)
                          for key, v in asdict(plan).items()}
-            # Câu SAU restore dấu (nhánh dense dùng) — UI hiện "Đã hiểu" khi khác input
-            normalized_query = restore_diacritics(query)
+            # Câu "đã hiểu" cuối cùng cho UI: sau expand + restore dấu
+            normalized_query = restore_diacritics(expanded)
             # Plan ở dạng người-đọc-được: concept id → nhãn có dấu
             interpreted = {
                 "categories": sorted(plan.categories),
@@ -95,6 +100,7 @@ class SearchService:
             if explain:
                 hit.explanation = {
                     "plan": plan_dict,
+                    "expanded_query": expanded_query,
                     "normalized_query": normalized_query,
                     "interpreted": interpreted,
                     "signals": {name: round(v, 4) for name, v in row["signals"].items()},

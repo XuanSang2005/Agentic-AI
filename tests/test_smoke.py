@@ -96,6 +96,33 @@ def test_restore_diacritics():
     assert "24/7" in r("atm rut tien 24/7 gan pho di bo")
 
 
+def test_abbreviation_expansion():
+    """Viết tắt expand whole-word ở ĐẦU pipeline; từ thật không được biến dạng."""
+    from src.understanding.abbreviations import expand_abbreviations as ex
+
+    assert ex("bv gần đây") == "bệnh viện gần đây"
+    assert ex("cf yên tĩnh q1") == "cà phê yên tĩnh quận 1"
+    assert ex("BV GẦN ĐÂY").lower().startswith("bệnh viện")  # case-insensitive
+    # Bẫy: token trùng từ thật / không phải viết tắt → giữ nguyên tuyệt đối
+    assert ex("bun bo") == "bun bo"
+    assert ex("quán bún bò") == "quán bún bò"
+    assert ex("cafe q1a") == "cafe q1a"  # q1a không phải qN
+
+
+def test_abbreviation_retrieval():
+    """Câu viết tắt phải ra đúng loại POI (path v2 không dense cho nhanh)."""
+    from src.ranking.reranker import RerankRetriever, WEIGHTS_WITH_DISTANCE
+    from src.retrieval.bm25 import BM25Retriever
+
+    pois = load_pois()
+    by_id = {p.id: p for p in pois}
+    r = RerankRetriever(pois, base=BM25Retriever(pois), weights=WEIGHTS_WITH_DISTANCE)
+
+    assert by_id[r.search("bv gần đây", k=3)[0]].category == "Bệnh viện"
+    assert r.search("ks gần biển đà nẵng", k=3)[0] in {"H001", "H002"}
+    assert r.search("cf yên tĩnh q1", k=3)[0] == "C001"
+
+
 def test_no_accent_regression():
     """Câu KHÔNG DẤU phải ra đúng gold — dense mù chỗ này, BM25 (bỏ dấu 2 phía)
     + rules (match trên norm) + district phải gánh. Chạy path v2 (không dense) cho nhanh.
