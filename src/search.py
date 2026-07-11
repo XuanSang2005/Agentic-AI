@@ -18,6 +18,7 @@ from src.ranking.signals import haversine_km
 from src.retrieval.bm25 import BM25Retriever
 from src.retrieval.dense import DenseRetriever
 from src import config
+from src.reasoning.constraints import annotate as annotate_constraints
 from src.understanding.abbreviations import expand_abbreviations
 from src.understanding.diacritics import restore_diacritics
 from src.understanding.rules import concept_label, extract_plan, landmark_label
@@ -112,6 +113,9 @@ class SearchService:
                     "normalized_query": normalized_query,
                     "interpreted": interpreted,
                     "signals": {name: round(v, 4) for name, v in row["signals"].items()},
+                    # Lớp reasoning: tách ràng buộc, chấm thỏa/nới TỪNG cái cho
+                    # result này — annotation-only, không đổi thứ tự ranking.
+                    "constraints": annotate_constraints(plan, poi),
                 }
             hits.append(hit)
         return hits

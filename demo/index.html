@@ -354,6 +354,19 @@
   .swatch { display: inline-block; width: 8px; height: 8px; border-radius: 2px;
             margin-right: 6px; vertical-align: middle; }
 
+  /* ===== constraint checklist (reasoning layer) ===== */
+  .cons { margin-top: 14px; padding-left: 34px; }
+  .ctokens { display: flex; flex-wrap: wrap; gap: 6px; }
+  .ctoken {
+    border-radius: 8px; font-size: 12.5px; padding: 3px 10px;
+    border: 1px solid rgba(30,158,106,.30); background: rgba(30,158,106,.09);
+    color: var(--text);
+  }
+  .ctoken.relax {
+    background: none; border: 1px dashed rgba(22,40,28,.25);
+    color: var(--faint);
+  }
+
   /* ===== footer ===== */
   footer { margin-top: 44px; padding: 18px 0 22px; }
   .status {
@@ -613,6 +626,20 @@ function renderResults(data, planCoord) {
         </div>`;
     }
 
+    // Reasoning layer: checklist ràng buộc thỏa/nới cho từng kết quả
+    let consHtml = "";
+    const cons = ex && ex.constraints;
+    if (cons && cons.total) {
+      const chips = cons.detail.map((d) => d.satisfied
+        ? `<span class="ctoken" title="${d.type} · score ${d.score}">✓ ${esc(d.label)}</span>`
+        : `<span class="ctoken relax" title="${d.type} · score ${d.score}">nới · ${esc(d.label)}</span>`
+      ).join("");
+      consHtml = `<div class="cons">
+          <div class="sig-label">Ràng buộc · thỏa ${cons.satisfied}/${cons.total}</div>
+          <div class="ctokens">${chips}</div>
+        </div>`;
+    }
+
     card.innerHTML = `
       <div class="card-top">
         <span class="rank">${i + 1}</span>
@@ -620,7 +647,7 @@ function renderResults(data, planCoord) {
         <span class="score">${res.score.toFixed(3)}</span>
       </div>
       <div class="meta"><span class="cat">${esc(res.category)}</span>${esc(res.address)}</div>
-      ${distHtml}${sigHtml}`;
+      ${distHtml}${consHtml}${sigHtml}`;
     box.appendChild(card);
   });
 }

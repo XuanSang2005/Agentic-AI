@@ -185,6 +185,52 @@ def test_typo_retrieval():
     assert by_id[r.search("khách sạnn gần biển đà nẵng", k=3)[0]].category == "Khách sạn"
 
 
+def test_constraint_reasoning():
+    """Lớp reasoning: tách ràng buộc có kiểu, chấm thỏa/nới trên field data thật."""
+    from src.ranking.reranker import preprocess_query
+    from src.reasoning.constraints import annotate, parse_constraints, score_constraint
+    from src.understanding.rules import extract_plan
+
+    pois = {p.id: p for p in load_pois()}
+
+    # Câu 5 ràng buộc → đủ 5 kiểu, priority đúng (location/category cao)
+    plan = extract_plan(preprocess_query(
+        "quán cà phê yên tĩnh có chỗ đậu xe ở quận 1 mở khuya giá rẻ"))
+    cons = parse_constraints(plan)
+    types = {c.type for c in cons}
+    assert types == {"category", "attribute", "time", "location", "price"}
+    assert all(c.priority == 2 for c in cons if c.type in ("category", "location"))
+    assert all(c.priority == 1 for c in cons if c.type in ("attribute", "time", "price"))
+
+    by_type = {c.type: c for c in cons}
+    # time (mở khuya): 24/7 → 1.0; qua đêm/tự khai token → 1.0; 22:30 → 0.5; 17:00 → 0
+    assert score_constraint(pois["S003"], by_type["time"]) == 1.0   # 24/7
+    assert score_constraint(pois["R006"], by_type["time"]) == 1.0   # 18:00-03:00 + token
+    assert score_constraint(pois["C001"], by_type["time"]) == 0.5   # 07:00-22:30
+    assert score_constraint(pois["A003"], by_type["time"]) == 0.0   # 08:00-17:00
+    # price (giá rẻ): price_level 1 → 1.0; level 4 không token giá → 0
+    assert score_constraint(pois["C008"], by_type["price"]) == 1.0
+    assert score_constraint(pois["R002"], by_type["price"]) == 0.0
+    # location (district Quận 1): đúng quận → 1.0; khác city → 0
+    assert score_constraint(pois["C001"], by_type["location"]) == 1.0
+    assert score_constraint(pois["C004"], by_type["location"]) == 0.0
+
+    # Negation: "không quá đông" → thỏa khi KHÔNG có đông khách
+    plan_neg = extract_plan(preprocess_query("cafe không quá đông"))
+    neg = next(c for c in parse_constraints(plan_neg) if c.negated)
+    assert score_constraint(pois["C001"], neg) == 1.0  # không đông khách
+    assert score_constraint(pois["C002"], neg) == 0.0  # đông khách
+
+    # annotate: đếm thỏa/nới + nới ưu tiên thấp trước
+    a = annotate(plan, pois["C008"])  # Mộc Cafe Thủ Đức: cafe ✓ đậu xe ✓ giá rẻ ✓
+    assert a["total"] == 6 and a["satisfied"] >= 3
+    assert all(x in [d["label"] for d in a["detail"]] for x in ["giá rẻ", "bãi đỗ xe"])
+
+    # Bẫy P009: "trên đường đi hạ long" KHÔNG được thành ràng buộc location
+    plan_trap = extract_plan(preprocess_query("cây xăng có toilet trên đường đi hạ long"))
+    assert not any(c.type == "location" for c in parse_constraints(plan_trap))
+
+
 def test_no_accent_regression():
     """Câu KHÔNG DẤU phải ra đúng gold — dense mù chỗ này, BM25 (bỏ dấu 2 phía)
     + rules (match trên norm) + district phải gánh. Chạy path v2 (không dense) cho nhanh.
