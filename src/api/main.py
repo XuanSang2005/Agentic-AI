@@ -22,6 +22,7 @@ from typing import Optional
 from fastapi import Body, Depends, FastAPI, Query, Request
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import FileResponse, JSONResponse
+from fastapi.staticfiles import StaticFiles
 
 from src import config
 from src.api.dto import (ErrorBody, ErrorResponse, SearchMeta, SearchResponse,
@@ -174,11 +175,6 @@ def ingest_pois_batch(request: Request, records: list[dict] = Body(...),
     return report
 
 
-@app.get("/", include_in_schema=False)
-@app.get("/demo", include_in_schema=False)
-def demo_page():
-    """UI demo tĩnh (demo/index.html) — same-origin với API, offline 100%."""
-    return FileResponse(config.ROOT / "demo" / "index.html", media_type="text/html")
 
 
 @app.get("/health")
@@ -250,3 +246,6 @@ def search(
         results=[to_place_result(h) for h in hits[:limit]],
         meta=SearchMeta(limit=limit, lang=lang),
     )
+
+
+app.mount("/", StaticFiles(directory=config.ROOT / "demo", html=True), name="static")
