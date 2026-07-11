@@ -310,11 +310,16 @@
   .rank { font-family: var(--mono); font-size: 13px; color: var(--faint); flex: 0 0 20px; }
   .name { font-family: var(--display); font-size: 21px; font-weight: 600;
           letter-spacing: -.015em; color: var(--ink); flex: 1; min-width: 0; }
+  .score-col { flex: 0 0 auto; display: flex; flex-direction: column;
+               align-items: center; gap: 2px; }
   .score {
     font-family: var(--mono); font-variant-numeric: tabular-nums;
     font-size: 14px; font-weight: 600; color: var(--green-dark);
     background: rgba(30,158,106,.13); padding: 5px 12px; border-radius: 999px;
-    flex: 0 0 auto;
+  }
+  .score-label {
+    font-family: var(--mono); font-size: 10px; letter-spacing: .08em;
+    text-transform: uppercase; color: var(--faint);
   }
   .meta { margin-top: 6px; padding-left: 34px; color: var(--muted); font-size: 14.5px; }
   .meta .cat {
@@ -354,18 +359,57 @@
   .swatch { display: inline-block; width: 8px; height: 8px; border-radius: 2px;
             margin-right: 6px; vertical-align: middle; }
 
-  /* ===== constraint checklist (reasoning layer) ===== */
-  .cons { margin-top: 14px; padding-left: 34px; }
-  .ctokens { display: flex; flex-wrap: wrap; gap: 6px; }
+  /* ===== constraint checklist (reasoning layer) — 3 trạng thái ===== */
+  .cons { margin-top: 12px; padding-left: 34px;
+          display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+  .badge-kn {
+    font-family: var(--mono); font-variant-numeric: tabular-nums;
+    font-size: 12px; font-weight: 600; color: var(--green-dark);
+    background: var(--green-soft); border-radius: 7px; padding: 3px 8px;
+    flex: 0 0 auto;
+  }
   .ctoken {
+    position: relative;
+    display: inline-flex; align-items: center; gap: 5px;
     border-radius: 8px; font-size: 12.5px; padding: 3px 10px;
+    transition: border-color .15s ease-out;
+  }
+  .ctoken svg { flex: 0 0 auto; }
+  /* THỎA (score = 1): fill xanh nhạt + viền xanh + ✓ */
+  .ctoken.ok {
     border: 1px solid rgba(30,158,106,.30); background: rgba(30,158,106,.09);
     color: var(--text);
   }
-  .ctoken.relax {
-    background: none; border: 1px dashed rgba(22,40,28,.25);
-    color: var(--faint);
+  .ctoken.ok svg { color: var(--green-dark); }
+  /* MỘT PHẦN (0 < score < 1): viền xanh, KHÔNG fill, chấm rỗng */
+  .ctoken.part {
+    border: 1px solid rgba(30,158,106,.35); background: none; color: var(--text);
   }
+  .ctoken.part svg { color: var(--green); }
+  .ctoken.part .part-note { font-size: 10.5px; color: var(--faint); }
+  /* NỚI / KHÔNG THỎA (score = 0): dashed, muted, ⊘ + tag "nới" */
+  .ctoken.relax {
+    background: none; border: 1px dashed rgba(22,40,28,.25); color: var(--faint);
+  }
+  .ctoken.relax svg { color: var(--faint); }
+  .ctoken .relax-tag {
+    font-size: 10px; letter-spacing: .06em; text-transform: uppercase;
+    color: var(--faint); border-left: 1px solid rgba(22,40,28,.15);
+    padding-left: 5px;
+  }
+  /* Tooltip thuần CSS (đọc data-tip — không tự tính gì) */
+  .ctoken::after {
+    content: attr(data-tip);
+    position: absolute; left: 50%; bottom: calc(100% + 6px);
+    transform: translateX(-50%);
+    background: var(--ink); color: #F4F7EE;
+    font-family: var(--mono); font-size: 11px; white-space: nowrap;
+    padding: 4px 9px; border-radius: 6px;
+    opacity: 0; pointer-events: none;
+    transition: opacity .15s ease-out;
+    z-index: 5;
+  }
+  .ctoken:hover::after { opacity: 1; }
 
   /* ===== footer ===== */
   footer { margin-top: 44px; padding: 18px 0 22px; }
@@ -470,6 +514,11 @@ const SLOT_DEFS = [
   ["district", "district"],
   ["landmark", "landmark"],
 ];
+
+// Icon inline SVG (currentColor, không lib ngoài — offline tuyệt đối)
+const ICON_CHECK = `<svg width="10" height="10" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.5 9.5 18 20 6.5" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+const ICON_HALF = `<svg width="10" height="10" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8" fill="none" stroke="currentColor" stroke-width="2.6"/><path d="M12 4a8 8 0 0 1 0 16Z" fill="currentColor"/></svg>`;
+const ICON_NO = `<svg width="10" height="10" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8" fill="none" stroke="currentColor" stroke-width="2.4"/><path d="M6.7 6.7 17.3 17.3" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>`;
 
 const $ = (id) => document.getElementById(id);
 const esc = (s) => String(s).replace(/[&<>"']/g, (c) =>
@@ -626,17 +675,30 @@ function renderResults(data, planCoord) {
         </div>`;
     }
 
-    // Reasoning layer: checklist ràng buộc thỏa/nới cho từng kết quả
+    // Reasoning layer: checklist ràng buộc 3 trạng thái cho từng kết quả.
+    // Chỉ ĐỌC field constraints từ ?explain — không tự tính, không đổi thứ tự.
     let consHtml = "";
     const cons = ex && ex.constraints;
     if (cons && cons.total) {
-      const chips = cons.detail.map((d) => d.satisfied
-        ? `<span class="ctoken" title="${d.type} · score ${d.score}">✓ ${esc(d.label)}</span>`
-        : `<span class="ctoken relax" title="${d.type} · score ${d.score}">nới · ${esc(d.label)}</span>`
-      ).join("");
+      // Nhóm theo score: thỏa (=1) → một phần (0<s<1) → nới (=0);
+      // trong nhóm sắp theo priority TĂNG dần (khớp thứ tự relaxation backend).
+      const group = (d) => (d.score >= 1 ? 0 : d.score > 0 ? 1 : 2);
+      const sorted = [...cons.detail].sort((a, b) =>
+        group(a) - group(b) || a.priority - b.priority || a.label.localeCompare(b.label));
+      const chips = sorted.map((d) => {
+        const tip = `${d.type} · ${esc(d.label)} · score ${d.score}` +
+                    (d.satisfied ? "" : " · nới");
+        const g = group(d);
+        if (g === 0)
+          return `<span class="ctoken ok" data-tip="${tip}">${ICON_CHECK}${esc(d.label)}</span>`;
+        if (g === 1)
+          return `<span class="ctoken part" data-tip="${tip}">${ICON_HALF}${esc(d.label)}
+            <span class="part-note">(một phần)</span>${d.satisfied ? "" : `<span class="relax-tag">nới</span>`}</span>`;
+        return `<span class="ctoken relax" data-tip="${tip}">${ICON_NO}${esc(d.label)}<span class="relax-tag">nới</span></span>`;
+      }).join("");
       consHtml = `<div class="cons">
-          <div class="sig-label">Ràng buộc · thỏa ${cons.satisfied}/${cons.total}</div>
-          <div class="ctokens">${chips}</div>
+          <span class="badge-kn" data-tip="thỏa ${cons.satisfied}/${cons.total} ràng buộc">${cons.satisfied}/${cons.total}</span>
+          ${chips}
         </div>`;
     }
 
@@ -644,10 +706,13 @@ function renderResults(data, planCoord) {
       <div class="card-top">
         <span class="rank">${i + 1}</span>
         <span class="name">${esc(res.name)}</span>
-        <span class="score">${res.score.toFixed(3)}</span>
+        <span class="score-col">
+          <span class="score">${res.score.toFixed(3)}</span>
+          <span class="score-label">relevance</span>
+        </span>
       </div>
       <div class="meta"><span class="cat">${esc(res.category)}</span>${esc(res.address)}</div>
-      ${distHtml}${consHtml}${sigHtml}`;
+      ${consHtml}${distHtml}${sigHtml}`;
     box.appendChild(card);
   });
 }
