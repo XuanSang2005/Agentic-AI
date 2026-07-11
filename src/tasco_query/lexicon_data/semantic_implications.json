@@ -1,0 +1,126 @@
+{
+  "mappings": [
+    {
+      "id": "semantic.privacy",
+      "aliases": ["riêng tư"],
+      "implications": [
+        {
+          "field": "privacy_preference",
+          "value": "high",
+          "confidence": 0.98,
+          "relationship": "direct_interpretation",
+          "requires_external_validation": false,
+          "review_dependency": "SUBJECTIVE"
+        },
+        {
+          "field": "amenities",
+          "value": ["phòng riêng"],
+          "confidence": 0.72,
+          "relationship": "possible_supporting_feature",
+          "requires_external_validation": true,
+          "review_dependency": "REVIEW_DEPENDENT"
+        },
+        {
+          "field": "amenities",
+          "value": ["không gian tách biệt"],
+          "confidence": 0.68,
+          "relationship": "possible_supporting_feature",
+          "requires_external_validation": true,
+          "review_dependency": "REVIEW_DEPENDENT"
+        }
+      ],
+      "expansions": [
+        {
+          "text": "phòng riêng",
+          "fields": {"amenities": ["phòng riêng"]},
+          "confidence": 0.72,
+          "purpose": "local_search"
+        },
+        {
+          "text": "không gian tách biệt",
+          "fields": {"attributes": ["không gian tách biệt"]},
+          "confidence": 0.68,
+          "purpose": "ranking_hint"
+        },
+        {
+          "text": "review không gian riêng tư",
+          "fields": {"privacy_preference": "high"},
+          "confidence": 0.65,
+          "purpose": "social_search"
+        }
+      ]
+    },
+    {
+      "id": "semantic.car_access",
+      "aliases": ["có thể lái xe tới"],
+      "implications": [
+        {
+          "field": "transport_mode",
+          "value": "car",
+          "confidence": 0.99,
+          "relationship": "direct_interpretation",
+          "requires_external_validation": false,
+          "review_dependency": "LOCATION_DEPENDENT"
+        },
+        {
+          "field": "car_accessible",
+          "value": true,
+          "confidence": 0.96,
+          "relationship": "direct_interpretation",
+          "requires_external_validation": false,
+          "review_dependency": "LOCATION_DEPENDENT"
+        },
+        {
+          "field": "amenities",
+          "value": ["đường ô tô tiếp cận"],
+          "confidence": 0.76,
+          "relationship": "possible_supporting_feature",
+          "requires_external_validation": true,
+          "review_dependency": "LOCATION_DEPENDENT"
+        },
+        {
+          "field": "amenities",
+          "value": ["bãi đỗ xe"],
+          "confidence": 0.58,
+          "relationship": "possible_supporting_feature",
+          "requires_external_validation": true,
+          "review_dependency": "LOCATION_DEPENDENT"
+        },
+        {
+          "field": "amenities",
+          "value": ["chỗ gửi xe gần đó"],
+          "confidence": 0.55,
+          "relationship": "possible_supporting_feature",
+          "requires_external_validation": true,
+          "review_dependency": "LOCATION_DEPENDENT"
+        }
+      ],
+      "expansions": [
+        {
+          "text": "đường ô tô tiếp cận",
+          "fields": {"car_accessible": true},
+          "confidence": 0.76,
+          "purpose": "local_search"
+        },
+        {
+          "text": "bãi đỗ xe",
+          "fields": {"amenities": ["bãi đỗ xe"]},
+          "confidence": 0.58,
+          "purpose": "local_search"
+        },
+        {
+          "text": "chỗ gửi xe gần đó",
+          "fields": {"amenities": ["chỗ gửi xe gần đó"]},
+          "confidence": 0.55,
+          "purpose": "ranking_hint"
+        },
+        {
+          "text": "review đường vào và chỗ đỗ xe",
+          "fields": {"transport_mode": "car"},
+          "confidence": 0.55,
+          "purpose": "social_search"
+        }
+      ]
+    }
+  ]
+}

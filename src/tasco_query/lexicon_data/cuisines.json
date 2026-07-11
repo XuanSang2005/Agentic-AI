@@ -1,0 +1,8 @@
+{
+  "entries": [
+    {"canonical": "Sushi", "aliases": ["sushi"], "entity_type": "cuisine", "canonical_field": "cuisine", "rule_id": "cuisine.sushi", "priority": 100, "confidence": 1.0, "canonical_rendering": "sushi", "source": "curated_semantic_decomposition"},
+    {"canonical": "Món Nhật", "aliases": ["món nhật", "ẩm thực nhật", "đồ nhật"], "entity_type": "cuisine", "canonical_field": "cuisine", "rule_id": "cuisine.japanese", "priority": 90, "confidence": 0.98, "canonical_rendering": "món Nhật", "source": "curated_semantic_decomposition"},
+    {"canonical": "Món Hàn", "aliases": ["món hàn", "ẩm thực hàn", "đồ hàn"], "entity_type": "cuisine", "canonical_field": "cuisine", "rule_id": "cuisine.korean", "priority": 90, "confidence": 0.98, "canonical_rendering": "món Hàn", "source": "curated_semantic_decomposition"},
+    {"canonical": "Món chay", "aliases": ["món chay", "đồ chay"], "entity_type": "cuisine", "canonical_field": "cuisine", "rule_id": "cuisine.vegetarian", "priority": 90, "confidence": 0.98, "canonical_rendering": "món chay", "source": "curated_semantic_decomposition"}
+  ]
+}

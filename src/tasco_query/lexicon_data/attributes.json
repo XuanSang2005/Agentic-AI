@@ -1,0 +1,15 @@
+{
+  "entries": [
+    {"canonical": "ngon/đánh giá cao", "aliases": ["ngon", "ngon xỉu"], "entity_type": "attribute", "canonical_field": "quality", "rule_id": "quality.good", "priority": 70, "confidence": 0.9, "canonical_rendering": "ngon", "source": "curated_release_1"},
+    {"canonical": ["phù hợp chụp ảnh", "check-in đẹp"], "aliases": ["sống ảo"], "entity_type": "attribute", "canonical_field": "attributes", "rule_id": "attribute.photogenic", "priority": 100, "confidence": 0.98, "canonical_rendering": "phù hợp chụp ảnh", "source": "curated_release_1"},
+    {"canonical": ["check-in đẹp"], "aliases": ["check-in đẹp", "checkin đẹp"], "entity_type": "attribute", "canonical_field": "attributes", "rule_id": "attribute.checkin", "priority": 90, "confidence": 0.96, "canonical_rendering": "check-in đẹp", "source": "curated_release_1"},
+    {"canonical": ["view đẹp"], "aliases": ["view đẹp"], "entity_type": "attribute", "canonical_field": "attributes", "rule_id": "attribute.view", "priority": 90, "confidence": 0.98, "canonical_rendering": "view đẹp", "source": "curated_release_1"},
+    {"canonical": ["yên tĩnh"], "aliases": ["yên tĩnh"], "entity_type": "attribute", "canonical_field": "attributes", "rule_id": "attribute.quiet", "priority": 90, "confidence": 0.98, "canonical_rendering": "yên tĩnh", "source": "curated_release_1"},
+    {"canonical": ["4 sao"], "aliases": ["4 sao"], "entity_type": "attribute", "canonical_field": "attributes", "rule_id": "attribute.four_star", "priority": 90, "confidence": 1.0, "canonical_rendering": "4 sao", "source": "curated_release_1"},
+    {"canonical": ["hồ bơi"], "aliases": ["hồ bơi"], "entity_type": "attribute", "canonical_field": "attributes", "rule_id": "attribute.pool", "priority": 80, "confidence": 0.96, "canonical_rendering": "hồ bơi", "source": "curated_release_1"},
+    {"canonical": ["gần biển"], "aliases": ["gần biển"], "entity_type": "attribute", "canonical_field": "attributes", "rule_id": "attribute.near_beach", "priority": 80, "confidence": 0.94, "canonical_rendering": "gần biển", "source": "curated_release_1"},
+    {"canonical": ["giá phải chăng"], "aliases": ["giá phải chăng"], "entity_type": "attribute", "canonical_field": "attributes", "rule_id": "attribute.affordable", "priority": 80, "confidence": 0.92, "canonical_rendering": "giá phải chăng", "source": "curated_model_ontology"},
+    {"canonical": ["không quá ồn"], "aliases": ["không quá ồn"], "entity_type": "attribute", "canonical_field": "attributes", "rule_id": "attribute.not_too_noisy", "priority": 80, "confidence": 0.92, "canonical_rendering": "không quá ồn", "source": "curated_model_ontology"},
+    {"canonical": ["riêng tư"], "aliases": ["riêng tư"], "entity_type": "attribute", "canonical_field": "attributes", "rule_id": "attribute.private", "priority": 80, "confidence": 0.92, "canonical_rendering": "riêng tư", "source": "curated_model_ontology"}
+  ]
+}

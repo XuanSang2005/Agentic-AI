@@ -1,0 +1,9 @@
+{
+  "entries": [
+    {"canonical": ["phù hợp học tập"], "aliases": ["để học", "học bài"], "entity_type": "purpose", "canonical_field": "attributes", "rule_id": "purpose.study", "priority": 100, "confidence": 0.98, "canonical_rendering": "phù hợp học tập", "source": "curated_release_1"},
+    {"canonical": ["phù hợp làm việc"], "aliases": ["làm việc", "để làm việc"], "entity_type": "purpose", "canonical_field": "attributes", "rule_id": "purpose.work", "priority": 100, "confidence": 0.98, "canonical_rendering": "phù hợp làm việc", "source": "curated_release_1"},
+    {"canonical": ["phù hợp gia đình"], "aliases": ["gia đình"], "entity_type": "purpose", "canonical_field": "attributes", "rule_id": "purpose.family", "priority": 90, "confidence": 0.96, "canonical_rendering": "phù hợp gia đình", "source": "curated_release_1"},
+    {"canonical": ["phù hợp hẹn hò"], "aliases": ["phù hợp hẹn hò"], "entity_type": "purpose", "canonical_field": "attributes", "rule_id": "purpose.dating", "priority": 90, "confidence": 0.94, "canonical_rendering": "phù hợp hẹn hò", "source": "curated_model_ontology"},
+    {"canonical": ["phù hợp trẻ nhỏ"], "aliases": ["phù hợp trẻ nhỏ"], "entity_type": "purpose", "canonical_field": "attributes", "rule_id": "purpose.children", "priority": 90, "confidence": 0.94, "canonical_rendering": "phù hợp trẻ nhỏ", "source": "curated_model_ontology"}
+  ]
+}

@@ -1,0 +1,75 @@
+term,normalized_form,type
+q1,Quận 1,district abbreviation
+q3,Quận 3,district abbreviation
+q7,Quận 7,district abbreviation
+q bt,Quận Bình Thạnh,district abbreviation
+tp hcm,Thành phố Hồ Chí Minh,city abbreviation
+tphcm,Thành phố Hồ Chí Minh,city abbreviation
+hcm,Thành phố Hồ Chí Minh,city abbreviation
+sg,Sài Gòn / Thành phố Hồ Chí Minh,city alias
+hn,Hà Nội,city abbreviation
+dn,Đà Nẵng,city abbreviation
+ks,Khách sạn,category abbreviation
+bv,Bệnh viện,category abbreviation
+dh,Đại học,category abbreviation
+nt,Nhà thuốc,category abbreviation
+tttm,Trung tâm thương mại,category abbreviation
+cx,Cây xăng,category abbreviation
+trạm xăng,Cây xăng,synonym
+cây xăng,Cây xăng,synonym
+atm,ATM,category
+vcb,Vietcombank,brand abbreviation
+tcb,Techcombank,brand abbreviation
+bidv,BIDV,brand
+mb,MB Bank,brand abbreviation
+pl,Phúc Long,brand abbreviation
+tch,The Coffee House,brand abbreviation
+hl,Highlands Coffee,brand abbreviation
+hls,Highlands Coffee,brand abbreviation
+tsn,Sân bay Tân Sơn Nhất,poi abbreviation
+nb,Sân bay Nội Bài,poi abbreviation
+hồ gươm,Hồ Hoàn Kiếm,alias
+ho guom,Hồ Hoàn Kiếm,accentless alias
+ben thanh,Chợ Bến Thành,accentless alias
+nct,Nguyễn Chí Thanh,street abbreviation
+n hue,Nguyễn Huệ,street abbreviation
+ng hue,Nguyễn Huệ,street abbreviation
+cmt8,Cách Mạng Tháng Tám,street abbreviation
+đbp,Điện Biên Phủ,street abbreviation
+pmh,Phú Mỹ Hưng,area abbreviation
+bx,Bến xe,category abbreviation
+bxmd,Bến xe Mỹ Đình,poi abbreviation
+ga,Ga / nhà ga,category abbreviation
+cf,Quán cà phê,category slang
+cafe,Quán cà phê,category alias
+coffee,Quán cà phê,English alias
+restaurant,Nhà hàng,English alias
+hotel,Khách sạn,English alias
+airport,Sân bay,English alias
+near,gần,English term
+open late,mở cửa muộn,English phrase
+24h,24/7,opening hour constraint
+wifi,Wi-Fi,amenity
+wc,nhà vệ sinh,amenity
+parking,bãi đỗ xe,amenity
+đi đâu,chỉ đường / tìm địa điểm,intent phrase
+chỉ đường,Navigation,intent
+đường đi,Navigation,intent
+dẫn đường,Navigation,intent
+gần đây,Nearby Search,nearby
+gần nhất,Nearby Search,nearby
+ăn đêm,ăn đêm,informal/synonym
+quán ăn mở khuya,quán ăn mở khuya,informal/synonym
+quán cafe học bài,quán cafe học bài,informal/synonym
+quán cafe làm việc,quán cafe làm việc,informal/synonym
+trà sữa ngon,trà sữa ngon,informal/synonym
+địa điểm check-in,địa điểm check-in,informal/synonym
+phòng khám,phòng khám,informal/synonym
+nha khoa,nha khoa,informal/synonym
+bãi đỗ xe,bãi đỗ xe,informal/synonym
+rửa xe,rửa xe,informal/synonym
+trạm sạc,trạm sạc,informal/synonym
+sạc xe điện,sạc xe điện,informal/synonym
+đổi tiền,đổi tiền,informal/synonym
+siêu thị,siêu thị,informal/synonym
+cửa hàng tiện lợi,cửa hàng tiện lợi,informal/synonym

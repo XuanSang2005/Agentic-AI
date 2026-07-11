@@ -1,0 +1,16 @@
+{
+  "entries": [
+    {
+      "aliases": ["ngon", "phục vụ tốt", "đáng tiền", "không quá đông"],
+      "review_dependency": "REVIEW_DEPENDENT",
+      "confidence": 0.9,
+      "reason": "declared_review_dependent_criterion"
+    },
+    {
+      "aliases": ["sống ảo", "view đẹp", "chill", "riêng tư", "yên tĩnh", "lãng mạn"],
+      "review_dependency": "SUBJECTIVE",
+      "confidence": 0.92,
+      "reason": "declared_subjective_preference"
+    }
+  ]
+}

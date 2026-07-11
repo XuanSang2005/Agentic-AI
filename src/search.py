@@ -226,22 +226,21 @@ class SearchService:
                                                user_coord=user_coord)
         plan_dict = interpreted = normalized_query = expanded_query = typo_corrected = None
         if explain:
-            # Chuỗi hiểu câu — TRÙNG với reranker.preprocess_query:
-            # expand viết tắt → restore dấu → typo fix (flag). Plan build từ bản cuối.
-            expanded = expand_abbreviations(query)
-            expanded_query = expanded if expanded != query else None
-            normalized_query = restore_diacritics(expanded)
-            understood = normalized_query
-            if config.ENABLE_TYPO_FIX:
-                fixed = correct_typos(normalized_query)
-                typo_corrected = fixed if fixed != normalized_query else None
-                understood = fixed
-            plan = extract_plan(understood, attr_index=idx.attr_index,
-                                joint_index=idx.joint_index,
-                                column_anchor=idx.column_anchor)
+            from src.understanding.compiler_adapter import get_plan_and_normalized_query
+            plan, norm = get_plan_and_normalized_query(query, user_coord,
+                                                       attr_index=idx.attr_index,
+                                                       joint_index=idx.joint_index,
+                                                       column_anchor=idx.column_anchor)
             plan_dict = {key: (sorted(v) if isinstance(v, set) else v)
                          for key, v in asdict(plan).items()}
-            normalized_query = understood  # UI hiện bản "đã hiểu" CUỐI CÙNG
+            normalized_query = norm  # UI hiện bản "đã hiểu" CUỐI CÙNG
+            if not config.USE_ADVANCED_COMPILER:
+                expanded = expand_abbreviations(query)
+                expanded_query = expanded if expanded != query else None
+                normalized_query_old = restore_diacritics(expanded)
+                if config.ENABLE_TYPO_FIX:
+                    fixed = correct_typos(normalized_query_old)
+                    typo_corrected = fixed if fixed != normalized_query_old else None
             # Plan ở dạng người-đọc-được: attr là RAW string có dấu từ dataset
             interpreted = {
                 "categories": sorted(plan.categories),

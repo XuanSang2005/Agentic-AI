@@ -1,0 +1,8 @@
+{
+  "entries": [
+    {"canonical": true, "aliases": ["24h", "24 giờ", "24/24", "24 trên 24", "24/7", "mở 24h", "mở cửa 24h", "mở cả ngày", "mở cả ngày lẫn đêm", "mở suốt ngày đêm", "luôn mở", "luôn mở cửa", "không đóng cửa"], "entity_type": "opening_constraint", "canonical_field": "open_24h", "rule_id": "opening.always", "priority": 100, "confidence": 1.0, "canonical_rendering": "mở cửa 24/7", "source": "curated_release_1"},
+    {"canonical": true, "aliases": ["mọi lúc"], "entity_type": "opening_constraint", "canonical_field": "open_24h", "rule_id": "opening.every_time_context", "priority": 95, "confidence": 0.98, "contexts": {"required_tokens": ["mở"], "max_token_distance": 1, "phrase_boundaries": true}, "canonical_rendering": "mở cửa 24/7", "source": "curated_release_1"},
+    {"canonical": true, "aliases": ["mở khuya", "ăn đêm", "open late", "mở cửa muộn"], "entity_type": "opening_constraint", "canonical_field": "open_late", "rule_id": "opening.late", "priority": 90, "confidence": 0.96, "canonical_rendering": "mở cửa muộn", "source": "curated_release_1"},
+    {"canonical": true, "aliases": ["còn mở cửa", "đang mở", "open now"], "entity_type": "opening_constraint", "canonical_field": "open_now", "rule_id": "opening.now", "priority": 90, "confidence": 0.98, "canonical_rendering": "đang mở cửa", "source": "curated_release_1"}
+  ]
+}

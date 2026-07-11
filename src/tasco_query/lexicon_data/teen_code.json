@@ -1,0 +1,9 @@
+{
+  "entries": [
+    {"canonical": "hột", "aliases": ["hoot"], "entity_type": "lexical", "canonical_field": "rewrite", "rule_id": "teen.hoot", "priority": 100, "confidence": 0.98, "canonical_rendering": "hột", "source": "curated_release_1", "transformation_type": "teen_code"},
+    {"canonical": "vịt", "aliases": ["vjt"], "entity_type": "lexical", "canonical_field": "rewrite", "rule_id": "teen.vjt", "priority": 100, "confidence": 0.98, "canonical_rendering": "vịt", "source": "curated_release_1", "transformation_type": "teen_code"},
+    {"canonical": "trên", "aliases": ["trenn"], "entity_type": "lexical", "canonical_field": "rewrite", "rule_id": "teen.trenn", "priority": 100, "confidence": 0.96, "canonical_rendering": "trên", "source": "curated_release_1", "transformation_type": "teen_code"},
+    {"canonical": "không", "aliases": ["ko"], "entity_type": "lexical", "canonical_field": "rewrite", "rule_id": "teen.ko", "priority": 80, "confidence": 0.9, "canonical_rendering": "không", "source": "curated_release_1", "transformation_type": "teen_code"},
+    {"canonical": "đi", "aliases": ["ik"], "entity_type": "lexical", "canonical_field": "rewrite", "rule_id": "teen.ik", "priority": 90, "confidence": 0.85, "canonical_rendering": "đi", "source": "curated_release_1", "transformation_type": "teen_code"}
+  ]
+}

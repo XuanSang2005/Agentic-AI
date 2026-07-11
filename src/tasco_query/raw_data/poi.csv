@@ -1,0 +1,191 @@
+poi_id,name_vi,name_en,category,brand,address,district,city,latitude,longitude,aliases,opening_hours,rating
+POI001,Chợ Bến Thành,Ben Thanh Market,"Chợ, Điểm du lịch",,"1 Công trường Quách Thị Trang, Phường Bến Thành, Quận 1, TP Hồ Chí Minh",Quận 1,TP Hồ Chí Minh,10.7725,106.698,"cho ben thanh, ben thanh market, bến thành",Mở cửa 06:00-19:00,4.4
+POI002,Sân bay Tân Sơn Nhất,Tan Son Nhat Airport,Sân bay,,"Trường Sơn, Phường 2, Tân Bình, TP Hồ Chí Minh",Tân Bình,TP Hồ Chí Minh,10.8188,106.6519,"san bay tsn, tan son nhat, airport hcm",24/7,4.2
+POI003,Sân bay Nội Bài,Noi Bai Airport,Sân bay,,"Phú Minh, Sóc Sơn, Hà Nội",Sóc Sơn,Hà Nội,21.2187,105.8042,"noi bai, san bay noi bai, airport hn",24/7,4.1
+POI004,Hồ Hoàn Kiếm,Hoan Kiem Lake,Điểm du lịch,,"Hoàn Kiếm, Hà Nội",Hoàn Kiếm,Hà Nội,21.0288,105.852,"ho guom, hồ gươm, hoan kiem lake",24/7,4.7
+POI005,Bệnh viện Bạch Mai,Bach Mai Hospital,Bệnh viện,Bạch Mai,"78 Giải Phóng, Phương Mai, Đống Đa, Hà Nội",Đống Đa,Hà Nội,21.0012,105.8412,"bv bach mai, benh vien bach mai, bach mai hospital",24/7,4.0
+POI006,Vincom Center Đồng Khởi,Vincom Center Dong Khoi,Trung tâm thương mại,Vincom,"72 Lê Thánh Tôn, Bến Nghé, Quận 1, TP Hồ Chí Minh",Quận 1,TP Hồ Chí Minh,10.7781,106.7022,"vincom dong khoi, vincom q1, vc dong khoi",09:30-22:00,4.5
+POI007,Vincom Center Nguyễn Chí Thanh,Vincom Center Nguyen Chi Thanh,Trung tâm thương mại,Vincom,"54A Nguyễn Chí Thanh, Láng Thượng, Đống Đa, Hà Nội",Đống Đa,Hà Nội,21.0239,105.8095,"vincom nguyen chi thanh, vincom nct",09:30-22:00,4.4
+POI008,Galaxy Nguyễn Du,Galaxy Nguyen Du,Rạp chiếu phim,Galaxy Cinema,"116 Nguyễn Du, Bến Thành, Quận 1, TP Hồ Chí Minh",Quận 1,TP Hồ Chí Minh,10.7719,106.6929,"galaxy nguyen du, rap galaxy q1",08:00-23:30,4.3
+POI009,CGV Vincom Đồng Khởi,CGV Vincom Dong Khoi,Rạp chiếu phim,CGV,"Vincom Center Đồng Khởi, Quận 1, TP Hồ Chí Minh",Quận 1,TP Hồ Chí Minh,10.7782,106.7021,"cgv vincom dong khoi, cgv q1",08:00-23:30,4.4
+POI010,Bến xe Mỹ Đình,My Dinh Bus Station,Bến xe,,"20 Phạm Hùng, Mỹ Đình, Nam Từ Liêm, Hà Nội",Nam Từ Liêm,Hà Nội,21.0289,105.778,"ben xe my dinh, my dinh bus station",05:00-23:00,4.0
+POI011,Highlands Coffee Lê Duẩn,,Cafe,Highlands Coffee,"15 Lê Duẩn, Tân Bình, TP Hồ Chí Minh",Tân Bình,TP Hồ Chí Minh,10.802402,106.660197,"HLC, highland, hls, highlands coffee lê duẩn",09:00-21:00,4
+POI012,Highlands Coffee Phạm Văn Đồng,,Cafe,Highlands Coffee,"204 Phạm Văn Đồng, Quận 3, TP Hồ Chí Minh",Quận 3,TP Hồ Chí Minh,10.770534,106.690614,"HLC, highland, hls, highlands coffee phạm văn đồng",07:00-22:00,4.4
+POI013,Highlands Coffee Hai Bà Trưng,,Cafe,Highlands Coffee,"129 Hai Bà Trưng, Quận 1, TP Hồ Chí Minh",Quận 1,TP Hồ Chí Minh,10.779835,106.709025,"HLC, highland, hls, highlands coffee hai bà trưng",08:00-23:00,4.5
+POI014,Highlands Coffee Nguyễn Trãi,,Cafe,Highlands Coffee,"37 Nguyễn Trãi, Cầu Giấy, Hà Nội",Cầu Giấy,Hà Nội,21.022741,105.797723,"HLC, highland, hls, highlands coffee nguyễn trãi",07:00-22:00,4.5
+POI015,Highlands Coffee Lê Duẩn,,Cafe,Highlands Coffee,"103 Lê Duẩn, Đống Đa, Hà Nội",Đống Đa,Hà Nội,21.010785,105.842763,"HLC, highland, hls, highlands coffee lê duẩn",24/7,4.1
+POI016,Highlands Coffee Điện Biên Phủ,,Cafe,Highlands Coffee,"233 Điện Biên Phủ, Ngũ Hành Sơn, Đà Nẵng",Ngũ Hành Sơn,Đà Nẵng,15.99278,108.267675,"HLC, highland, hls, highlands coffee điện biên phủ",24/7,4.2
+POI017,Vincom Center Kim Mã,,Shopping Mall,Vincom Center,"193 Kim Mã, Cầu Giấy, Hà Nội",Cầu Giấy,Hà Nội,21.023965,105.777587,"vc, vincom, vin, vincom center kim mã",09:00-21:00,4.4
+POI018,Vincom Center Điện Biên Phủ,,Shopping Mall,Vincom Center,"17 Điện Biên Phủ, Quận 3, TP Hồ Chí Minh",Quận 3,TP Hồ Chí Minh,10.773827,106.673485,"vc, vincom, vin, vincom center điện biên phủ",08:00-23:00,4
+POI019,Vincom Center Lý Thường Kiệt,,Shopping Mall,Vincom Center,"55 Lý Thường Kiệt, Hải Châu, Đà Nẵng",Hải Châu,Đà Nẵng,16.057382,108.234875,"vc, vincom, vin, vincom center lý thường kiệt",24/7,4.3
+POI020,Vincom Center Lý Thường Kiệt,,Shopping Mall,Vincom Center,"190 Lý Thường Kiệt, Ba Đình, Hà Nội",Ba Đình,Hà Nội,21.039399,105.819723,"vc, vincom, vin, vincom center lý thường kiệt",08:00-23:00,4.7
+POI021,Vincom Center Hùng Vương,,Shopping Mall,Vincom Center,"146 Hùng Vương, Sơn Trà, Đà Nẵng",Sơn Trà,Đà Nẵng,16.097814,108.246424,"vc, vincom, vin, vincom center hùng vương",24/7,4
+POI022,Vincom Center Lê Duẩn,,Shopping Mall,Vincom Center,"75 Lê Duẩn, Quận 7, TP Hồ Chí Minh",Quận 7,TP Hồ Chí Minh,10.74166,106.722828,"vc, vincom, vin, vincom center lê duẩn",08:00-23:00,4.6
+POI023,Vietcombank Trần Hưng Đạo,,Bank/ATM,Vietcombank,"230 Trần Hưng Đạo, Đống Đa, Hà Nội",Đống Đa,Hà Nội,21.022253,105.831027,"vcb, vietcom, vietcombank trần hưng đạo",09:00-21:00,4.3
+POI024,Vietcombank Lý Thường Kiệt,,Bank/ATM,Vietcombank,"3 Lý Thường Kiệt, Tân Bình, TP Hồ Chí Minh",Tân Bình,TP Hồ Chí Minh,10.805329,106.654054,"vcb, vietcom, vietcombank lý thường kiệt",09:00-21:00,4.1
+POI025,Vietcombank Nguyễn Huệ,,Bank/ATM,Vietcombank,"184 Nguyễn Huệ, Quận 3, TP Hồ Chí Minh",Quận 3,TP Hồ Chí Minh,10.780312,106.676251,"vcb, vietcom, vietcombank nguyễn huệ",08:00-23:00,4.5
+POI026,Vietcombank Điện Biên Phủ,,Bank/ATM,Vietcombank,"167 Điện Biên Phủ, Hoàn Kiếm, Hà Nội",Hoàn Kiếm,Hà Nội,21.037703,105.855648,"vcb, vietcom, vietcombank điện biên phủ",08:00-23:00,4.8
+POI027,Vietcombank Lê Lợi,,Bank/ATM,Vietcombank,"137 Lê Lợi, Bình Thạnh, TP Hồ Chí Minh",Bình Thạnh,TP Hồ Chí Minh,10.801955,106.701198,"vcb, vietcom, vietcombank lê lợi",07:00-22:00,4.6
+POI028,Vietcombank Nam Kỳ Khởi Nghĩa,,Bank/ATM,Vietcombank,"45 Nam Kỳ Khởi Nghĩa, Quận 7, TP Hồ Chí Minh",Quận 7,TP Hồ Chí Minh,10.72413,106.711876,"vcb, vietcom, vietcombank nam kỳ khởi nghĩa",07:00-22:00,3.9
+POI029,BIDV Trần Hưng Đạo,,Bank/ATM,BIDV,"126 Trần Hưng Đạo, Quận 1, TP Hồ Chí Minh",Quận 1,TP Hồ Chí Minh,10.784943,106.694781,"bidv, bidv trần hưng đạo",08:00-23:00,4.8
+POI030,BIDV Nguyễn Trãi,,Bank/ATM,BIDV,"78 Nguyễn Trãi, Quận 7, TP Hồ Chí Minh",Quận 7,TP Hồ Chí Minh,10.726117,106.713092,"bidv, bidv nguyễn trãi",08:00-23:00,4.4
+POI031,BIDV Điện Biên Phủ,,Bank/ATM,BIDV,"225 Điện Biên Phủ, Hải Châu, Đà Nẵng",Hải Châu,Đà Nẵng,16.05986,108.232019,"bidv, bidv điện biên phủ",07:00-22:00,4.3
+POI032,BIDV Võ Nguyên Giáp,,Bank/ATM,BIDV,"69 Võ Nguyên Giáp, Ngũ Hành Sơn, Đà Nẵng",Ngũ Hành Sơn,Đà Nẵng,15.994756,108.255364,"bidv, bidv võ nguyên giáp",24/7,4
+POI033,BIDV Nguyễn Huệ,,Bank/ATM,BIDV,"72 Nguyễn Huệ, Sơn Trà, Đà Nẵng",Sơn Trà,Đà Nẵng,16.106762,108.252837,"bidv, bidv nguyễn huệ",08:00-23:00,4.1
+POI034,BIDV Lê Duẩn,,Bank/ATM,BIDV,"224 Lê Duẩn, Bình Thạnh, TP Hồ Chí Minh",Bình Thạnh,TP Hồ Chí Minh,10.802595,106.718819,"bidv, bidv lê duẩn",09:00-21:00,4.6
+POI035,CGV Hai Bà Trưng,,Cinema,CGV,"94 Hai Bà Trưng, Hoàn Kiếm, Hà Nội",Hoàn Kiếm,Hà Nội,21.028215,105.849219,"cgv cinema, cgv hai bà trưng",24/7,4.5
+POI036,CGV Bạch Đằng,,Cinema,CGV,"171 Bạch Đằng, Quận 3, TP Hồ Chí Minh",Quận 3,TP Hồ Chí Minh,10.774439,106.685455,"cgv cinema, cgv bạch đằng",09:00-21:00,3.8
+POI037,CGV Điện Biên Phủ,,Cinema,CGV,"43 Điện Biên Phủ, Bình Thạnh, TP Hồ Chí Minh",Bình Thạnh,TP Hồ Chí Minh,10.81354,106.706095,"cgv cinema, cgv điện biên phủ",09:00-21:00,3.9
+POI038,CGV Lê Duẩn,,Cinema,CGV,"218 Lê Duẩn, Ngũ Hành Sơn, Đà Nẵng",Ngũ Hành Sơn,Đà Nẵng,15.998046,108.270368,"cgv cinema, cgv lê duẩn",08:00-23:00,4.6
+POI039,CGV Cách Mạng Tháng Tám,,Cinema,CGV,"81 Cách Mạng Tháng Tám, Hoàn Kiếm, Hà Nội",Hoàn Kiếm,Hà Nội,21.029076,105.863824,"cgv cinema, cgv cách mạng tháng tám",08:00-23:00,4.6
+POI040,CGV Hai Bà Trưng,,Cinema,CGV,"36 Hai Bà Trưng, Quận 7, TP Hồ Chí Minh",Quận 7,TP Hồ Chí Minh,10.728874,106.725032,"cgv cinema, cgv hai bà trưng",08:00-23:00,4
+POI041,Galaxy Cinema Cách Mạng Tháng Tám,,Cinema,Galaxy Cinema,"122 Cách Mạng Tháng Tám, Quận 7, TP Hồ Chí Minh",Quận 7,TP Hồ Chí Minh,10.736429,106.713354,"galaxy, galaxy cinema, galaxy cinema cách mạng tháng tám",24/7,4.5
+POI042,Galaxy Cinema Cách Mạng Tháng Tám,,Cinema,Galaxy Cinema,"141 Cách Mạng Tháng Tám, Cầu Giấy, Hà Nội",Cầu Giấy,Hà Nội,21.027268,105.804898,"galaxy, galaxy cinema, galaxy cinema cách mạng tháng tám",07:00-22:00,4.6
+POI043,Galaxy Cinema Hai Bà Trưng,,Cinema,Galaxy Cinema,"87 Hai Bà Trưng, Ba Đình, Hà Nội",Ba Đình,Hà Nội,21.027936,105.847655,"galaxy, galaxy cinema, galaxy cinema hai bà trưng",24/7,4.1
+POI044,Galaxy Cinema Võ Nguyên Giáp,,Cinema,Galaxy Cinema,"181 Võ Nguyên Giáp, Bình Thạnh, TP Hồ Chí Minh",Bình Thạnh,TP Hồ Chí Minh,10.82589,106.696763,"galaxy, galaxy cinema, galaxy cinema võ nguyên giáp",09:00-21:00,4.6
+POI045,Galaxy Cinema Hùng Vương,,Cinema,Galaxy Cinema,"71 Hùng Vương, Ba Đình, Hà Nội",Ba Đình,Hà Nội,21.025634,105.830092,"galaxy, galaxy cinema, galaxy cinema hùng vương",07:00-22:00,4
+POI046,Galaxy Cinema Bạch Đằng,,Cinema,Galaxy Cinema,"214 Bạch Đằng, Đống Đa, Hà Nội",Đống Đa,Hà Nội,21.015297,105.839827,"galaxy, galaxy cinema, galaxy cinema bạch đằng",07:00-22:00,4.3
+POI047,Vinmec Kim Mã,,Hospital,Vinmec,"238 Kim Mã, Cầu Giấy, Hà Nội",Cầu Giấy,Hà Nội,21.026865,105.800931,"vinmec hospital, vinmec kim mã",07:00-22:00,4.5
+POI048,Vinmec Hùng Vương,,Hospital,Vinmec,"119 Hùng Vương, Đống Đa, Hà Nội",Đống Đa,Hà Nội,21.014719,105.816411,"vinmec hospital, vinmec hùng vương",09:00-21:00,3.8
+POI049,Vinmec Lý Thường Kiệt,,Hospital,Vinmec,"101 Lý Thường Kiệt, Hải Châu, Đà Nẵng",Hải Châu,Đà Nẵng,16.058298,108.235099,"vinmec hospital, vinmec lý thường kiệt",09:00-21:00,4.8
+POI050,Vinmec Pasteur,,Hospital,Vinmec,"179 Pasteur, Quận 1, TP Hồ Chí Minh",Quận 1,TP Hồ Chí Minh,10.771701,106.706796,"vinmec hospital, vinmec pasteur",08:00-23:00,4
+POI051,Vinmec Lý Thường Kiệt,,Hospital,Vinmec,"82 Lý Thường Kiệt, Sơn Trà, Đà Nẵng",Sơn Trà,Đà Nẵng,16.09937,108.251812,"vinmec hospital, vinmec lý thường kiệt",09:00-21:00,4.3
+POI052,Vinmec Lê Lợi,,Hospital,Vinmec,"50 Lê Lợi, Quận 1, TP Hồ Chí Minh",Quận 1,TP Hồ Chí Minh,10.775249,106.707071,"vinmec hospital, vinmec lê lợi",09:00-21:00,4.5
+POI053,Bệnh viện Bạch Mai Cơ sở 1,,Hospital,Bạch Mai,"169 Cách Mạng Tháng Tám, Quận 7, TP Hồ Chí Minh",Quận 7,TP Hồ Chí Minh,10.732385,106.724573,"bach mai, bv bach mai, bạch mai cách mạng tháng tám",09:00-21:00,4.7
+POI054,Bệnh viện Bạch Mai Cơ sở 2,,Hospital,Bạch Mai,"126 Trường Sơn, Sơn Trà, Đà Nẵng",Sơn Trà,Đà Nẵng,16.095268,108.25422,"bach mai, bv bach mai, bạch mai trường sơn",08:00-23:00,4.6
+POI055,Bệnh viện Bạch Mai Cơ sở 3,,Hospital,Bạch Mai,"31 Lê Lợi, Bình Thạnh, TP Hồ Chí Minh",Bình Thạnh,TP Hồ Chí Minh,10.798716,106.699861,"bach mai, bv bach mai, bạch mai lê lợi",24/7,4.5
+POI056,Bệnh viện Bạch Mai Cơ sở 4,,Hospital,Bạch Mai,"126 Trường Sơn, Ba Đình, Hà Nội",Ba Đình,Hà Nội,21.049373,105.844353,"bach mai, bv bach mai, bạch mai trường sơn",09:00-21:00,4.6
+POI057,Bệnh viện Bạch Mai Cơ sở 5,,Hospital,Bạch Mai,"97 Phạm Văn Đồng, Sơn Trà, Đà Nẵng",Sơn Trà,Đà Nẵng,16.09713,108.252229,"bach mai, bv bach mai, bạch mai phạm văn đồng",09:00-21:00,4.8
+POI058,Bệnh viện Bạch Mai Cơ sở 6,,Hospital,Bạch Mai,"209 Nguyễn Chí Thanh, Bình Thạnh, TP Hồ Chí Minh",Bình Thạnh,TP Hồ Chí Minh,10.815888,106.7132,"bach mai, bv bach mai, bạch mai nguyễn chí thanh",24/7,4.3
+POI059,Circle K Nguyễn Huệ,,Convenience Store,Circle K,"202 Nguyễn Huệ, Quận 3, TP Hồ Chí Minh",Quận 3,TP Hồ Chí Minh,10.784478,106.675261,"ck, circle, circle k nguyễn huệ",08:00-23:00,4.2
+POI060,Circle K Trường Sơn,,Convenience Store,Circle K,"161 Trường Sơn, Hải Châu, Đà Nẵng",Hải Châu,Đà Nẵng,16.063038,108.228341,"ck, circle, circle k trường sơn",24/7,4.1
+POI061,Circle K Hùng Vương,,Convenience Store,Circle K,"47 Hùng Vương, Hải Châu, Đà Nẵng",Hải Châu,Đà Nẵng,16.054883,108.229003,"ck, circle, circle k hùng vương",07:00-22:00,4.3
+POI062,Circle K Láng Hạ,,Convenience Store,Circle K,"52 Láng Hạ, Cầu Giấy, Hà Nội",Cầu Giấy,Hà Nội,21.028315,105.777891,"ck, circle, circle k láng hạ",24/7,4.5
+POI063,Circle K Lý Thường Kiệt,,Convenience Store,Circle K,"152 Lý Thường Kiệt, Ba Đình, Hà Nội",Ba Đình,Hà Nội,21.031054,105.841679,"ck, circle, circle k lý thường kiệt",24/7,4.7
+POI064,Circle K Phạm Văn Đồng,,Convenience Store,Circle K,"217 Phạm Văn Đồng, Cầu Giấy, Hà Nội",Cầu Giấy,Hà Nội,21.028989,105.804002,"ck, circle, circle k phạm văn đồng",09:00-21:00,4.2
+POI065,Phúc Long Trường Sơn,,Cafe/Tea,Phúc Long,"235 Trường Sơn, Bình Thạnh, TP Hồ Chí Minh",Bình Thạnh,TP Hồ Chí Minh,10.808505,106.721625,"phuc long, pl, phúc long trường sơn",09:00-21:00,4.6
+POI066,Phúc Long Võ Nguyên Giáp,,Cafe/Tea,Phúc Long,"19 Võ Nguyên Giáp, Ba Đình, Hà Nội",Ba Đình,Hà Nội,21.050152,105.820424,"phuc long, pl, phúc long võ nguyên giáp",24/7,4.4
+POI067,Phúc Long Lê Duẩn,,Cafe/Tea,Phúc Long,"176 Lê Duẩn, Hải Châu, Đà Nẵng",Hải Châu,Đà Nẵng,16.064018,108.209267,"phuc long, pl, phúc long lê duẩn",24/7,4.4
+POI068,Phúc Long Láng Hạ,,Cafe/Tea,Phúc Long,"232 Láng Hạ, Bình Thạnh, TP Hồ Chí Minh",Bình Thạnh,TP Hồ Chí Minh,10.816431,106.723447,"phuc long, pl, phúc long láng hạ",07:00-22:00,4.6
+POI069,Phúc Long Pasteur,,Cafe/Tea,Phúc Long,"174 Pasteur, Đống Đa, Hà Nội",Đống Đa,Hà Nội,21.031489,105.842113,"phuc long, pl, phúc long pasteur",09:00-21:00,4
+POI070,Phúc Long Phạm Văn Đồng,,Cafe/Tea,Phúc Long,"237 Phạm Văn Đồng, Cầu Giấy, Hà Nội",Cầu Giấy,Hà Nội,21.042172,105.790378,"phuc long, pl, phúc long phạm văn đồng",24/7,4.2
+POI071,The Coffee House Lý Thường Kiệt,,Cafe,The Coffee House,"38 Lý Thường Kiệt, Hoàn Kiếm, Hà Nội",Hoàn Kiếm,Hà Nội,21.03413,105.844749,"tch, coffee house, the coffee house lý thường kiệt",24/7,4.2
+POI072,The Coffee House Nguyễn Trãi,,Cafe,The Coffee House,"72 Nguyễn Trãi, Sơn Trà, Đà Nẵng",Sơn Trà,Đà Nẵng,16.092406,108.262998,"tch, coffee house, the coffee house nguyễn trãi",07:00-22:00,4.7
+POI073,The Coffee House Lê Duẩn,,Cafe,The Coffee House,"88 Lê Duẩn, Quận 7, TP Hồ Chí Minh",Quận 7,TP Hồ Chí Minh,10.721007,106.713467,"tch, coffee house, the coffee house lê duẩn",09:00-21:00,4.8
+POI074,The Coffee House Nam Kỳ Khởi Nghĩa,,Cafe,The Coffee House,"106 Nam Kỳ Khởi Nghĩa, Quận 3, TP Hồ Chí Minh",Quận 3,TP Hồ Chí Minh,10.785724,106.689728,"tch, coffee house, the coffee house nam kỳ khởi nghĩa",08:00-23:00,4.1
+POI075,The Coffee House Nam Kỳ Khởi Nghĩa,,Cafe,The Coffee House,"29 Nam Kỳ Khởi Nghĩa, Cầu Giấy, Hà Nội",Cầu Giấy,Hà Nội,21.031393,105.792006,"tch, coffee house, the coffee house nam kỳ khởi nghĩa",09:00-21:00,4.2
+POI076,The Coffee House Trường Sơn,,Cafe,The Coffee House,"175 Trường Sơn, Quận 1, TP Hồ Chí Minh",Quận 1,TP Hồ Chí Minh,10.774673,106.692192,"tch, coffee house, the coffee house trường sơn",09:00-21:00,4.1
+POI077,Lotte Mart Cách Mạng Tháng Tám,,Supermarket,Lotte Mart,"60 Cách Mạng Tháng Tám, Quận 1, TP Hồ Chí Minh",Quận 1,TP Hồ Chí Minh,10.768126,106.70404,"lotte, lotte mart cách mạng tháng tám",09:00-21:00,4.3
+POI078,Lotte Mart Xuân Thủy,,Supermarket,Lotte Mart,"156 Xuân Thủy, Tân Bình, TP Hồ Chí Minh",Tân Bình,TP Hồ Chí Minh,10.794917,106.659582,"lotte, lotte mart xuân thủy",09:00-21:00,4.4
+POI079,Lotte Mart Võ Nguyên Giáp,,Supermarket,Lotte Mart,"11 Võ Nguyên Giáp, Hoàn Kiếm, Hà Nội",Hoàn Kiếm,Hà Nội,21.036951,105.867058,"lotte, lotte mart võ nguyên giáp",24/7,4.8
+POI080,Lotte Mart Nam Kỳ Khởi Nghĩa,,Supermarket,Lotte Mart,"221 Nam Kỳ Khởi Nghĩa, Hải Châu, Đà Nẵng",Hải Châu,Đà Nẵng,16.071563,108.223784,"lotte, lotte mart nam kỳ khởi nghĩa",08:00-23:00,4.4
+POI081,Lotte Mart Nguyễn Trãi,,Supermarket,Lotte Mart,"134 Nguyễn Trãi, Hoàn Kiếm, Hà Nội",Hoàn Kiếm,Hà Nội,21.040304,105.856917,"lotte, lotte mart nguyễn trãi",09:00-21:00,4.2
+POI082,Lotte Mart Hùng Vương,,Supermarket,Lotte Mart,"124 Hùng Vương, Ngũ Hành Sơn, Đà Nẵng",Ngũ Hành Sơn,Đà Nẵng,16.00248,108.253676,"lotte, lotte mart hùng vương",24/7,4.3
+POI083,Co.opmart Trường Sơn,,Supermarket,Co.opmart,"75 Trường Sơn, Hoàn Kiếm, Hà Nội",Hoàn Kiếm,Hà Nội,21.018296,105.839832,"coop, coopmart, co.opmart trường sơn",24/7,4.7
+POI084,Co.opmart Nguyễn Huệ,,Supermarket,Co.opmart,"147 Nguyễn Huệ, Sơn Trà, Đà Nẵng",Sơn Trà,Đà Nẵng,16.091589,108.254439,"coop, coopmart, co.opmart nguyễn huệ",08:00-23:00,4.7
+POI085,Co.opmart Kim Mã,,Supermarket,Co.opmart,"161 Kim Mã, Quận 3, TP Hồ Chí Minh",Quận 3,TP Hồ Chí Minh,10.787262,106.682418,"coop, coopmart, co.opmart kim mã",07:00-22:00,3.9
+POI086,Co.opmart Nguyễn Huệ,,Supermarket,Co.opmart,"28 Nguyễn Huệ, Quận 1, TP Hồ Chí Minh",Quận 1,TP Hồ Chí Minh,10.781074,106.702606,"coop, coopmart, co.opmart nguyễn huệ",24/7,4.3
+POI087,Co.opmart Láng Hạ,,Supermarket,Co.opmart,"27 Láng Hạ, Cầu Giấy, Hà Nội",Cầu Giấy,Hà Nội,21.0401,105.79193,"coop, coopmart, co.opmart láng hạ",07:00-22:00,4.6
+POI088,Co.opmart Điện Biên Phủ,,Supermarket,Co.opmart,"118 Điện Biên Phủ, Quận 1, TP Hồ Chí Minh",Quận 1,TP Hồ Chí Minh,10.766619,106.712508,"coop, coopmart, co.opmart điện biên phủ",08:00-23:00,4.8
+POI089,Nhà thuốc Long Châu Lê Lợi,,Pharmacy,Nhà thuốc Long Châu,"85 Lê Lợi, Sơn Trà, Đà Nẵng",Sơn Trà,Đà Nẵng,16.120377,108.243515,"long chau, nt long chau, nhà thuốc long châu lê lợi",24/7,4.6
+POI090,Nhà thuốc Long Châu Nguyễn Chí Thanh,,Pharmacy,Nhà thuốc Long Châu,"164 Nguyễn Chí Thanh, Bình Thạnh, TP Hồ Chí Minh",Bình Thạnh,TP Hồ Chí Minh,10.801533,106.704763,"long chau, nt long chau, nhà thuốc long châu nguyễn chí thanh",08:00-23:00,4.2
+POI091,Nhà thuốc Long Châu Bạch Đằng,,Pharmacy,Nhà thuốc Long Châu,"41 Bạch Đằng, Quận 7, TP Hồ Chí Minh",Quận 7,TP Hồ Chí Minh,10.746315,106.717206,"long chau, nt long chau, nhà thuốc long châu bạch đằng",09:00-21:00,4.4
+POI092,Nhà thuốc Long Châu Lê Duẩn,,Pharmacy,Nhà thuốc Long Châu,"215 Lê Duẩn, Đống Đa, Hà Nội",Đống Đa,Hà Nội,21.010635,105.843406,"long chau, nt long chau, nhà thuốc long châu lê duẩn",08:00-23:00,4.2
+POI093,Nhà thuốc Long Châu Hai Bà Trưng,,Pharmacy,Nhà thuốc Long Châu,"79 Hai Bà Trưng, Ba Đình, Hà Nội",Ba Đình,Hà Nội,21.028864,105.847631,"long chau, nt long chau, nhà thuốc long châu hai bà trưng",07:00-22:00,4.1
+POI094,Nhà thuốc Long Châu Lý Thường Kiệt,,Pharmacy,Nhà thuốc Long Châu,"167 Lý Thường Kiệt, Cầu Giấy, Hà Nội",Cầu Giấy,Hà Nội,21.045672,105.786949,"long chau, nt long chau, nhà thuốc long châu lý thường kiệt",09:00-21:00,4.4
+POI095,Pharmacity Hùng Vương,,Pharmacy,Pharmacity,"9 Hùng Vương, Cầu Giấy, Hà Nội",Cầu Giấy,Hà Nội,21.036084,105.790919,"pharma, pharmacity hùng vương",24/7,4.5
+POI096,Pharmacity Lê Duẩn,,Pharmacy,Pharmacity,"177 Lê Duẩn, Ba Đình, Hà Nội",Ba Đình,Hà Nội,21.042231,105.823162,"pharma, pharmacity lê duẩn",08:00-23:00,3.9
+POI097,Pharmacity Phạm Văn Đồng,,Pharmacy,Pharmacity,"123 Phạm Văn Đồng, Quận 1, TP Hồ Chí Minh",Quận 1,TP Hồ Chí Minh,10.778861,106.686892,"pharma, pharmacity phạm văn đồng",07:00-22:00,4.7
+POI098,Pharmacity Pasteur,,Pharmacy,Pharmacity,"153 Pasteur, Hoàn Kiếm, Hà Nội",Hoàn Kiếm,Hà Nội,21.032743,105.839606,"pharma, pharmacity pasteur",24/7,4.5
+POI099,Pharmacity Lý Thường Kiệt,,Pharmacy,Pharmacity,"7 Lý Thường Kiệt, Quận 1, TP Hồ Chí Minh",Quận 1,TP Hồ Chí Minh,10.780275,106.709858,"pharma, pharmacity lý thường kiệt",24/7,4.5
+POI100,Pharmacity Kim Mã,,Pharmacy,Pharmacity,"122 Kim Mã, Tân Bình, TP Hồ Chí Minh",Tân Bình,TP Hồ Chí Minh,10.801917,106.640377,"pharma, pharmacity kim mã",08:00-23:00,4.5
+POI101,Petrolimex Hai Bà Trưng,,Gas Station,Petrolimex,"221 Hai Bà Trưng, Ngũ Hành Sơn, Đà Nẵng",Ngũ Hành Sơn,Đà Nẵng,16.012481,108.261235,"cây xăng petrolimex, petrolimex hai bà trưng",09:00-21:00,4.5
+POI102,Petrolimex Kim Mã,,Gas Station,Petrolimex,"187 Kim Mã, Đống Đa, Hà Nội",Đống Đa,Hà Nội,21.020156,105.821143,"cây xăng petrolimex, petrolimex kim mã",24/7,4.5
+POI103,Petrolimex Phạm Văn Đồng,,Gas Station,Petrolimex,"223 Phạm Văn Đồng, Cầu Giấy, Hà Nội",Cầu Giấy,Hà Nội,21.028258,105.783232,"cây xăng petrolimex, petrolimex phạm văn đồng",07:00-22:00,3.8
+POI104,Petrolimex Nguyễn Huệ,,Gas Station,Petrolimex,"33 Nguyễn Huệ, Quận 1, TP Hồ Chí Minh",Quận 1,TP Hồ Chí Minh,10.790474,106.709608,"cây xăng petrolimex, petrolimex nguyễn huệ",07:00-22:00,4
+POI105,Petrolimex Bạch Đằng,,Gas Station,Petrolimex,"145 Bạch Đằng, Quận 1, TP Hồ Chí Minh",Quận 1,TP Hồ Chí Minh,10.776174,106.70596,"cây xăng petrolimex, petrolimex bạch đằng",07:00-22:00,4.2
+POI106,Petrolimex Lý Thường Kiệt,,Gas Station,Petrolimex,"28 Lý Thường Kiệt, Quận 7, TP Hồ Chí Minh",Quận 7,TP Hồ Chí Minh,10.721897,106.720868,"cây xăng petrolimex, petrolimex lý thường kiệt",07:00-22:00,4.1
+POI107,PVOIL Lê Duẩn,,Gas Station,PVOIL,"45 Lê Duẩn, Quận 7, TP Hồ Chí Minh",Quận 7,TP Hồ Chí Minh,10.728153,106.71044,"pv oil, pvoil, pvoil lê duẩn",08:00-23:00,4.6
+POI108,PVOIL Láng Hạ,,Gas Station,PVOIL,"165 Láng Hạ, Cầu Giấy, Hà Nội",Cầu Giấy,Hà Nội,21.031153,105.795296,"pv oil, pvoil, pvoil láng hạ",07:00-22:00,4.4
+POI109,PVOIL Nguyễn Huệ,,Gas Station,PVOIL,"59 Nguyễn Huệ, Sơn Trà, Đà Nẵng",Sơn Trà,Đà Nẵng,16.092567,108.238599,"pv oil, pvoil, pvoil nguyễn huệ",07:00-22:00,4.1
+POI110,PVOIL Cách Mạng Tháng Tám,,Gas Station,PVOIL,"220 Cách Mạng Tháng Tám, Đống Đa, Hà Nội",Đống Đa,Hà Nội,21.01,105.820465,"pv oil, pvoil, pvoil cách mạng tháng tám",08:00-23:00,3.8
+POI111,PVOIL Hai Bà Trưng,,Gas Station,PVOIL,"196 Hai Bà Trưng, Quận 1, TP Hồ Chí Minh",Quận 1,TP Hồ Chí Minh,10.783547,106.695578,"pv oil, pvoil, pvoil hai bà trưng",09:00-21:00,4.5
+POI112,PVOIL Pasteur,,Gas Station,PVOIL,"82 Pasteur, Hoàn Kiếm, Hà Nội",Hoàn Kiếm,Hà Nội,21.020353,105.868677,"pv oil, pvoil, pvoil pasteur",08:00-23:00,3.9
+POI113,FPT Shop Trường Sơn,,Electronics,FPT Shop,"190 Trường Sơn, Quận 3, TP Hồ Chí Minh",Quận 3,TP Hồ Chí Minh,10.776263,106.692323,"fpt shop, fpt shop trường sơn",07:00-22:00,4.2
+POI114,FPT Shop Láng Hạ,,Electronics,FPT Shop,"165 Láng Hạ, Hoàn Kiếm, Hà Nội",Hoàn Kiếm,Hà Nội,21.033273,105.853449,"fpt shop, fpt shop láng hạ",09:00-21:00,3.9
+POI115,FPT Shop Nguyễn Trãi,,Electronics,FPT Shop,"30 Nguyễn Trãi, Hoàn Kiếm, Hà Nội",Hoàn Kiếm,Hà Nội,21.03199,105.839324,"fpt shop, fpt shop nguyễn trãi",09:00-21:00,3.8
+POI116,FPT Shop Lê Duẩn,,Electronics,FPT Shop,"39 Lê Duẩn, Quận 7, TP Hồ Chí Minh",Quận 7,TP Hồ Chí Minh,10.720558,106.719453,"fpt shop, fpt shop lê duẩn",24/7,4.4
+POI117,FPT Shop Lê Lợi,,Electronics,FPT Shop,"75 Lê Lợi, Hoàn Kiếm, Hà Nội",Hoàn Kiếm,Hà Nội,21.03224,105.841309,"fpt shop, fpt shop lê lợi",09:00-21:00,4.7
+POI118,FPT Shop Trường Sơn,,Electronics,FPT Shop,"136 Trường Sơn, Ba Đình, Hà Nội",Ba Đình,Hà Nội,21.037695,105.825158,"fpt shop, fpt shop trường sơn",08:00-23:00,4.4
+POI119,Thế Giới Di Động Điện Biên Phủ,,Electronics,Thế Giới Di Động,"93 Điện Biên Phủ, Bình Thạnh, TP Hồ Chí Minh",Bình Thạnh,TP Hồ Chí Minh,10.809737,106.705229,"tgdd, the gioi di dong, thế giới di động điện biên phủ",24/7,4.5
+POI120,Thế Giới Di Động Nam Kỳ Khởi Nghĩa,,Electronics,Thế Giới Di Động,"82 Nam Kỳ Khởi Nghĩa, Quận 3, TP Hồ Chí Minh",Quận 3,TP Hồ Chí Minh,10.786555,106.678823,"tgdd, the gioi di dong, thế giới di động nam kỳ khởi nghĩa",24/7,4
+POI121,Thế Giới Di Động Láng Hạ,,Electronics,Thế Giới Di Động,"150 Láng Hạ, Đống Đa, Hà Nội",Đống Đa,Hà Nội,21.012836,105.835203,"tgdd, the gioi di dong, thế giới di động láng hạ",09:00-21:00,4.3
+POI122,Thế Giới Di Động Hùng Vương,,Electronics,Thế Giới Di Động,"61 Hùng Vương, Đống Đa, Hà Nội",Đống Đa,Hà Nội,21.027594,105.825358,"tgdd, the gioi di dong, thế giới di động hùng vương",24/7,3.9
+POI123,Thế Giới Di Động Hai Bà Trưng,,Electronics,Thế Giới Di Động,"36 Hai Bà Trưng, Tân Bình, TP Hồ Chí Minh",Tân Bình,TP Hồ Chí Minh,10.806963,106.661211,"tgdd, the gioi di dong, thế giới di động hai bà trưng",07:00-22:00,4.1
+POI124,Thế Giới Di Động Nguyễn Chí Thanh,,Electronics,Thế Giới Di Động,"12 Nguyễn Chí Thanh, Ngũ Hành Sơn, Đà Nẵng",Ngũ Hành Sơn,Đà Nẵng,16.001976,108.266827,"tgdd, the gioi di dong, thế giới di động nguyễn chí thanh",24/7,4.5
+POI125,WinMart Trường Sơn,,Supermarket,WinMart,"128 Trường Sơn, Ba Đình, Hà Nội",Ba Đình,Hà Nội,21.038492,105.829762,"wm, winmart, winmart trường sơn",07:00-22:00,3.9
+POI126,WinMart Cách Mạng Tháng Tám,,Supermarket,WinMart,"48 Cách Mạng Tháng Tám, Ba Đình, Hà Nội",Ba Đình,Hà Nội,21.042677,105.842681,"wm, winmart, winmart cách mạng tháng tám",07:00-22:00,4.3
+POI127,WinMart Nam Kỳ Khởi Nghĩa,,Supermarket,WinMart,"163 Nam Kỳ Khởi Nghĩa, Bình Thạnh, TP Hồ Chí Minh",Bình Thạnh,TP Hồ Chí Minh,10.801218,106.715678,"wm, winmart, winmart nam kỳ khởi nghĩa",09:00-21:00,4.7
+POI128,WinMart Nam Kỳ Khởi Nghĩa,,Supermarket,WinMart,"7 Nam Kỳ Khởi Nghĩa, Quận 3, TP Hồ Chí Minh",Quận 3,TP Hồ Chí Minh,10.781889,106.673556,"wm, winmart, winmart nam kỳ khởi nghĩa",09:00-21:00,4.8
+POI129,WinMart Hai Bà Trưng,,Supermarket,WinMart,"184 Hai Bà Trưng, Tân Bình, TP Hồ Chí Minh",Tân Bình,TP Hồ Chí Minh,10.800823,106.662659,"wm, winmart, winmart hai bà trưng",07:00-22:00,4.3
+POI130,WinMart Phạm Văn Đồng,,Supermarket,WinMart,"130 Phạm Văn Đồng, Bình Thạnh, TP Hồ Chí Minh",Bình Thạnh,TP Hồ Chí Minh,10.813689,106.715262,"wm, winmart, winmart phạm văn đồng",24/7,3.8
+POI131,The Working Coffee Lý Thường Kiệt,,Quán cà phê,,"157 Lý Thường Kiệt, Ba Đình, Hà Nội",Ba Đình,Hà Nội,21.036666,105.815687,"the working coffee lý thường kiệt, quán cà phê, gần lý thường kiệt",24/7,4.1
+POI132,Cà phê View Đẹp Võ Nguyên Giáp,,Quán cà phê,,"149 Võ Nguyên Giáp, Ba Đình, Hà Nội",Ba Đình,Hà Nội,21.05525,105.815327,"cà phê view đẹp võ nguyên giáp, quán cà phê, gần võ nguyên giáp",07:00-23:00,4.2
+POI133,Cafe Sách Xanh Nguyễn Huệ,,Quán cà phê,,"149 Nguyễn Huệ, Hoàn Kiếm, Hà Nội",Hoàn Kiếm,Hà Nội,21.014761,105.862344,"cafe sách xanh nguyễn huệ, quán cà phê, gần nguyễn huệ",07:00-23:00,4.7
+POI134,Cafe Yên Tĩnh Điện Biên Phủ,,Quán cà phê,,"131 Điện Biên Phủ, Hoàn Kiếm, Hà Nội",Hoàn Kiếm,Hà Nội,21.044358,105.870001,"cafe yên tĩnh điện biên phủ, quán cà phê, gần điện biên phủ",06:00-22:00,4.1
+POI135,Cà phê View Đẹp Xuân Thủy,,Quán cà phê,,"178 Xuân Thủy, Quận 3, TP Hồ Chí Minh",Quận 3,TP Hồ Chí Minh,10.791008,106.666854,"cà phê view đẹp xuân thủy, quán cà phê, gần xuân thủy",07:00-23:00,4.6
+POI136,Cà phê View Đẹp Lê Duẩn,,Quán cà phê,,"235 Lê Duẩn, Đống Đa, Hà Nội",Đống Đa,Hà Nội,21.039414,105.824479,"cà phê view đẹp lê duẩn, quán cà phê, gần lê duẩn",24/7,4
+POI137,The Working Coffee Xuân Thủy,,Quán cà phê,,"235 Xuân Thủy, Quận 3, TP Hồ Chí Minh",Quận 3,TP Hồ Chí Minh,10.784913,106.687076,"the working coffee xuân thủy, quán cà phê, gần xuân thủy",07:00-23:00,4.8
+POI138,Cà phê View Đẹp Nguyễn Trãi,,Quán cà phê,,"167 Nguyễn Trãi, Đống Đa, Hà Nội",Đống Đa,Hà Nội,21.006235,105.846285,"cà phê view đẹp nguyễn trãi, quán cà phê, gần nguyễn trãi",07:00-23:00,4.7
+POI139,The Working Coffee Điện Biên Phủ,,Quán cà phê,,"247 Điện Biên Phủ, Sơn Trà, Đà Nẵng",Sơn Trà,Đà Nẵng,16.109299,108.250167,"the working coffee điện biên phủ, quán cà phê, gần điện biên phủ",24/7,4.1
+POI140,Cà phê Mộc Lý Thường Kiệt,,Quán cà phê,,"119 Lý Thường Kiệt, Bình Thạnh, TP Hồ Chí Minh",Bình Thạnh,TP Hồ Chí Minh,10.815641,106.706796,"cà phê mộc lý thường kiệt, quán cà phê, gần lý thường kiệt",24/7,3.7
+POI141,Quán Ăn Ngon Hùng Vương,,Nhà hàng,,"76 Hùng Vương, Quận 1, TP Hồ Chí Minh",Quận 1,TP Hồ Chí Minh,10.786333,106.693733,"quán ăn ngon hùng vương, nhà hàng, gần hùng vương",24/7,4.9
+POI142,Lẩu Phố Nguyễn Trãi,,Nhà hàng,,"40 Nguyễn Trãi, Đống Đa, Hà Nội",Đống Đa,Hà Nội,21.013685,105.835395,"lẩu phố nguyễn trãi, nhà hàng, gần nguyễn trãi",08:00-22:00,4.8
+POI143,Quán Ăn Ngon Hai Bà Trưng,,Nhà hàng,,"236 Hai Bà Trưng, Quận 7, TP Hồ Chí Minh",Quận 7,TP Hồ Chí Minh,10.731581,106.714944,"quán ăn ngon hai bà trưng, nhà hàng, gần hai bà trưng",07:00-23:00,3.9
+POI144,Quán Ăn Ngon Hùng Vương,,Nhà hàng,,"184 Hùng Vương, Sơn Trà, Đà Nẵng",Sơn Trà,Đà Nẵng,16.106462,108.268854,"quán ăn ngon hùng vương, nhà hàng, gần hùng vương",24/7,4.4
+POI145,Phở Truyền Thống Xuân Thủy,,Nhà hàng,,"98 Xuân Thủy, Ba Đình, Hà Nội",Ba Đình,Hà Nội,21.02371,105.841981,"phở truyền thống xuân thủy, nhà hàng, gần xuân thủy",06:00-22:00,4.9
+POI146,Lẩu Phố Võ Nguyên Giáp,,Nhà hàng,,"113 Võ Nguyên Giáp, Ba Đình, Hà Nội",Ba Đình,Hà Nội,21.018495,105.835314,"lẩu phố võ nguyên giáp, nhà hàng, gần võ nguyên giáp",07:00-23:00,4.9
+POI147,Nhà hàng Gia Đình Việt Hùng Vương,,Nhà hàng,,"146 Hùng Vương, Tân Bình, TP Hồ Chí Minh",Tân Bình,TP Hồ Chí Minh,10.810952,106.642271,"nhà hàng gia đình việt hùng vương, nhà hàng, gần hùng vương",06:00-22:00,4.5
+POI148,Phở Truyền Thống Kim Mã,,Nhà hàng,,"25 Kim Mã, Hải Châu, Đà Nẵng",Hải Châu,Đà Nẵng,16.072275,108.234262,"phở truyền thống kim mã, nhà hàng, gần kim mã",08:00-22:00,4
+POI149,Lẩu Phố Láng Hạ,,Nhà hàng,,"75 Láng Hạ, Quận 1, TP Hồ Chí Minh",Quận 1,TP Hồ Chí Minh,10.75883,106.715798,"lẩu phố láng hạ, nhà hàng, gần láng hạ",08:00-22:00,4.2
+POI150,Quán Ăn Ngon Phạm Văn Đồng,,Nhà hàng,,"223 Phạm Văn Đồng, Sơn Trà, Đà Nẵng",Sơn Trà,Đà Nẵng,16.088631,108.257724,"quán ăn ngon phạm văn đồng, nhà hàng, gần phạm văn đồng",08:00-22:00,4.5
+POI151,Khách sạn Biển Xanh Phạm Văn Đồng,,Khách sạn,,"158 Phạm Văn Đồng, Bình Thạnh, TP Hồ Chí Minh",Bình Thạnh,TP Hồ Chí Minh,10.800323,106.701085,"khách sạn biển xanh phạm văn đồng, khách sạn, gần phạm văn đồng",08:00-22:00,4.7
+POI152,Resort Ánh Dương Trường Sơn,,Khách sạn,,"200 Trường Sơn, Hải Châu, Đà Nẵng",Hải Châu,Đà Nẵng,16.067326,108.202901,"resort ánh dương trường sơn, khách sạn, gần trường sơn",07:00-23:00,4.4
+POI153,Khách sạn Công Tác Trần Hưng Đạo,,Khách sạn,,"238 Trần Hưng Đạo, Quận 1, TP Hồ Chí Minh",Quận 1,TP Hồ Chí Minh,10.7803,106.713318,"khách sạn công tác trần hưng đạo, khách sạn, gần trần hưng đạo",24/7,4
+POI154,Hotel Central Lý Thường Kiệt,,Khách sạn,,"55 Lý Thường Kiệt, Hải Châu, Đà Nẵng",Hải Châu,Đà Nẵng,16.067131,108.216529,"hotel central lý thường kiệt, khách sạn, gần lý thường kiệt",07:00-23:00,4.3
+POI155,Khách sạn Gia Đình Pasteur,,Khách sạn,,"162 Pasteur, Đống Đa, Hà Nội",Đống Đa,Hà Nội,21.007285,105.841345,"khách sạn gia đình pasteur, khách sạn, gần pasteur",24/7,4.7
+POI156,Khách sạn Gia Đình Lê Lợi,,Khách sạn,,"180 Lê Lợi, Đống Đa, Hà Nội",Đống Đa,Hà Nội,21.034362,105.843178,"khách sạn gia đình lê lợi, khách sạn, gần lê lợi",24/7,3.9
+POI157,Khách sạn Biển Xanh Nguyễn Huệ,,Khách sạn,,"212 Nguyễn Huệ, Ngũ Hành Sơn, Đà Nẵng",Ngũ Hành Sơn,Đà Nẵng,16.000879,108.274264,"khách sạn biển xanh nguyễn huệ, khách sạn, gần nguyễn huệ",08:00-22:00,4.7
+POI158,Khách sạn Gia Đình Lý Thường Kiệt,,Khách sạn,,"86 Lý Thường Kiệt, Hải Châu, Đà Nẵng",Hải Châu,Đà Nẵng,16.04821,108.226612,"khách sạn gia đình lý thường kiệt, khách sạn, gần lý thường kiệt",24/7,4
+POI159,Resort Ánh Dương Hai Bà Trưng,,Khách sạn,,"85 Hai Bà Trưng, Quận 3, TP Hồ Chí Minh",Quận 3,TP Hồ Chí Minh,10.775995,106.664412,"resort ánh dương hai bà trưng, khách sạn, gần hai bà trưng",07:00-23:00,4.4
+POI160,Hotel Central Bạch Đằng,,Khách sạn,,"233 Bạch Đằng, Ngũ Hành Sơn, Đà Nẵng",Ngũ Hành Sơn,Đà Nẵng,15.996927,108.248592,"hotel central bạch đằng, khách sạn, gần bạch đằng",06:00-22:00,4.3
+POI161,Trạm xăng An Phú Nam Kỳ Khởi Nghĩa,,Cây xăng,,"190 Nam Kỳ Khởi Nghĩa, Quận 1, TP Hồ Chí Minh",Quận 1,TP Hồ Chí Minh,10.765111,106.697643,"trạm xăng an phú nam kỳ khởi nghĩa, cây xăng, gần nam kỳ khởi nghĩa",06:00-22:00,4.4
+POI162,Cây xăng 24h Lý Thường Kiệt,,Cây xăng,,"1 Lý Thường Kiệt, Hải Châu, Đà Nẵng",Hải Châu,Đà Nẵng,16.084073,108.232395,"cây xăng 24h lý thường kiệt, cây xăng, gần lý thường kiệt",24/7,4
+POI163,Trạm nhiên liệu Phú Mỹ Nguyễn Chí Thanh,,Cây xăng,,"64 Nguyễn Chí Thanh, Tân Bình, TP Hồ Chí Minh",Tân Bình,TP Hồ Chí Minh,10.78445,106.646466,"trạm nhiên liệu phú mỹ nguyễn chí thanh, cây xăng, gần nguyễn chí thanh",07:00-23:00,3.7
+POI164,Cây xăng 24h Pasteur,,Cây xăng,,"30 Pasteur, Tân Bình, TP Hồ Chí Minh",Tân Bình,TP Hồ Chí Minh,10.788239,106.650367,"cây xăng 24h pasteur, cây xăng, gần pasteur",06:00-22:00,3.9
+POI165,Cây xăng Trung Tâm Pasteur,,Cây xăng,,"93 Pasteur, Cầu Giấy, Hà Nội",Cầu Giấy,Hà Nội,21.019168,105.782268,"cây xăng trung tâm pasteur, cây xăng, gần pasteur",07:00-23:00,3.8
+POI166,Cây xăng 24h Phạm Văn Đồng,,Cây xăng,,"81 Phạm Văn Đồng, Quận 1, TP Hồ Chí Minh",Quận 1,TP Hồ Chí Minh,10.761841,106.71462,"cây xăng 24h phạm văn đồng, cây xăng, gần phạm văn đồng",07:00-23:00,4.7
+POI167,Cây xăng Trung Tâm Pasteur,,Cây xăng,,"101 Pasteur, Quận 7, TP Hồ Chí Minh",Quận 7,TP Hồ Chí Minh,10.750857,106.707579,"cây xăng trung tâm pasteur, cây xăng, gần pasteur",07:00-23:00,4.7
+POI168,Cây xăng Quốc Lộ Nguyễn Huệ,,Cây xăng,,"172 Nguyễn Huệ, Sơn Trà, Đà Nẵng",Sơn Trà,Đà Nẵng,16.092981,108.244504,"cây xăng quốc lộ nguyễn huệ, cây xăng, gần nguyễn huệ",06:00-22:00,4.9
+POI169,Cây xăng Trung Tâm Trần Hưng Đạo,,Cây xăng,,"44 Trần Hưng Đạo, Ngũ Hành Sơn, Đà Nẵng",Ngũ Hành Sơn,Đà Nẵng,15.988121,108.268588,"cây xăng trung tâm trần hưng đạo, cây xăng, gần trần hưng đạo",08:00-22:00,4.6
+POI170,Trạm xăng An Phú Xuân Thủy,,Cây xăng,,"228 Xuân Thủy, Cầu Giấy, Hà Nội",Cầu Giấy,Hà Nội,21.052442,105.793096,"trạm xăng an phú xuân thủy, cây xăng, gần xuân thủy",06:00-22:00,4
+POI171,Trạm sạc nhanh Trung tâm Trần Hưng Đạo,,Trạm sạc điện,,"110 Trần Hưng Đạo, Tân Bình, TP Hồ Chí Minh",Tân Bình,TP Hồ Chí Minh,10.786328,106.638558,"trạm sạc nhanh trung tâm trần hưng đạo, trạm sạc điện, gần trần hưng đạo",08:00-22:00,3.8
+POI172,EV Station Plaza Pasteur,,Trạm sạc điện,,"189 Pasteur, Ba Đình, Hà Nội",Ba Đình,Hà Nội,21.037159,105.832549,"ev station plaza pasteur, trạm sạc điện, gần pasteur",24/7,4.3
+POI173,Trạm sạc nhanh Trung tâm Phạm Văn Đồng,,Trạm sạc điện,,"118 Phạm Văn Đồng, Quận 3, TP Hồ Chí Minh",Quận 3,TP Hồ Chí Minh,10.766284,106.683347,"trạm sạc nhanh trung tâm phạm văn đồng, trạm sạc điện, gần phạm văn đồng",06:00-22:00,4.3
+POI174,Trạm sạc VinFast Kim Mã,,Trạm sạc điện,,"146 Kim Mã, Quận 1, TP Hồ Chí Minh",Quận 1,TP Hồ Chí Minh,10.793161,106.71544,"trạm sạc vinfast kim mã, trạm sạc điện, gần kim mã",24/7,3.8
+POI175,Trạm sạc đường dài Bạch Đằng,,Trạm sạc điện,,"193 Bạch Đằng, Quận 1, TP Hồ Chí Minh",Quận 1,TP Hồ Chí Minh,10.785028,106.697756,"trạm sạc đường dài bạch đằng, trạm sạc điện, gần bạch đằng",24/7,4.7
+POI176,Trạm sạc EV City Điện Biên Phủ,,Trạm sạc điện,,"51 Điện Biên Phủ, Quận 7, TP Hồ Chí Minh",Quận 7,TP Hồ Chí Minh,10.727074,106.727575,"trạm sạc ev city điện biên phủ, trạm sạc điện, gần điện biên phủ",08:00-22:00,4
+POI177,Trạm sạc EV City Nguyễn Huệ,,Trạm sạc điện,,"207 Nguyễn Huệ, Cầu Giấy, Hà Nội",Cầu Giấy,Hà Nội,21.034719,105.792374,"trạm sạc ev city nguyễn huệ, trạm sạc điện, gần nguyễn huệ",08:00-22:00,4.4
+POI178,Trạm sạc nhanh Trung tâm Kim Mã,,Trạm sạc điện,,"152 Kim Mã, Quận 1, TP Hồ Chí Minh",Quận 1,TP Hồ Chí Minh,10.78311,106.720638,"trạm sạc nhanh trung tâm kim mã, trạm sạc điện, gần kim mã",07:00-23:00,4
+POI179,EV Station Plaza Phạm Văn Đồng,,Trạm sạc điện,,"3 Phạm Văn Đồng, Hải Châu, Đà Nẵng",Hải Châu,Đà Nẵng,16.074622,108.217061,"ev station plaza phạm văn đồng, trạm sạc điện, gần phạm văn đồng",07:00-23:00,4.3
+POI180,EV Station Plaza Cách Mạng Tháng Tám,,Trạm sạc điện,,"6 Cách Mạng Tháng Tám, Quận 3, TP Hồ Chí Minh",Quận 3,TP Hồ Chí Minh,10.788296,106.699796,"ev station plaza cách mạng tháng tám, trạm sạc điện, gần cách mạng tháng tám",06:00-22:00,3.8
+POI181,Tiệm thuốc Sức Khỏe Lý Thường Kiệt,,Nhà thuốc,,"127 Lý Thường Kiệt, Đống Đa, Hà Nội",Đống Đa,Hà Nội,21.011591,105.845166,"tiệm thuốc sức khỏe lý thường kiệt, nhà thuốc, gần lý thường kiệt",06:00-22:00,4.2
+POI182,Nhà thuốc An Khang Nguyễn Huệ,,Nhà thuốc,,"189 Nguyễn Huệ, Hoàn Kiếm, Hà Nội",Hoàn Kiếm,Hà Nội,21.017782,105.850687,"nhà thuốc an khang nguyễn huệ, nhà thuốc, gần nguyễn huệ",07:00-23:00,4.1
+POI183,Nhà thuốc Gia Đình Xuân Thủy,,Nhà thuốc,,"35 Xuân Thủy, Cầu Giấy, Hà Nội",Cầu Giấy,Hà Nội,21.050292,105.807289,"nhà thuốc gia đình xuân thủy, nhà thuốc, gần xuân thủy",06:00-22:00,3.7
+POI184,Nhà thuốc 24h Lê Lợi,,Nhà thuốc,,"7 Lê Lợi, Hải Châu, Đà Nẵng",Hải Châu,Đà Nẵng,16.085195,108.227953,"nhà thuốc 24h lê lợi, nhà thuốc, gần lê lợi",07:00-23:00,4.5
+POI185,Nhà thuốc An Khang Nguyễn Huệ,,Nhà thuốc,,"165 Nguyễn Huệ, Quận 7, TP Hồ Chí Minh",Quận 7,TP Hồ Chí Minh,10.748333,106.724916,"nhà thuốc an khang nguyễn huệ, nhà thuốc, gần nguyễn huệ",24/7,4.5
+POI186,Nhà thuốc Minh Tâm Trường Sơn,,Nhà thuốc,,"78 Trường Sơn, Quận 3, TP Hồ Chí Minh",Quận 3,TP Hồ Chí Minh,10.789724,106.680734,"nhà thuốc minh tâm trường sơn, nhà thuốc, gần trường sơn",24/7,4
+POI187,Nhà thuốc 24h Kim Mã,,Nhà thuốc,,"139 Kim Mã, Quận 7, TP Hồ Chí Minh",Quận 7,TP Hồ Chí Minh,10.738564,106.723823,"nhà thuốc 24h kim mã, nhà thuốc, gần kim mã",06:00-22:00,4.5
+POI188,Nhà thuốc Gia Đình Nam Kỳ Khởi Nghĩa,,Nhà thuốc,,"180 Nam Kỳ Khởi Nghĩa, Tân Bình, TP Hồ Chí Minh",Tân Bình,TP Hồ Chí Minh,10.783821,106.649224,"nhà thuốc gia đình nam kỳ khởi nghĩa, nhà thuốc, gần nam kỳ khởi nghĩa",06:00-22:00,3.7
+POI189,Nhà thuốc 24h Lê Lợi,,Nhà thuốc,,"113 Lê Lợi, Hoàn Kiếm, Hà Nội",Hoàn Kiếm,Hà Nội,21.03968,105.868667,"nhà thuốc 24h lê lợi, nhà thuốc, gần lê lợi",07:00-23:00,4
+POI190,Nhà thuốc An Khang Trần Hưng Đạo,,Nhà thuốc,,"179 Trần Hưng Đạo, Hải Châu, Đà Nẵng",Hải Châu,Đà Nẵng,16.064667,108.234892,"nhà thuốc an khang trần hưng đạo, nhà thuốc, gần trần hưng đạo",07:00-23:00,3.7

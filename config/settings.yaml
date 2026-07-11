@@ -165,3 +165,5 @@ verify:
 # Feature flags — default ở đây; env override từng cái (xem .env.example)
 features:
   typo_fix: true  # env TASCO_TYPO_FIX=0/1
+  deterministic_mode: true  # env DETERMINISTIC_MODE=0/1 — không gọi LLM, planner rule-based
+  use_advanced_compiler: false

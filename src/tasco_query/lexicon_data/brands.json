@@ -1,0 +1,15 @@
+{
+  "entries": [
+    {"canonical": "Vietcombank", "aliases": ["vietcom bank", "vietcombank", "vcb"], "entity_type": "brand", "canonical_field": "brand", "rule_id": "brand.vietcombank", "priority": 100, "confidence": 1.0, "canonical_rendering": "Vietcombank", "source": "curated_release_1"},
+    {"canonical": "Circle K", "aliases": ["circle k"], "entity_type": "brand", "canonical_field": "brand", "rule_id": "brand.circle_k", "priority": 100, "confidence": 1.0, "canonical_rendering": "Circle K", "source": "curated_release_1"},
+    {"canonical": "Long Châu", "aliases": ["long châu", "long chau"], "entity_type": "brand", "canonical_field": "brand", "rule_id": "brand.long_chau", "priority": 100, "confidence": 1.0, "canonical_rendering": "Long Châu", "source": "curated_release_1"},
+    {"canonical": "VinFast", "aliases": ["vinfast"], "entity_type": "brand", "canonical_field": "brand", "rule_id": "brand.vinfast", "priority": 100, "confidence": 1.0, "canonical_rendering": "VinFast", "source": "curated_release_1"},
+    {"canonical": "Vincom", "aliases": ["vincom"], "entity_type": "brand", "canonical_field": "brand", "rule_id": "brand.vincom", "priority": 90, "confidence": 1.0, "canonical_rendering": "Vincom", "source": "curated_release_1"},
+    {"canonical": "CGV", "aliases": ["cgv"], "entity_type": "brand", "canonical_field": "brand", "rule_id": "brand.cgv", "priority": 100, "confidence": 1.0, "canonical_rendering": "CGV", "source": "curated_release_1"},
+    {"canonical": "Lotte Mart", "aliases": ["lotte mart"], "entity_type": "brand", "canonical_field": "brand", "rule_id": "brand.lotte_mart", "priority": 100, "confidence": 1.0, "canonical_rendering": "Lotte Mart", "source": "curated_release_1"},
+    {"canonical": "Highlands Coffee", "aliases": ["highlands coffee"], "entity_type": "brand", "canonical_field": "brand", "rule_id": "brand.highlands", "priority": 100, "confidence": 1.0, "canonical_rendering": "Highlands Coffee", "source": "curated_release_1"},
+    {"canonical": "Phúc Long", "aliases": ["phúc long", "phuc long"], "entity_type": "brand", "canonical_field": "brand", "rule_id": "brand.phuc_long", "priority": 100, "confidence": 1.0, "canonical_rendering": "Phúc Long", "source": "curated_release_1"},
+    {"canonical": "The Coffee House", "aliases": ["the coffee house"], "entity_type": "brand", "canonical_field": "brand", "rule_id": "brand.the_coffee_house", "priority": 100, "confidence": 1.0, "canonical_rendering": "The Coffee House", "source": "curated_release_1"},
+    {"canonical": "BIDV", "aliases": ["bidv"], "entity_type": "brand", "canonical_field": "brand", "rule_id": "brand.bidv", "priority": 100, "confidence": 1.0, "canonical_rendering": "BIDV", "source": "curated_release_1"}
+  ]
+}

@@ -130,16 +130,14 @@ class RerankRetriever:
         fallback khi query text không tự resolve được location (landmark/district giữ
         ưu tiên). Eval không truyền → không ảnh hưởng con số eval.
         """
-        query = preprocess_query(query)  # expand → restore → typo, trước MỌI nhánh
-        plan = extract_plan(query, attr_index=self._attr_index,
-                            joint_index=self._joint_index,
-                            column_anchor=self._column_anchor)
-        if user_coord is not None and plan.resolved_coord is None:
-            plan.resolved_coord = user_coord
-
+        from src.understanding.compiler_adapter import get_plan_and_normalized_query
+        plan, norm = get_plan_and_normalized_query(query, user_coord,
+                                                   attr_index=self._attr_index,
+                                                   joint_index=self._joint_index,
+                                                   column_anchor=self._column_anchor)
         n_all = len(self._by_id)
-        bm25_all = self._base.search_scored(query, k=n_all)
-        dense_all = self._dense.search_scored(query, k=n_all, plan=plan)
+        bm25_all = self._base.search_scored(norm, k=n_all)
+        dense_all = self._dense.search_scored(norm, k=n_all, plan=plan)
         pool = sorted({pid for pid, _ in bm25_all[:self._pool_k]}
                       | {pid for pid, _ in dense_all[:self._pool_k]})
         bm25_n = self._minmax_in_pool(dict(bm25_all), pool)
@@ -176,11 +174,12 @@ class RerankRetriever:
     def search(self, query: str, k: int = 10) -> list[str]:
         if self._dense is not None:
             return [pid for pid, _, _ in self._score_pool(query)[:k]]
-        query = preprocess_query(query)  # path không dense cũng qua chuỗi hiểu query
-        plan = extract_plan(query, attr_index=self._attr_index,
-                            joint_index=self._joint_index,
-                            column_anchor=self._column_anchor)
-        cands = self._candidates(query)
+        from src.understanding.compiler_adapter import get_plan_and_normalized_query
+        plan, norm = get_plan_and_normalized_query(query,
+                                                   attr_index=self._attr_index,
+                                                   joint_index=self._joint_index,
+                                                   column_anchor=self._column_anchor)
+        cands = self._candidates(norm)
         if not cands:
             return []
         max_base = max(score for _, score in cands) or 1.0

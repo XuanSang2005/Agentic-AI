@@ -257,6 +257,8 @@ def _env_flag(name: str, default: bool) -> bool:
 # Typo correction bảo thủ, query-side. TẮT = export TASCO_TYPO_FIX=0.
 # Xem luật trong src/understanding/typo_fix.py.
 ENABLE_TYPO_FIX = _env_flag("TASCO_TYPO_FIX", _S.features["typo_fix"])
+USE_ADVANCED_COMPILER = _env_flag("USE_ADVANCED_COMPILER", _S.features.get("use_advanced_compiler", False))
+
 
 
 # Nguồn POI data: "xlsx" (mặc định — offline, không phá gì) | "postgres" (opt-in).

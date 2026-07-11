@@ -1,0 +1,17 @@
+{
+  "templates": {
+    "unknown_target": "Không rõ mục tiêu tìm kiếm",
+    "near_current": "gần đây",
+    "open_24h": "mở cửa 24/7",
+    "open_now": "đang mở cửa",
+    "open_late": "mở cửa muộn",
+    "directions": "Chỉ đường"
+    ,"attribute_order": "yên tĩnh|không quá ồn|phù hợp làm việc|phù hợp học tập|phù hợp chụp ảnh|check-in đẹp|view đẹp|giá phải chăng|phù hợp hẹn hò|riêng tư|phù hợp gia đình|phù hợp trẻ nhỏ|phòng riêng|4 sao|hồ bơi|gần biển"
+    ,"passthrough_tokens": "có|mở|cửa|tại|ở|trên|dưới|đến|tới|từ|sau|trước|cho|tôi|chỉ|tìm|find|và|hoặc|với|của|đẹp|k"
+  },
+  "ambiguities": [
+    {"alias": "galaxy", "candidates": ["Galaxy Cinema", "Samsung Galaxy Store", "Galaxy Hotel"], "ambiguity_type": "brand_or_poi", "rule_id": "ambiguity.galaxy", "canonical_rendering": "Galaxy"},
+    {"alias": "big c", "candidates": ["GO! / Big C supermarket", "Big C Thăng Long", "Big C Miền Đông"], "ambiguity_type": "brand_or_branch", "rule_id": "ambiguity.big_c", "canonical_rendering": "Big C"},
+    {"alias": "vinmec", "candidates": ["Bệnh viện Đa khoa Quốc tế Vinmec", "Phòng khám Vinmec", "Vinmec branches"], "ambiguity_type": "brand_or_branch", "rule_id": "ambiguity.vinmec", "canonical_rendering": "Vinmec"}
+  ]
+}

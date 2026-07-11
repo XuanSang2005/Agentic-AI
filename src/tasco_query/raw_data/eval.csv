@@ -1,0 +1,61 @@
+query_id,input_query,expected_normalized_query,expected_intent,expected_entities_json,difficulty,skills_tested
+PUB001,vincom q1,"Vincom Center Đồng Khởi, Quận 1",POI Search,"{""poi_name"": ""Vincom Center Đồng Khởi"", ""brand"": ""Vincom"", ""district"": ""Quận 1"", ""city"": ""TP Hồ Chí Minh""}",Easy,Abbreviation Expansion; POI Search
+PUB002,cafe gan day,Quán cà phê gần đây,Nearby Search,"{""category"": ""Quán cà phê"", ""location"": ""current_location""}",Easy,Missing Accents; Nearby Search
+PUB003,ben thanh market,Chợ Bến Thành,POI Search,"{""poi_name"": ""Chợ Bến Thành"", ""alias"": ""Ben Thanh Market""}",Easy,Mixed Language; POI Alias
+PUB004,bv bach mai,Bệnh viện Bạch Mai,POI Search,"{""poi_name"": ""Bệnh viện Bạch Mai"", ""category"": ""Bệnh viện""}",Easy,Abbreviation Expansion; POI Search
+PUB005,atm vcb,ATM Vietcombank,Brand Category Search,"{""category"": ""ATM"", ""brand"": ""Vietcombank""}",Easy,Abbreviation Expansion; Brand Search
+PUB006,chi duong den san bay,Chỉ đường đến sân bay,Navigation,"{""category"": ""Sân bay"", ""action"": ""directions""}",Easy,Missing Accents; Navigation Intent
+PUB007,ks da nang gan bien,Khách sạn Đà Nẵng gần biển,Category Search,"{""category"": ""Khách sạn"", ""city"": ""Đà Nẵng"", ""attribute"": ""gần biển""}",Medium,Abbreviation Expansion; Missing Accents; Natural Language
+PUB008,12 nguyen hue q1,"12 Nguyễn Huệ, Quận 1",Address Search,"{""house_number"": ""12"", ""street"": ""Nguyễn Huệ"", ""district"": ""Quận 1""}",Medium,Address Parsing; Missing Accents
+PUB009,coffee near ben thanh market,Quán cà phê gần Chợ Bến Thành,Nearby Search,"{""category"": ""Quán cà phê"", ""reference_poi"": ""Chợ Bến Thành""}",Medium,Mixed Language; Nearby Search
+PUB010,atm vcb q7,ATM Vietcombank Quận 7,Nearby Search,"{""category"": ""ATM"", ""brand"": ""Vietcombank"", ""district"": ""Quận 7""}",Medium,Multiple Abbreviations; Entity Extraction
+PUB011,benh vien bach maj,Bệnh viện Bạch Mai,POI Search,"{""poi_name"": ""Bệnh viện Bạch Mai"", ""category"": ""Bệnh viện""}",Hard,Typo Correction; Missing Accents
+PUB012,vincom dong khoii,Vincom Center Đồng Khởi,POI Search,"{""poi_name"": ""Vincom Center Đồng Khởi"", ""brand"": ""Vincom""}",Medium,Typo Correction; Brand Search
+PUB013,galaxy,Galaxy,Ambiguous,"{""candidates"": [""Galaxy Cinema"", ""Samsung Galaxy Store"", ""Galaxy Hotel""], ""ambiguity_type"": ""brand_or_poi""}",Hard,Ambiguity Resolution
+PUB014,quán ăn mở cửa sau 11h gần hồ gươm,Nhà hàng mở cửa sau 23:00 gần Hồ Hoàn Kiếm,Category Search,"{""category"": ""Nhà hàng"", ""location"": ""Hồ Hoàn Kiếm"", ""open_after"": ""23:00""}",Hard,Natural Language; Time Constraint; Alias
+PUB015,trà sữa ngon xỉu q3,Quán trà sữa được đánh giá cao tại Quận 3,Category Search,"{""category"": ""Trà sữa"", ""district"": ""Quận 3"", ""sentiment"": ""ngon/xếp hạng cao""}",Medium,Slang; Category Search
+PUB016,chỉ tôi quán cafe làm việc có wifi gần sân bay tsn,Quán cà phê làm việc có Wi-Fi gần Sân bay Tân Sơn Nhất,Category Search,"{""category"": ""Quán cà phê"", ""amenities"": [""Wi-Fi"", ""phù hợp làm việc""], ""reference_poi"": ""Sân bay Tân Sơn Nhất""}",Hard,Natural Language; Abbreviation; Amenity Extraction
+PUB017,"10.7769,106.7009","10.7769,106.7009",Coordinate Search,"{""latitude"": 10.7769, ""longitude"": 106.7009}",Easy,Coordinate Parsing
+PUB018,cây xăng có wc trên đường đi hạ long,Cây xăng có nhà vệ sinh trên đường đi Hạ Long,Category Search,"{""category"": ""Cây xăng"", ""amenities"": [""nhà vệ sinh""], ""route_destination"": ""Hạ Long""}",Hard,Synonym; Amenity; Route Context
+PUB019,pharmacy near ho guom,Nhà thuốc gần Hồ Hoàn Kiếm,Nearby Search,"{""category"": ""Nhà thuốc"", ""reference_poi"": ""Hồ Hoàn Kiếm""}",Medium,Mixed Language; Alias; Nearby Search
+PUB020,quán cafe đẹp để học,Quán cà phê phù hợp học tập,Category Search,"{""category"": ""Quán cà phê"", ""attribute"": ""phù hợp học tập""}",Medium,Query Rewriting; Semantic Intent
+PUB021,đường đi vincom nct,Chỉ đường đến Vincom Center Nguyễn Chí Thanh,Navigation,"{""poi_name"": ""Vincom Center Nguyễn Chí Thanh"", ""action"": ""directions""}",Medium,Abbreviation; Navigation Intent
+PUB022,atm gần vincom đồng khởi,ATM gần Vincom Center Đồng Khởi,Nearby Search,"{""category"": ""ATM"", ""reference_poi"": ""Vincom Center Đồng Khởi""}",Medium,Nearby Search; Reference POI
+PUB023,nha hang ngon ha noi,Nhà hàng ngon tại Hà Nội,Category Search,"{""category"": ""Nhà hàng"", ""city"": ""Hà Nội"", ""quality"": ""ngon/đánh giá cao""}",Medium,Missing Accents; Category Search
+PUB024,khach san 4 sao co ho boi gan bien da nang,Khách sạn 4 sao có hồ bơi gần biển Đà Nẵng,Category Search,"{""category"": ""Khách sạn"", ""city"": ""Đà Nẵng"", ""attributes"": [""4 sao"", ""hồ bơi"", ""gần biển""]}",Hard,Missing Accents; Multiple Constraints
+PUB025,rap phim gan day,Rạp chiếu phim gần đây,Nearby Search,"{""category"": ""Rạp chiếu phim"", ""location"": ""current_location""}",Easy,Missing Accents; Category Search
+PUB026,cgv vincom dong khoi,CGV Vincom Đồng Khởi,POI Search,"{""poi_name"": ""CGV Vincom Đồng Khởi"", ""brand"": ""CGV""}",Easy,Brand + POI
+PUB027,bún chả dưới 100k gần hồ tây,Quán bún chả dưới 100.000đ gần Hồ Tây,Category Search,"{""dish"": ""Bún chả"", ""price_max"": 100000, ""location"": ""Hồ Tây""}",Hard,Food Search; Price Constraint; Location
+PUB028,nt long chau q1,Nhà thuốc Long Châu Quận 1,Brand Category Search,"{""category"": ""Nhà thuốc"", ""brand"": ""Long Châu"", ""district"": ""Quận 1""}",Medium,Abbreviation; Brand Search
+PUB029,sạc xe điện gần tôi,Trạm sạc xe điện gần tôi,Nearby Search,"{""category"": ""Trạm sạc điện"", ""location"": ""current_location""}",Medium,Synonym; Nearby Search
+PUB030,big c,Big C,Ambiguous,"{""candidates"": [""GO! / Big C supermarket"", ""Big C Thăng Long"", ""Big C Miền Đông""], ""ambiguity_type"": ""brand_or_branch""}",Hard,Ambiguity Resolution
+PUB031,đh quốc gia hà nội,Đại học Quốc gia Hà Nội,POI Search,"{""poi_name"": ""Đại học Quốc gia Hà Nội"", ""category"": ""Trường đại học""}",Medium,Abbreviation Expansion; POI Search
+PUB032,dia diem checkin dep o da nang,Địa điểm check-in đẹp ở Đà Nẵng,Discovery Search,"{""category"": ""Điểm du lịch"", ""city"": ""Đà Nẵng"", ""attribute"": ""check-in đẹp""}",Medium,Missing Accents; Discovery Intent
+PUB033,hoan kiem lake restaurants open late,Nhà hàng mở cửa muộn gần Hồ Hoàn Kiếm,Category Search,"{""category"": ""Nhà hàng"", ""location"": ""Hồ Hoàn Kiếm"", ""open_late"": true}",Hard,Mixed Language; Time Constraint
+PUB034,ga ha noi,Ga Hà Nội,POI Search,"{""poi_name"": ""Ga Hà Nội"", ""category"": ""Nhà ga""}",Medium,Missing Accents; POI Search
+PUB035,bx my dinh,Bến xe Mỹ Đình,POI Search,"{""poi_name"": ""Bến xe Mỹ Đình"", ""category"": ""Bến xe""}",Medium,Abbreviation Expansion; POI Search
+PUB036,"khách sạn gần 16.0678,108.2208","Khách sạn gần tọa độ 16.0678,108.2208",Nearby Search,"{""category"": ""Khách sạn"", ""latitude"": 16.0678, ""longitude"": 108.2208}",Hard,Coordinate + Category
+PUB037,ăn đêm gần đây,Quán ăn mở khuya gần đây,Nearby Search,"{""category"": ""Nhà hàng"", ""open_late"": true, ""location"": ""current_location""}",Medium,Informal Language; Nearby Search
+PUB038,cafe 24h q7 có chỗ đậu xe,Quán cà phê 24/7 tại Quận 7 có chỗ đậu xe,Category Search,"{""category"": ""Quán cà phê"", ""district"": ""Quận 7"", ""open_24h"": true, ""amenities"": [""bãi đỗ xe""]}",Hard,Multiple Constraints
+PUB039,đi sân bay từ quận 1,Chỉ đường đến sân bay từ Quận 1,Navigation,"{""destination_category"": ""Sân bay"", ""origin"": ""Quận 1"", ""action"": ""directions""}",Hard,Navigation; Origin/Destination
+PUB040,circle k gần đại học quốc gia,Circle K gần Đại học Quốc gia,Nearby Search,"{""brand"": ""Circle K"", ""reference_poi"": ""Đại học Quốc gia""}",Medium,Brand + Nearby Reference
+PUB041,nguyen chi thanh vincom,Vincom Center Nguyễn Chí Thanh,POI Search,"{""poi_name"": ""Vincom Center Nguyễn Chí Thanh"", ""street"": ""Nguyễn Chí Thanh""}",Medium,Entity Reordering
+PUB042,quán ăn gia đình có phòng riêng q1,Nhà hàng gia đình có phòng riêng tại Quận 1,Category Search,"{""category"": ""Nhà hàng"", ""district"": ""Quận 1"", ""attributes"": [""phù hợp gia đình"", ""phòng riêng""]}",Hard,Natural Language; Multiple Attributes
+PUB043,find hotel near da nang beach,Khách sạn gần biển Đà Nẵng,Category Search,"{""category"": ""Khách sạn"", ""city"": ""Đà Nẵng"", ""location_attribute"": ""gần biển""}",Medium,English Query; Semantic Mapping
+PUB044,bv gần sân bay nội bài,Bệnh viện gần Sân bay Nội Bài,Nearby Search,"{""category"": ""Bệnh viện"", ""reference_poi"": ""Sân bay Nội Bài""}",Medium,Abbreviation; Nearby Search
+PUB045,tới chợ bến thành,Chỉ đường đến Chợ Bến Thành,Navigation,"{""poi_name"": ""Chợ Bến Thành"", ""action"": ""directions""}",Medium,Navigation Intent; Natural Language
+PUB046,lotte mart gò vấp,Lotte Mart Gò Vấp,POI Search,"{""poi_name"": ""Lotte Mart Gò Vấp"", ""brand"": ""Lotte Mart"", ""district"": ""Gò Vấp""}",Medium,Brand + District
+PUB047,cửa hàng tiện lợi 24/7 gần tôi,Cửa hàng tiện lợi 24/7 gần tôi,Nearby Search,"{""category"": ""Cửa hàng tiện lợi"", ""open_24h"": true, ""location"": ""current_location""}",Medium,Category; Open Hours
+PUB048,nhà thuốc còn mở cửa gần đây,Nhà thuốc đang mở cửa gần đây,Nearby Search,"{""category"": ""Nhà thuốc"", ""open_now"": true, ""location"": ""current_location""}",Medium,Open Now; Nearby
+PUB049,vietcom bank atm nguyen hue,ATM Vietcombank Nguyễn Huệ,Brand Category Search,"{""category"": ""ATM"", ""brand"": ""Vietcombank"", ""street"": ""Nguyễn Huệ""}",Medium,Typo/Split Brand; Entity Extraction
+PUB050,pizza ngon gần vincom q1,Quán pizza ngon gần Vincom Center Đồng Khởi Quận 1,Nearby Search,"{""dish"": ""Pizza"", ""quality"": ""ngon"", ""reference_poi"": ""Vincom Center Đồng Khởi""}",Hard,Food Search; Nearby POI
+PUB051,sân bay tân sơn nhát,Sân bay Tân Sơn Nhất,POI Search,"{""poi_name"": ""Sân bay Tân Sơn Nhất"", ""category"": ""Sân bay""}",Medium,Typo Correction
+PUB052,ho guom cafe wifi,Quán cà phê có Wi-Fi gần Hồ Hoàn Kiếm,Nearby Search,"{""category"": ""Quán cà phê"", ""amenity"": ""Wi-Fi"", ""reference_poi"": ""Hồ Hoàn Kiếm""}",Medium,Missing Accents; Entity Reordering
+PUB053,phở gà gần đây dưới 50k,Quán phở gà gần đây dưới 50.000đ,Nearby Search,"{""dish"": ""Phở gà"", ""price_max"": 50000, ""location"": ""current_location""}",Hard,Food + Price Constraint
+PUB054,bãi đậu xe quanh phố đi bộ nguyễn huệ,Bãi đỗ xe gần phố đi bộ Nguyễn Huệ,Nearby Search,"{""category"": ""Bãi đỗ xe"", ""reference_area"": ""Phố đi bộ Nguyễn Huệ""}",Hard,Synonym; Area Parsing
+PUB055,vinmec,Vinmec,Ambiguous,"{""candidates"": [""Bệnh viện Đa khoa Quốc tế Vinmec"", ""Phòng khám Vinmec"", ""Vinmec branches""], ""ambiguity_type"": ""brand_or_branch""}",Hard,Ambiguity Resolution
+PUB056,đường tới cgv vincom đồng khởi từ q7,Chỉ đường từ Quận 7 đến CGV Vincom Đồng Khởi,Navigation,"{""origin"": ""Quận 7"", ""destination_poi"": ""CGV Vincom Đồng Khởi"", ""action"": ""directions""}",Hard,Navigation; Origin/Destination
+PUB057,tiệm thuốc gần 72 lê thánh tôn,Nhà thuốc gần 72 Lê Thánh Tôn,Nearby Search,"{""category"": ""Nhà thuốc"", ""reference_address"": ""72 Lê Thánh Tôn""}",Hard,Address Reference; Category
+PUB058,trạm sạc vinfast gần cầu rồng,Trạm sạc VinFast gần Cầu Rồng,Nearby Search,"{""category"": ""Trạm sạc điện"", ""brand"": ""VinFast"", ""reference_poi"": ""Cầu Rồng""}",Hard,Brand + Category + Landmark
+PUB059,cafe view đẹp gần biển mỹ khê,Quán cà phê view đẹp gần biển Mỹ Khê,Category Search,"{""category"": ""Quán cà phê"", ""attributes"": [""view đẹp""], ""reference_area"": ""Biển Mỹ Khê""}",Hard,Semantic Attribute; Location
+PUB060,quan an co phong rieng va dau xe q1,Nhà hàng có phòng riêng và chỗ đậu xe tại Quận 1,Category Search,"{""category"": ""Nhà hàng"", ""district"": ""Quận 1"", ""amenities"": [""phòng riêng"", ""bãi đỗ xe""]}",Hard,Missing Accents; Multiple Constraints

@@ -1,0 +1,8 @@
+{
+  "entries": [
+    {"canonical": ["Wi-Fi"], "aliases": ["wifi", "wi-fi", "wi fi"], "entity_type": "amenity", "canonical_field": "amenities", "rule_id": "amenity.wifi", "priority": 100, "confidence": 1.0, "canonical_rendering": "Wi-Fi", "source": "curated_release_1"},
+    {"canonical": ["nhà vệ sinh"], "aliases": ["wc", "nhà vệ sinh"], "entity_type": "amenity", "canonical_field": "amenities", "rule_id": "amenity.restroom", "priority": 100, "confidence": 1.0, "canonical_rendering": "nhà vệ sinh", "source": "curated_release_1"},
+    {"canonical": ["bãi đỗ xe"], "aliases": ["chỗ đậu xe", "chỗ đỗ xe", "bãi đậu xe", "bãi đỗ xe", "đậu xe"], "entity_type": "amenity", "canonical_field": "amenities", "rule_id": "amenity.parking", "priority": 100, "confidence": 0.98, "canonical_rendering": "bãi đỗ xe", "source": "curated_release_1"},
+    {"canonical": ["phòng riêng"], "aliases": ["phòng riêng", "có phòng riêng"], "entity_type": "amenity", "canonical_field": "attributes", "rule_id": "amenity.private_room", "priority": 100, "confidence": 0.98, "canonical_rendering": "phòng riêng", "source": "curated_release_1"}
+  ]
+}
