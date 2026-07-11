@@ -1,8 +1,9 @@
 """SMOKE THẬT (chạy TAY, KHÔNG trong CI): gọi AWS Location Geocode v2 THẬT với
 ~10 địa chỉ Việt Nam thật từ dataset — đo ĐỘ PHỦ Việt Nam của verify.
 
-Cần credential AWS (env / ~/.aws) có quyền geo-places:Geocode. Mỗi lần chạy
-tốn ~10 request (SingleUse). In Overall + toạ độ matched + verdict từng địa chỉ.
+Cần env AWS_LOCATION_API_KEY (API key của AWS Location, KHÔNG IAM/SigV4 —
+xem TODO trong src/verify/geocode.py). Mỗi lần chạy tốn ~10 request
+(SingleUse). In Overall + toạ độ matched + verdict từng địa chỉ.
 
 ⚠ Nếu nhiều địa chỉ THẬT ra unverified/score thấp → phủ VN kém: BÁO LẠI để
 quyết định ngưỡng/nguồn — ĐỪNG tự hạ threshold trong config cho "đẹp số".

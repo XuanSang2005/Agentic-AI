@@ -108,3 +108,49 @@ def test_l_bias_position_is_lon_lat_order():
     assert call["QueryText"] == _ADDR
     assert call["Filter"] == {"IncludeCountries": ["VNM"]}
     assert call["IntendedUse"] == "SingleUse"
+
+
+def test_http_client_api_key_url_body_and_throttle():
+    """HttpGeocodeClient (API key, không SigV4): đúng endpoint theo region, key
+    trên query string, kwargs → JSON body nguyên vẹn, 429 → ThrottlingException,
+    thiếu key → lỗi rõ ràng. httpx.MockTransport — không mạng thật."""
+    import json
+
+    import httpx
+    import pytest
+
+    seen: dict = {}
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        seen["url"] = str(request.url)
+        seen["body"] = json.loads(request.content)
+        if seen["body"]["QueryText"] == "throttle me":
+            return httpx.Response(429, json={"message": "Rate exceeded"})
+        return httpx.Response(200, json={"ResultItems": [
+            {"Position": [_LON, _LAT], "MatchScores": {"Overall": 0.95},
+             "PlaceType": "PointAddress"}]})
+
+    http = httpx.Client(transport=httpx.MockTransport(handler))
+    client = geocode.HttpGeocodeClient(api_key="k-test-123",
+                                       region="ap-southeast-1", http=http)
+
+    resp = client.geocode(QueryText=_ADDR, BiasPosition=[_LON, _LAT],
+                          Filter={"IncludeCountries": ["VNM"]}, IntendedUse="SingleUse")
+    assert resp["ResultItems"][0]["MatchScores"]["Overall"] == 0.95
+    assert seen["url"].startswith(
+        "https://places.geo.ap-southeast-1.amazonaws.com/v2/geocode?key=k-test-123")
+    assert seen["body"] == {"QueryText": _ADDR, "BiasPosition": [_LON, _LAT],
+                            "Filter": {"IncludeCountries": ["VNM"]},
+                            "IntendedUse": "SingleUse"}
+
+    with pytest.raises(geocode.ThrottlingException):
+        client.geocode(QueryText="throttle me")
+
+    # Đi trọn geocode_verify với client HTTP thật (transport mock) → verified
+    r = geocode.geocode_verify(_ADDR, _LAT, _LON, client=client)
+    assert r["status"] == "verified"
+
+    # Thiếu key → lỗi rõ, KHÔNG lộ URL/key trong message
+    no_key = geocode.HttpGeocodeClient(api_key="", http=http)
+    with pytest.raises(RuntimeError, match="AWS_LOCATION_API_KEY"):
+        no_key.geocode(QueryText=_ADDR)

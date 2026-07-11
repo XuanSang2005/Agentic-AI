@@ -225,6 +225,17 @@ def database_url() -> str:
     return os.environ.get("DATABASE_URL", "postgresql://tasco:tasco@localhost:5433/tasco")
 
 
+def aws_location_api_key() -> str:
+    """API key AWS Location (Phase 4b) — secret, CHỈ từ env. TODO(production):
+    chuyển sang IAM SigV4 — API key lộ qua URL/log/proxy."""
+    return os.environ.get("AWS_LOCATION_API_KEY", "")
+
+
+def aws_region() -> str:
+    """Region AWS: env AWS_DEFAULT_REGION override, default từ settings.yaml."""
+    return os.environ.get("AWS_DEFAULT_REGION") or settings().verify.aws_region
+
+
 def bearer_token() -> str:
     """Secret auth service — đọc mỗi lần gọi (test set env sau import vẫn ăn)."""
     return os.environ.get("TASCO_BEARER_TOKEN", "")

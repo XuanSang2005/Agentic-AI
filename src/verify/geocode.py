@@ -8,9 +8,15 @@ làm sập ingestion. Ba lớp bảo vệ trong verify_batch:
   3. Retry backoff khi ThrottlingException (delays từ config); hết retry →
      unverified, không fail oan.
 
-Client AWS INJECT ĐƯỢC (set_client / param) — unit test thay fake, KHÔNG gọi
-mạng thật. Credential từ env / ~/.aws (boto3 default chain, KHÔNG hardcode);
-region + ngưỡng từ config/settings.yaml (verify).
+Xác thực bằng API KEY (KHÔNG IAM/SigV4): HTTP POST thẳng tới
+https://places.geo.<region>.amazonaws.com/v2/geocode?key=<API_KEY>.
+Key đọc từ env AWS_LOCATION_API_KEY (KHÔNG hardcode); region từ config
+(env AWS_DEFAULT_REGION override được). Client INJECT ĐƯỢC (set_client /
+param) — unit test thay fake, KHÔNG gọi mạng thật.
+
+⚠ BẢO MẬT: KHÔNG log URL đầy đủ (query string chứa key) — mọi message lỗi
+chỉ mang status + body. TODO(production): chuyển sang IAM SigV4 —
+API key lộ qua URL/log/proxy.
 
 ⚠ AWS Position là [lng, lat] — NGƯỢC với (lat, lon) của hệ; convert 2 chiều
 đều nằm gọn trong module này.
@@ -29,29 +35,54 @@ _UNVERIFIED = "unverified"
 _client = None  # singleton lazy; test thay bằng set_client(fake)
 
 
-def _boto_client():
-    import boto3
-    return boto3.client("geo-places", region_name=config.settings().verify.aws_region)
+class ThrottlingException(Exception):
+    """HTTP 429 từ Geocode v2 — geocode_verify retry backoff theo config."""
+
+
+class HttpGeocodeClient:
+    """Client HTTP cho Geocode v2, auth bằng API key trên query string.
+
+    Cùng interface .geocode(**kwargs) với fake trong test — kwargs đi thẳng
+    thành JSON body. TODO(production): IAM SigV4 thay API key.
+    """
+
+    def __init__(self, api_key: str | None = None, region: str | None = None, http=None):
+        import httpx
+        self._api_key = (api_key if api_key is not None
+                         else config.aws_location_api_key())
+        region = region or config.aws_region()
+        self._url = f"https://places.geo.{region}.amazonaws.com/v2/geocode"
+        self._http = http or httpx.Client(timeout=10.0)
+
+    def geocode(self, **body):
+        if not self._api_key:
+            raise RuntimeError("AWS_LOCATION_API_KEY chưa đặt (env) — không verify được")
+        resp = self._http.post(self._url, params={"key": self._api_key}, json=body)
+        if resp.status_code == 429:
+            raise ThrottlingException("HTTP 429 Too Many Requests")
+        if resp.status_code >= 400:
+            # KHÔNG kèm URL (chứa key) — chỉ status + body cắt ngắn
+            raise RuntimeError(f"geocode HTTP {resp.status_code}: {resp.text[:200]}")
+        return resp.json()
 
 
 def get_client():
     global _client
     if _client is None:
-        _client = _boto_client()
+        _client = HttpGeocodeClient()
     return _client
 
 
 def set_client(client) -> None:
-    """Inject client (fake trong test; None → quay về boto3 thật)."""
+    """Inject client (fake trong test; None → quay về HttpGeocodeClient thật)."""
     global _client
     _client = client
 
 
 def _is_throttling(exc: Exception) -> bool:
-    """Nhận ThrottlingException của botocore lẫn fake test (theo Code hoặc tên class)."""
-    code = getattr(exc, "response", {}) or {}
-    code = code.get("Error", {}).get("Code", "") if isinstance(code, dict) else ""
-    return code == "ThrottlingException" or type(exc).__name__ == "ThrottlingException"
+    """Nhận throttle theo TÊN CLASS — khớp cả ThrottlingException của module này
+    lẫn fake trong test (test tự định nghĩa class cùng tên)."""
+    return type(exc).__name__ == "ThrottlingException"
 
 
 def _unverified(reason: str, **extra) -> dict:
@@ -81,7 +112,6 @@ def geocode_verify(address: str, claimed_lat: float, claimed_lon: float,
                 BiasPosition=[claimed_lon, claimed_lat],  # AWS là [lng, lat] — ĐỪNG đảo
                 Filter={"IncludeCountries": ["VNM"]},
                 IntendedUse="SingleUse",  # verify thuần, không lưu kết quả AWS
-                MaxResults=1,
             )
             break
         except Exception as e:

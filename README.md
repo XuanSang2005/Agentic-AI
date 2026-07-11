@@ -62,10 +62,11 @@ con trỏ — request đang chạy vẫn đọc index cũ trọn vẹn; chỉ PO
 Mỗi record được **verify qua AWS Location Geocode v2** (Phase 4b) ngay trong request,
 trước commit: `Overall ≥ 0.8` + toạ độ lệch ≤ 150m + PlaceType hợp lệ → `status='verified'`,
 else `unverified` + reason. Verify là "flag không reject" — AWS lỗi/timeout/throttle
-(retry backoff 1s/2s/4s) thì POI vẫn ghi với `unverified`. Credential từ env/`~/.aws`
-(boto3 default chain); ngưỡng trong `config/settings.yaml` (mục `verify`). Smoke thật
-(chạy tay, tốn request AWS): `python scripts/smoke_geocode.py`. Endpoint chưa có auth
-(pass-through + TODO, chưa expose internet).
+(retry backoff 1s/2s/4s) thì POI vẫn ghi với `unverified`. Xác thực bằng **API key**
+(env `AWS_LOCATION_API_KEY`, HTTP thẳng tới Geocode v2 — TODO chuyển IAM SigV4 trước
+production vì key lộ qua URL/log); ngưỡng trong `config/settings.yaml` (mục `verify`).
+Smoke thật (chạy tay, tốn request AWS): `python scripts/smoke_geocode.py`. Endpoint
+chưa có auth (pass-through + TODO, chưa expose internet).
 
 ## Kiến trúc 3 lớp
 
