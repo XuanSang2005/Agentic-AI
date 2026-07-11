@@ -12,6 +12,8 @@ Chạy: make api  (uvicorn src.api.main:app --port 8000)
 """
 from __future__ import annotations
 
+import hmac
+import logging
 import uuid
 from contextlib import asynccontextmanager
 
@@ -28,6 +30,8 @@ from src.data_loader import normalize_vi
 from src.search import SearchService
 
 MAX_LIMIT = config.settings().search.api_max_limit  # "max recommended 20" theo PDF
+
+logger = logging.getLogger("tasco.api")
 
 _service: SearchService | None = None
 
@@ -76,6 +80,12 @@ async def on_internal_error(request: Request, exc: Exception):
     return _error(500, "internal_error", "Unexpected service error", request)
 
 
+def _secret_eq(given: str, expected: str) -> bool:
+    """So secret CONSTANT-TIME (hmac.compare_digest trên bytes — chống timing
+    attack); accept/reject y hệt so sánh == cũ."""
+    return hmac.compare_digest(given.encode("utf-8"), expected.encode("utf-8"))
+
+
 def _check_auth(request: Request) -> JSONResponse | None:
     """401 nếu env cấu hình token/key mà header không khớp; mock mode nếu không đặt env."""
     bearer = config.bearer_token()
@@ -83,9 +93,9 @@ def _check_auth(request: Request) -> JSONResponse | None:
     if not bearer and not api_key:
         return None  # mock mode — PDF: "accept requests with or without authentication"
     auth_header = request.headers.get("Authorization", "")
-    if bearer and auth_header == f"Bearer {bearer}":
+    if bearer and _secret_eq(auth_header, f"Bearer {bearer}"):
         return None
-    if api_key and request.headers.get("X-API-Key", "") == api_key:
+    if api_key and _secret_eq(request.headers.get("X-API-Key", ""), api_key):
         return None
     return _error(401, "unauthorized", "Missing or invalid token/key", request)
 
@@ -117,6 +127,12 @@ def ingest_pois_batch(request: Request, records: list[dict] = Body(...),
         return _error(503, "ingestion_unavailable",
                       "Ingestion cần DATA_SOURCE=postgres (nguồn xlsx là read-only)",
                       request)
+    # Chặn batch quá cỡ TRƯỚC validate/verify — không tốn AWS call, không chạm DB
+    max_batch = config.settings().ingestion.max_batch_size
+    if len(records) > max_batch:
+        return _error(413, "batch_too_large",
+                      f"Batch {len(records)} records vượt giới hạn {max_batch} — chia nhỏ batch",
+                      request, details={"received": len(records), "max": max_batch})
     valid, rejected = ingestion.validate_batch(records)
     verifications = geocode.verify_batch(valid) if valid else []
     report = {
@@ -142,7 +158,19 @@ def ingest_pois_batch(request: Request, records: list[dict] = Body(...),
             return _error(500, "ingestion_db_error",
                           "Batch rolled back, không record nào được ghi", request,
                           details={"reason": str(e).strip()})
-        report["reindex"] = _get_service().reindex()
+        try:
+            report["reindex"] = _get_service().reindex()
+        except Exception as e:
+            # DB ĐÃ commit → ingest thành công thật; index stale chỉ tạm thời
+            # (tự lành khi restart — load từ DB). Trả 500 ở đây gây hiểu nhầm
+            # "không có gì xảy ra" trong khi data đã persist.
+            logger.exception("reindex fail SAU khi batch đã commit — index tạm stale")
+            report["reindex"] = {
+                "status": "failed",
+                "warning": "records đã commit vào DB nhưng index chưa refresh — "
+                           "sẽ cập nhật ở lần reindex/restart sau",
+                "reason": str(e).strip(),
+            }
     return report
 
 

@@ -112,6 +112,10 @@ constraints:
   near_km_full: 1.0
   near_km_partial: 3.0
 
+# Ingestion endpoint (POST /admin/pois/batch)
+ingestion:
+  max_batch_size: 500  # vượt → 413 ngay, KHÔNG gọi AWS/DB (chống runaway cost + timeout)
+
 # Phase 4b — verify POI ingest bằng AWS Location Geocode v2 (geo-places).
 # Credential KHÔNG ở đây — boto3 default chain (env/~/.aws); đây chỉ là tham số.
 verify:

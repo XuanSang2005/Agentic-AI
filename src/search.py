@@ -59,7 +59,11 @@ class _SearchIndex:
 def _clear_data_caches() -> None:
     """Xoá mọi cache derive từ POI DATA trước khi rebuild (lexicon YAML không đổi
     thì cache theo file giữ nguyên). Gồm cả cache kết quả query-level của các bước
-    hiểu câu — vocab đổi thì kết quả sửa/expand có thể đổi theo."""
+    hiểu câu — vocab đổi thì kết quả sửa/expand có thể đổi theo.
+
+    TODO: đây là registry cache THỦ CÔNG — thêm cache derive-từ-data ở module
+    khác PHẢI thêm vào đây, nếu không sẽ staleness ngầm sau reindex. Cân nhắc
+    pattern tự-đăng-ký (decorator ghi vào registry chung) ở bước refactor sau."""
     from src import data_loader
     from src.ranking import signals
     from src.understanding import abbreviations, diacritics, rules, typo_fix

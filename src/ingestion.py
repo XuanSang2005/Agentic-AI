@@ -94,17 +94,27 @@ def validate_batch(records: list[dict]) -> tuple[list[PoiIn], list[dict]]:
     return valid, rejected
 
 
+# Key advisory lock cho ingest — hằng số cố định, chung cho MỌI batch.
+_INGEST_LOCK_KEY = 4242
+
+
 def upsert_pois(pois: list[PoiIn], statuses: list[str]) -> None:
     """Ghi cả batch trong MỘT transaction — lỗi giữa chừng → psycopg tự rollback
     sạch (with connect: commit khi thoát êm, rollback khi exception nổi lên).
     statuses: kết quả verify per-record (cùng thứ tự pois) — 4b chạy verify
-    TRƯỚC upsert nên status ghi vào DB là verified/unverified thật."""
+    TRƯỚC upsert nên status ghi vào DB là verified/unverified thật.
+
+    Advisory lock (xact-scoped, tự nhả khi commit/rollback) serialize các batch
+    đồng thời: hai batch cùng tính MAX(row_order)+1 sẽ đụng UNIQUE — batch sau
+    CHỜ thay vì rollback oan. Verify chạy TRƯỚC (ngoài lock) nên lock chỉ giữ
+    trong lúc ghi DB, không giữ suốt AWS call."""
     import json
 
     import psycopg
 
     assert len(statuses) == len(pois)
     with psycopg.connect(config.database_url()) as conn:
+        conn.execute("SELECT pg_advisory_xact_lock(%s)", (_INGEST_LOCK_KEY,))
         with conn.cursor() as cur:
             for p, status in zip(pois, statuses):
                 cur.execute(_UPSERT, (

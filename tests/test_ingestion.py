@@ -208,3 +208,91 @@ def test_k_mixed_batch_all_commit_flag_not_reject(client):
     statuses = {r[0]: r[2] for r in _db_rows("ZTEST1%")}
     assert statuses == {"ZTEST10": "verified", "ZTEST11": "unverified",
                         "ZTEST12": "unverified"}
+
+
+def test_m_batch_too_large_rejected_before_verify(client, monkeypatch):
+    """Harden 1: batch > max_batch_size → 413 NGAY, không gọi AWS, không chạm DB."""
+    import dataclasses
+
+    from src import config as cfg
+    from src.verify import geocode
+
+    s = cfg.settings()
+    small = dataclasses.replace(s, ingestion=dataclasses.replace(
+        s.ingestion, max_batch_size=2))
+    monkeypatch.setattr("src.config.settings", lambda: small)
+
+    def _must_not_be_called(*a, **kw):
+        raise AssertionError("verify_batch KHÔNG được gọi khi batch quá cỡ")
+    monkeypatch.setattr(geocode, "verify_batch", _must_not_be_called)
+
+    n_db_before = len(_db_rows("%"))
+    batch = [dict(_BATCH[0], poi_id=f"ZTESTBIG{i}") for i in range(3)]  # 3 > 2
+    resp = client.post("/admin/pois/batch", json=batch)
+    assert resp.status_code == 413
+    err = resp.json()["error"]
+    assert err["code"] == "batch_too_large"
+    assert err["details"] == {"received": 3, "max": 2}
+    assert len(_db_rows("%")) == n_db_before  # DB không đổi
+
+
+def test_n_auth_constant_time_same_behavior(client, monkeypatch):
+    """Harden 2: compare_digest KHÔNG đổi hành vi — token đúng pass, sai/thiếu 401."""
+    monkeypatch.setenv("TASCO_BEARER_TOKEN", "sekret-bearer")
+    monkeypatch.setenv("TASCO_API_KEY", "sekret-key")
+
+    ok = client.get("/v1/search", params={"q": "cafe"},
+                    headers={"Authorization": "Bearer sekret-bearer"})
+    assert ok.status_code == 200
+    ok2 = client.get("/v1/search", params={"q": "cafe"},
+                     headers={"X-API-Key": "sekret-key"})
+    assert ok2.status_code == 200
+    bad = client.get("/v1/search", params={"q": "cafe"},
+                     headers={"Authorization": "Bearer wrong"})
+    assert bad.status_code == 401
+    missing = client.get("/v1/search", params={"q": "cafe"})
+    assert missing.status_code == 401
+
+    monkeypatch.delenv("TASCO_BEARER_TOKEN")
+    monkeypatch.delenv("TASCO_API_KEY")
+    assert client.get("/v1/search", params={"q": "cafe"}).status_code == 200  # mock mode
+
+
+def test_o_reindex_fail_after_commit_returns_200_with_warning(client, monkeypatch):
+    """Harden 3: reindex ném lỗi SAU commit → 200 + warning (data ĐÃ persist),
+    KHÔNG 500, record vẫn nằm trong DB."""
+    from src.api import main as api_main
+
+    def _boom():
+        raise RuntimeError("encode POI mới fail (giả lập)")
+    monkeypatch.setattr(api_main._get_service(), "reindex", _boom)
+
+    batch = [dict(_BATCH[0], poi_id="ZTEST13", name="Ztestcafe Mười Ba")]
+    resp = client.post("/admin/pois/batch", json=batch)
+    assert resp.status_code == 200, resp.text
+    report = resp.json()
+    assert report["accepted"] == 1
+    assert report["reindex"]["status"] == "failed"
+    assert "đã commit" in report["reindex"]["warning"]
+    assert "encode POI mới fail" in report["reindex"]["reason"]
+    # DB vẫn giữ record — reindex fail không rollback commit
+    assert [r[0] for r in _db_rows("ZTEST13")] == ["ZTEST13"]
+
+
+def test_p_advisory_lock_serializes_and_releases(client):
+    """Harden 4: 2 ingest tuần tự chạy đúng qua advisory lock (row_order nối
+    tiếp), lock xact-scoped nhả sạch sau commit (pg_locks trống)."""
+    import psycopg
+
+    r1 = client.post("/admin/pois/batch",
+                     json=[dict(_BATCH[0], poi_id="ZTEST14", name="Ztestcafe Mười Bốn")])
+    r2 = client.post("/admin/pois/batch",
+                     json=[dict(_BATCH[0], poi_id="ZTEST15", name="Ztestcafe Mười Lăm")])
+    assert r1.status_code == 200 and r2.status_code == 200
+
+    rows = {r[0]: r[1] for r in _db_rows("ZTEST1%")}
+    assert rows["ZTEST15"] == rows["ZTEST14"] + 1, "row_order phải nối tiếp qua 2 batch"
+    with psycopg.connect(config.database_url()) as conn:
+        n_locks = conn.execute(
+            "SELECT count(*) FROM pg_locks WHERE locktype = 'advisory'").fetchone()[0]
+    assert n_locks == 0, "advisory lock phải tự nhả khi transaction kết thúc"

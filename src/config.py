@@ -95,6 +95,11 @@ class ConstraintsCfg:
 
 
 @dataclass(frozen=True)
+class IngestionCfg:
+    max_batch_size: int
+
+
+@dataclass(frozen=True)
 class VerifyCfg:
     aws_region: str
     match_score_threshold: float
@@ -115,6 +120,7 @@ class Settings:
     rerank_weights: dict[str, dict[str, float]]  # GIỮ thứ tự key như trong yaml
     understanding: UnderstandingCfg
     constraints: ConstraintsCfg
+    ingestion: IngestionCfg
     verify: VerifyCfg
     features: dict[str, bool]
 
@@ -155,6 +161,9 @@ def settings() -> Settings:
             late_close_partial_minutes=int(cons["late_close_partial_minutes"]),
             near_km_full=float(cons["near_km_full"]),
             near_km_partial=float(cons["near_km_partial"]),
+        ),
+        ingestion=IngestionCfg(
+            max_batch_size=int(raw["ingestion"]["max_batch_size"]),
         ),
         verify=VerifyCfg(
             aws_region=str(raw["verify"]["aws_region"]),
