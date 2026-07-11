@@ -32,10 +32,17 @@ EVAL_TOP_K = 10  # số kết quả retriever trả cho eval (MRR tính trong to
 # như ablation NHƯNG phải đo lại — corpus nhỏ, không mặc định model to hơn là tốt hơn.
 EMBEDDING_MODEL = "intfloat/multilingual-e5-small"
 EMBEDDING_CACHE_DIR = ROOT / "data" / "cache"  # .npy cache — gitignore, xoá là tự build lại
+QDRANT_STORAGE_DIR = ROOT / "data" / "qdrant_storage"
 
 # --- L1 LLM planner (chưa dùng ở slice BM25) ---
 # Ngưỡng cosine cho semantic cache: đủ gần mới tin, xa hơn → quăng về LLM.
 SEMANTIC_CACHE_THRESHOLD = 0.92
+
+# --- L1 attribute radius search ---
+# Cosine similarity threshold for dynamic attribute matching via vector radius search.
+# Query attribute spans matched against unique POI attributes; ≥ threshold → match.
+ATTRIBUTE_SIMILARITY_THRESHOLD = 0.85
+
 ANTHROPIC_API_KEY = os.environ.get("ANTHROPIC_API_KEY", "")
 # DETERMINISTIC_MODE=1 (mặc định): không gọi LLM, planner rule-based — test/demo không cần key.
 DETERMINISTIC_MODE = os.environ.get("DETERMINISTIC_MODE", "1") == "1"

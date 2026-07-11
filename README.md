@@ -9,11 +9,11 @@ hybrid retrieval (BM25 ∪ dense union-pool) → multi-signal re-rank (explainab
 | Pipeline | Hit@1 | MRR | Recall@3 |
 |---|---|---|---|
 | BM25 only | 0.833 | 0.890 | 0.861 |
-| + Rerank (rules, no distance) | 0.967 | 0.983 | 0.911 |
-| + Multi-signal Rerank | 0.967 | 0.983 | 0.936 |
-| + Dense (signal) | 1.000 | 1.000 | 0.942 |
+| + Rerank (rules, no distance) | 0.933 | 0.954 | 0.906 |
+| + Multi-signal Rerank | 0.933 | 0.954 | 0.914 |
+| + Dense (signal) | 0.967 | 0.983 | 0.958 |
 | + LLM Planner | — | — | — |
-| Stress (unseen phrasing, n=20) | 0.950 | 0.967 | — |
+| Stress (unseen phrasing, n=20) | 0.850 | 0.908 | — |
 
 - Breakdown theo difficulty/category + danh sách saved/regression: `make eval` (report JSON trong `eval/reports/`).
 - **Stress set** (`make stress`): 20 câu phrasing chưa từng thấy (slang "sống ảo"/"chill", không dấu

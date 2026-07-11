@@ -12,16 +12,16 @@ from __future__ import annotations
 from dataclasses import asdict, dataclass, field
 from typing import Protocol, runtime_checkable
 
-from src.data_loader import POI, load_pois
+from src.data_loader import POI, extract_unique_attributes, extract_unique_categories, load_pois
 from src.ranking.reranker import RerankRetriever
 from src.ranking.signals import haversine_km
 from src.retrieval.bm25 import BM25Retriever
-from src.retrieval.dense import DenseRetriever
+from src.retrieval.dense import AttributeIndex, ColumnAnchorIndex, DenseRetriever, JointMetadataIndex
 from src import config
 from src.reasoning.constraints import annotate as annotate_constraints
 from src.understanding.abbreviations import expand_abbreviations
 from src.understanding.diacritics import restore_diacritics
-from src.understanding.rules import concept_label, extract_plan, landmark_label
+from src.understanding.rules import extract_plan, landmark_label
 from src.understanding.typo_fix import correct_typos
 
 
@@ -51,7 +51,17 @@ class SearchService:
         self._by_id = {p.id: p for p in self._pois}
         bm25 = BM25Retriever(self._pois)
         dense = DenseRetriever(self._pois)
-        self._reranker = RerankRetriever(self._pois, base=bm25, dense=dense)
+        unique_attrs = extract_unique_attributes(self._pois)
+        unique_cats = extract_unique_categories(self._pois)
+        self._attr_index = AttributeIndex(unique_attrs)
+        self._joint_index = JointMetadataIndex(unique_cats, unique_attrs)
+        self._column_anchor = ColumnAnchorIndex()
+        self._reranker = RerankRetriever(
+            self._pois, base=bm25, dense=dense,
+            attr_index=self._attr_index,
+            joint_index=self._joint_index,
+            column_anchor=self._column_anchor,
+        )
         # Warmup: model encode query load lazy — ép load NGAY tại startup để
         # request đầu tiên không gánh ~7s (embedding corpus thì đã có .npy cache).
         self._reranker.search("warmup", k=1)
@@ -85,18 +95,31 @@ class SearchService:
                 fixed = correct_typos(normalized_query)
                 typo_corrected = fixed if fixed != normalized_query else None
                 understood = fixed
-            plan = extract_plan(understood)
+            plan = extract_plan(understood, attr_index=self._attr_index,
+                               joint_index=self._joint_index,
+                               column_anchor=self._column_anchor)
             plan_dict = {key: (sorted(v) if isinstance(v, set) else v)
                          for key, v in asdict(plan).items()}
             normalized_query = understood  # UI hiện bản "đã hiểu" CUỐI CÙNG
             # Plan ở dạng người-đọc-được: concept id → nhãn có dấu
             interpreted = {
                 "categories": sorted(plan.categories),
-                "attributes": [concept_label(c) for c in sorted(plan.attr_concepts)],
-                "excluded": [concept_label(c) for c in sorted(plan.neg_concepts)],
+                "attributes": sorted(plan.attr_concepts),
+                "excluded": sorted(plan.neg_concepts),
                 "city": plan.city,
                 "district": plan.district,
                 "landmark": landmark_label(plan.landmark) if plan.landmark else None,
+                "price_limit": (f"giá ≤ {plan.price_limit}" if plan.price_op == "le" and plan.price_limit is not None
+                                else f"giá ≥ {plan.price_limit}" if plan.price_op == "ge" and plan.price_limit is not None
+                                else f"giá = {plan.price_limit}" if plan.price_limit is not None else None),
+                "rating_limit": (f"đánh giá ≥ {plan.rating_limit}" if plan.rating_op == "ge" and plan.rating_limit is not None
+                                 else f"đánh giá ≤ {plan.rating_limit}" if plan.rating_op == "le" and plan.rating_limit is not None
+                                 else f"đánh giá = {plan.rating_limit}" if plan.rating_limit is not None else None),
+                "time_limit": (f"mở cửa {'trước' if plan.time_op == 'le' else 'sau'} {plan.time_limit_minutes // 60:02d}:{plan.time_limit_minutes % 60:02d}"
+                               if plan.time_limit_minutes is not None else None),
+                "sort_by": plan.sort_by,
+                "sort_order": plan.sort_order,
+                "current_time_open": plan.current_time_open,
             }
 
         hits = []

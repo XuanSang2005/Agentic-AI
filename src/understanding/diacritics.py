@@ -43,17 +43,16 @@ def _accented_phrases() -> list[str]:
     """Mọi cụm CÓ DẤU trong domain: lexicon + gazetteer + field POI + description."""
     # Alias city nằm trong regex của rules.py (không có trong YAML/data) — khai báo tay,
     # không thì "sai gon" bị vote nhầm thành "sài gọn" (từ surface "nhanh gọn")
-    phrases: list[str] = ["sài gòn", "hồ chí minh", "hà nội", "đà nẵng", "đà lạt"]
+    phrases: list[str] = [
+        "sài gòn", "hồ chí minh", "hà nội", "đà nẵng", "đà lạt",
+        "trên", "dưới", "giờ", "giá", "đánh giá", "sao", "mở cửa", "sau", "khoảng", "tầm", "triệu"
+    ]
 
     cats = yaml.safe_load(config.CATEGORIES_YAML.read_text(encoding="utf-8"))
     for entry in cats.values():
         phrases.append(str(entry["canonical"]))
         phrases.extend(str(s) for s in entry["synonyms"])
 
-    concepts = yaml.safe_load(config.ATTRIBUTE_CONCEPTS_YAML.read_text(encoding="utf-8"))
-    for entry in concepts.values():
-        phrases.extend(str(t) for t in entry.get("tokens", []))
-        phrases.extend(str(s) for s in entry.get("surface", []) or [])
 
     gaz = yaml.safe_load(config.GAZETTEER_YAML.read_text(encoding="utf-8"))
     for entry in gaz.values():

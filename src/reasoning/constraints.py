@@ -20,13 +20,16 @@ from dataclasses import dataclass, field
 from src.data_loader import POI, normalize_vi
 from src.ranking.signals import haversine_km
 from src.understanding.query_plan import QueryPlan
-from src.understanding.rules import concept_label, concept_tokens, landmark_label
+from src.understanding.rules import landmark_label
 
 # Concept đặc thù được nâng thành constraint CÓ KIỂU riêng (không phải attribute
 # thuần): chấm bằng field cấu trúc thay vì chỉ token match.
-_TIME_CONCEPTS = {"mo_khuya", "hai_bon_bay"}
-_PRICE_CONCEPTS = {"gia_re", "mien_phi"}
-_PRICE_MAX_LEVEL = {"gia_re": 2, "mien_phi": 1}  # price_level trong data: 1..4
+# Concept keywords (NORMALIZED) dùng để phân loại constraint type.
+# So khớp bằng substring trên normalize_vi(attribute_string) — hoạt động với
+# cả attribute strings gốc từ dataset ("mở khuya", "giá rẻ", "miễn phí", "24/7").
+_TIME_KEYWORDS = {"mo khuya", "24/7", "mo muon", "hai bon bay"}
+_PRICE_KEYWORDS = {"gia re", "mien phi"}
+_PRICE_MAX_LEVEL = {"gia re": 2, "mien phi": 1}  # price_level trong data: 1..4
 
 SATISFIED_THRESHOLD = 0.5  # score ≥ ngưỡng → "thỏa"; dưới → liệt kê vào "nới"
 
@@ -41,6 +44,16 @@ class Constraint:
     data: dict = field(default_factory=dict)  # payload (coord landmark, city…)
 
 
+def _classify_attr(attr_str: str) -> str:
+    """Phân loại attribute string thành constraint type: time, price, hoặc attribute."""
+    norm = normalize_vi(attr_str)
+    if any(kw in norm for kw in _TIME_KEYWORDS):
+        return "time"
+    if any(kw in norm for kw in _PRICE_KEYWORDS):
+        return "price"
+    return "attribute"
+
+
 def parse_constraints(plan: QueryPlan) -> list[Constraint]:
     """QueryPlan (đã có sẵn từ L1) → danh sách ràng buộc có kiểu."""
     out: list[Constraint] = []
@@ -48,15 +61,11 @@ def parse_constraints(plan: QueryPlan) -> list[Constraint]:
     for cat in sorted(plan.categories):
         out.append(Constraint("category", cat, cat, priority=2))
 
-    for cid in sorted(plan.attr_concepts):
-        if cid in _TIME_CONCEPTS:
-            out.append(Constraint("time", concept_label(cid), cid, priority=1))
-        elif cid in _PRICE_CONCEPTS:
-            out.append(Constraint("price", concept_label(cid), cid, priority=1))
-        else:
-            out.append(Constraint("attribute", concept_label(cid), cid, priority=1))
-    for cid in sorted(plan.neg_concepts):
-        out.append(Constraint("attribute", f"không {concept_label(cid)}", cid,
+    for attr_str in sorted(plan.attr_concepts):
+        ctype = _classify_attr(attr_str)
+        out.append(Constraint(ctype, attr_str, attr_str, priority=1))
+    for attr_str in sorted(plan.neg_concepts):
+        out.append(Constraint("attribute", f"không {attr_str}", attr_str,
                               priority=1, negated=True))
 
     # Location: lấy MỨC CỤ THỂ NHẤT (landmark > district > city) làm 1 ràng buộc
@@ -71,6 +80,31 @@ def parse_constraints(plan: QueryPlan) -> list[Constraint]:
     elif plan.city:
         out.append(Constraint("location", f"ở {plan.city}", plan.city,
                               priority=2, data={"city": plan.city}))
+
+    # Numeric constraints: price, rating, time limits
+    if plan.price_limit:
+        op_label = "≤" if plan.price_op == "le" else "≥" if plan.price_op == "ge" else "="
+        out.append(Constraint("price_limit", f"giá {op_label} {plan.price_limit}", f"{plan.price_op}:{plan.price_limit}", priority=1))
+
+    if plan.rating_limit:
+        op_label = "≥" if plan.rating_op == "ge" else "≤" if plan.rating_op == "le" else "="
+        out.append(Constraint("rating_limit", f"đánh giá {op_label} {plan.rating_limit}", f"{plan.rating_op}:{plan.rating_limit}", priority=1))
+
+    if plan.time_limit_minutes:
+        h = plan.time_limit_minutes // 60
+        m = plan.time_limit_minutes % 60
+        time_str = f"{h:02d}:{m:02d}"
+        op_label = "trước" if plan.time_op == "le" else "sau" if plan.time_op == "ge" else "="
+        out.append(Constraint("time_limit", f"mở cửa {op_label} {time_str}", f"{plan.time_op}:{plan.time_limit_minutes}", priority=1))
+
+    # Currently-open constraint
+    if plan.current_time_open:
+        from datetime import datetime
+        now = datetime.now()
+        time_str = f"{now.hour:02d}:{now.minute:02d}"
+        out.append(Constraint("open_now", f"đang mở cửa ({time_str})",
+                              "current_time", priority=1))
+
     return out
 
 
@@ -91,9 +125,9 @@ def _parse_hours(s: str) -> tuple[int, int] | None:
     return (o, c)
 
 
-def _poi_has_concept(poi: POI, concept_id: str) -> bool:
-    tokens = concept_tokens().get(concept_id, frozenset())
-    return bool(tokens & {normalize_vi(a) for a in poi.attributes})
+def _poi_has_attr(poi: POI, attr_str: str) -> bool:
+    """POI khớp attribute nếu normalized attribute string match bất kỳ attribute nào."""
+    return normalize_vi(attr_str) in frozenset(normalize_vi(a) for a in poi.attributes)
 
 
 def score_constraint(poi: POI, c: Constraint) -> float:
@@ -102,16 +136,17 @@ def score_constraint(poi: POI, c: Constraint) -> float:
         return 1.0 if poi.category == c.key else 0.0
 
     if c.type == "attribute":
-        has = _poi_has_concept(poi, c.key)
+        has = _poi_has_attr(poi, c.key)
         return (0.0 if has else 1.0) if c.negated else (1.0 if has else 0.0)
 
     if c.type == "time":
         hours = _parse_hours(poi.opening_hours)
-        if c.key == "hai_bon_bay":
+        norm_key = normalize_vi(c.key)
+        if "24/7" in norm_key or "hai bon bay" in norm_key:
             return 1.0 if poi.opening_hours.strip() == "24/7" else 0.0
         # mo_khuya: 24/7 hoặc đóng qua đêm (close < open) → 1.0;
         # đóng ≥ 23:00 → 1.0; ≥ 22:00 → 0.5 (thỏa một phần); còn lại 0.
-        if _poi_has_concept(poi, c.key):
+        if _poi_has_attr(poi, c.key):
             return 1.0  # token "mở khuya/mở muộn" tự khai trong attributes
         if hours is None:
             return 0.0
@@ -121,10 +156,15 @@ def score_constraint(poi: POI, c: Constraint) -> float:
         return 0.5 if close >= 22 * 60 else 0.0
 
     if c.type == "price":
-        max_level = _PRICE_MAX_LEVEL[c.key]
+        norm_key = normalize_vi(c.key)
+        max_level = 1  # default fallback
+        for kw, ml in _PRICE_MAX_LEVEL.items():
+            if kw in norm_key:
+                max_level = ml
+                break
         if poi.price_level and poi.price_level <= max_level:
             return 1.0
-        return 1.0 if _poi_has_concept(poi, c.key) else 0.0
+        return 1.0 if _poi_has_attr(poi, c.key) else 0.0
 
     if c.type == "location":
         if "coord" in c.data:
@@ -139,6 +179,50 @@ def score_constraint(poi: POI, c: Constraint) -> float:
                 return 1.0
             return 0.5 if poi.city == c.data.get("city") else 0.0
         return 1.0 if poi.city == c.data.get("city") else 0.0
+
+    if c.type == "price_limit":
+        op, val = c.key.split(":")
+        val = int(float(val))
+        if not poi.price_level:
+            return 0.0
+        if op == "le":
+            return 1.0 if poi.price_level <= val else 0.0
+        if op == "ge":
+            return 1.0 if poi.price_level >= val else 0.0
+        return 1.0 if poi.price_level == val else 0.0
+
+    if c.type == "rating_limit":
+        op, val = c.key.split(":")
+        val = float(val)
+        if not poi.rating:
+            return 0.0
+        if op == "ge":
+            return 1.0 if poi.rating >= val else 0.0
+        if op == "le":
+            return 1.0 if poi.rating <= val else 0.0
+        return 1.0 if poi.rating == val else 0.0
+
+    if c.type == "time_limit":
+        op, val = c.key.split(":")
+        val = int(float(val))
+        hours = _parse_hours(poi.opening_hours)
+        if not hours:
+            return 0.0
+        o, close = hours
+        if op == "le":
+            return 1.0 if o <= val else 0.0
+        if op == "ge":
+            if close == 1440 or close < o:
+                return 1.0
+            return 1.0 if close >= val else 0.0
+        return 0.0
+
+    if c.type == "open_now":
+        from src.ranking.signals import is_open_at
+        from datetime import datetime
+        now = datetime.now()
+        current_minutes = now.hour * 60 + now.minute
+        return 1.0 if is_open_at(poi.opening_hours, current_minutes) else 0.0
 
     return 0.0
 

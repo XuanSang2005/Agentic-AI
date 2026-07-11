@@ -513,6 +513,11 @@ const SLOT_DEFS = [
   ["city", "city"],
   ["district", "district"],
   ["landmark", "landmark"],
+  ["price_limit", "giá"],
+  ["rating_limit", "đánh giá"],
+  ["time_limit", "giờ mở cửa"],
+  ["sort_by", "sắp xếp"],
+  ["current_time_open", "đang mở cửa"],
 ];
 
 // Icon inline SVG (currentColor, không lib ngoài — offline tuyệt đối)
@@ -561,7 +566,13 @@ function renderPlan(ex, submittedQuery) {
   const slotHtml = [];
   for (const [key, label] of SLOT_DEFS) {
     let vals = interpreted[key];
-    if (vals == null) vals = [];
+    if (vals == null || vals === false) vals = [];
+    if (key === "sort_by" && interpreted.sort_by) {
+      vals = [`${interpreted.sort_by} (${interpreted.sort_order})`].map(v => v.toUpperCase());
+    }
+    if (key === "current_time_open" && interpreted.current_time_open) {
+      vals = ["mở cửa ngay lúc này"].map(v => v.toUpperCase());
+    }
     if (!Array.isArray(vals)) vals = [vals];
     if (!vals.length) continue;
     const neg = key === "excluded" ? " neg" : "";

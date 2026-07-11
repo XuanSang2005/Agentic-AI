@@ -12,3 +12,4 @@ rank_bm25
 pyvi
 pytest
 httpx
+qdrant-client
