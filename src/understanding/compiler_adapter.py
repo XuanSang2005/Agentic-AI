@@ -23,10 +23,10 @@ def _match_landmark(poi_name: str | None) -> str | None:
                 return key
     return None
 
-def compile_query_to_plan(query: str, user_coord: tuple[float, float] | None = None) -> QueryPlan:
+def compile_query_to_plan(query: str, user_coord: tuple[float, float] | None = None, attr_index=None, joint_index=None, column_anchor=None) -> QueryPlan:
     # 1. Start with baseline plan to prevent regressions
     from src.understanding.rules import extract_plan as extract_plan_baseline
-    plan = extract_plan_baseline(query)
+    plan = extract_plan_baseline(query, attr_index=attr_index, joint_index=joint_index, column_anchor=column_anchor)
     
     # 2. Extract advanced properties from tasco_query service
     service = get_service()
@@ -144,16 +144,16 @@ def compile_query_to_plan(query: str, user_coord: tuple[float, float] | None = N
         
     return plan
 
-def get_plan_and_normalized_query(raw_query: str, user_coord: tuple[float, float] | None = None) -> tuple[QueryPlan, str]:
+def get_plan_and_normalized_query(raw_query: str, user_coord: tuple[float, float] | None = None, attr_index=None, joint_index=None, column_anchor=None) -> tuple[QueryPlan, str]:
     from src.ranking.reranker import preprocess_query
     norm = preprocess_query(raw_query)
     if config.USE_ADVANCED_COMPILER:
-        plan = compile_query_to_plan(raw_query, user_coord)
+        plan = compile_query_to_plan(raw_query, user_coord, attr_index=attr_index, joint_index=joint_index, column_anchor=column_anchor)
         plan.norm_query = norm
         return plan, norm
     else:
         from src.understanding.rules import extract_plan
-        plan = extract_plan(norm)
+        plan = extract_plan(norm, attr_index=attr_index, joint_index=joint_index, column_anchor=column_anchor)
         if user_coord is not None and plan.resolved_coord is None:
             plan.resolved_coord = user_coord
         return plan, norm

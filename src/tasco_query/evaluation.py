@@ -718,7 +718,7 @@ def main() -> None:
                 f"{values['latency_p50_ms']:.3f} | {values['model_failure_rate']:.4f} |"
             )
     (output_dir / "model_comparison.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
-    print(json.dumps(comparison, ensure_ascii=False, indent=2))
+
 
 
 if __name__ == "__main__":
