@@ -368,16 +368,28 @@
     background: var(--green-soft); border-radius: 7px; padding: 3px 8px;
     flex: 0 0 auto;
   }
-  /* Badge trạng thái verify — hiển thị thuần (policy A), cạnh tên POI */
+  /* Badge trạng thái verify — hiển thị thuần (policy A), inline cạnh tên POI.
+     verified = pill xanh đặc (đã đóng dấu); unverified = viền đứt amber (chờ kiểm). */
   .vbadge {
     position: relative;
-    display: inline-flex; align-items: center; gap: 4px;
-    font-size: 11px; font-weight: 600; letter-spacing: .02em;
-    border-radius: 6px; padding: 2px 7px; flex: 0 0 auto;
+    display: inline-flex; align-items: center; gap: 5px;
+    font-family: var(--mono); font-size: 10px; font-weight: 700;
+    letter-spacing: .08em; text-transform: uppercase;
+    border-radius: 999px; padding: 4px 10px 4px 8px;
+    margin-left: 10px; vertical-align: 3px;
+    flex: 0 0 auto; cursor: default; white-space: nowrap;
   }
   .vbadge svg { flex: 0 0 auto; }
-  .vbadge.ok { color: var(--green-dark); background: var(--green-soft); }
-  .vbadge.warn { color: var(--amber); background: rgba(224, 145, 58, .12); }
+  .vbadge.ok {
+    color: #fff;
+    background: linear-gradient(135deg, var(--green) 0%, var(--green-dark) 100%);
+    box-shadow: 0 1px 6px rgba(30, 158, 106, .28), inset 0 1px 0 rgba(255, 255, 255, .22);
+  }
+  .vbadge.warn {
+    color: #9A6320;
+    background: rgba(224, 145, 58, .09);
+    border: 1px dashed rgba(224, 145, 58, .60);
+  }
   .ctoken {
     position: relative;
     display: inline-flex; align-items: center; gap: 5px;
@@ -723,8 +735,7 @@ function renderResults(data, planCoord) {
     card.innerHTML = `
       <div class="card-top">
         <span class="rank">${i + 1}</span>
-        <span class="name">${esc(res.name)}</span>
-        ${vbadgeHtml}
+        <span class="name">${esc(res.name)}${vbadgeHtml}</span>
         <span class="score-col">
           <span class="score">${res.score.toFixed(3)}</span>
           <span class="score-label">relevance</span>
