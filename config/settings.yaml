@@ -10,7 +10,6 @@
 
 paths:
   data_xlsx: data/ai_maps_track2_dataset_participants.xlsx
-  lexicon_dir: lexicon
   attribute_concepts: lexicon/attribute_concepts.yaml
   gazetteer: lexicon/gazetteer.yaml
   categories: lexicon/categories.yaml
@@ -24,9 +23,6 @@ paths:
 sheets:
   poi: POI_Dataset
   eval: Public_Evaluation
-  taxonomy: Attribute_Taxonomy
-  signals: Ranking_Signals
-  readme: README
 
 embedding:
   # e5-small đã đo retrieval-only 0.950 trên corpus 111 doc. TODO thử e5-base/bge-m3
@@ -84,8 +80,6 @@ rerank_weights:
     pop: 0.02
 
 understanding:
-  # Ngưỡng cosine cho semantic cache: đủ gần mới tin, xa hơn → quăng về LLM.
-  semantic_cache_threshold: 0.92
   # Cửa sổ (số ký tự) trước landmark phải chứa cue "gần/near/cạnh/sát/quanh"
   # thì mới resolve — bẫy P009 "trên đường đi hạ long" không có cue → bỏ qua.
   landmark_near_cue_window: 15
@@ -134,5 +128,4 @@ verify:
 
 # Feature flags — default ở đây; env override từng cái (xem .env.example)
 features:
-  typo_fix: true            # env TASCO_TYPO_FIX=0/1
-  deterministic_mode: true  # env DETERMINISTIC_MODE=0/1 — không gọi LLM, planner rule-based
+  typo_fix: true  # env TASCO_TYPO_FIX=0/1

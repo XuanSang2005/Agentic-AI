@@ -36,15 +36,19 @@ make test          # smoke + regression (kể cả bộ câu không dấu)
 Lần chạy đầu tải model `intfloat/multilingual-e5-small` (~450MB, 1 lần); embedding corpus
 cache tại `data/cache/*.npy` — các lần sau khởi động không cần network.
 
-### Nguồn data: xlsx (mặc định) hoặc Postgres (opt-in)
+### Nguồn data: Postgres (chính) — xlsx là fallback read-only
 
-POI đọc được từ 2 nguồn tương đương — chọn qua env `DATA_SOURCE`; **mặc định `xlsx`**,
-không cần làm gì thêm. Postgres là opt-in cho lộ trình production:
+POI đọc được từ 2 nguồn tương đương — chọn qua env `DATA_SOURCE`. **Postgres là
+nguồn chính** (serve + ingestion + verify badge); xlsx giữ 3 vai trò: nguồn seed,
+eval harness (`Public_Evaluation` luôn đọc từ xlsx), và fallback offline cho image
+HF Space / máy chưa có DB (code default `xlsx` khi không đặt env — an toàn cho
+fresh clone/docker build). `.env` được **tự nạp** lúc import config (env thật
+luôn thắng; image không chứa `.env`), nên dev chỉ cần copy `.env.example` → `.env`:
 
 ```bash
 docker compose up -d           # Postgres 16 (port host 5433), schema tự áp từ migrations/
 make db-seed                   # xlsx → bảng pois (idempotent, chạy 1 lần)
-DATA_SOURCE=postgres make eval # toàn pipeline đọc từ Postgres
+make eval                      # .env đã đặt DATA_SOURCE=postgres → pipeline đọc từ DB
 ```
 
 `DATABASE_URL` không đặt thì default khớp docker-compose dev

@@ -52,12 +52,18 @@ data/                 # xlsx dataset (không sửa tay)
 docs/                 # tasco_api.pdf — API contract
 lexicon/              # attribute_concepts.yaml (~25-30 concept ← 82 token)
                       # gazetteer.yaml (landmark → toạ độ), categories.yaml
+config/               # settings.yaml (ngưỡng/trọng số), abbreviations/city_aliases.yaml
+migrations/           # schema Postgres (pois + meta.data_version)
 src/
-  data_loader.py      # xlsx → POI documents (giữ nguyên dấu)
-  search.py           # orchestrator: plan → retrieve → rerank
-  understanding/      # query_plan.py, llm_planner.py, rules.py, semantic_cache.py
-  retrieval/          # dense.py, bm25.py, filters.py, fusion.py (RRF)
-  ranking/            # signals.py (7 signal), reranker.py, llm_rerank.py
+  config.py           # settings.yaml + .env autoload — điểm truy cập cấu hình duy nhất
+  data_loader.py      # POI documents từ Postgres (nguồn chính) / xlsx (fallback) — giữ dấu
+  search.py           # orchestrator: plan → retrieve → rerank + atomic-swap reindex
+  ingestion.py        # POST /admin/pois/batch: validate → verify → upsert
+  understanding/      # query_plan.py, rules.py, abbreviations.py, diacritics.py, typo_fix.py
+  retrieval/          # dense.py, bm25.py
+  ranking/            # signals.py (7 signal), reranker.py
+  reasoning/          # constraints.py — annotation thỏa/nới từng ràng buộc
+  verify/             # geocode.py — AWS Location verify (API key, mock được)
   api/                # main.py (FastAPI), dto.py (PlaceResult ↔ SearchSuggestion)
 eval/
   verify_dataset.py   # xác minh con số dataset (ĐANG CHẠY ĐƯỢC)

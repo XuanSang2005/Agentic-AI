@@ -18,12 +18,9 @@ from src.data_loader import _pois_from_xlsx
 
 def _pg_pois_or_skip():
     try:
-        import psycopg
         from src.data_loader import _pois_from_postgres
         pois = _pois_from_postgres()
-    except ModuleNotFoundError:
-        pytest.skip("psycopg chưa cài")
-    except Exception as e:  # DB chưa chạy / chưa seed
+    except Exception as e:  # psycopg chưa cài / DB chưa chạy / chưa seed
         pytest.skip(f"Postgres không sẵn sàng: {e}")
     if not pois:
         pytest.skip("bảng pois rỗng — chạy scripts/seed_postgres.py trước")

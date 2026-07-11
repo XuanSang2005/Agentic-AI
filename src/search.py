@@ -12,7 +12,7 @@ from __future__ import annotations
 import logging
 import threading
 import time
-from dataclasses import asdict, dataclass, field
+from dataclasses import asdict, dataclass
 from typing import Protocol, runtime_checkable
 
 from src.data_loader import POI, current_data_version, load_pois

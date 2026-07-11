@@ -4,8 +4,7 @@ Tách bạch rõ:
 - config/settings.yaml : giá trị KHÔNG nhạy cảm (path, model, ngưỡng, trọng số, flag default).
 - ENV                  : secret (API key/token) + override feature flag — xem .env.example.
 
-Không hardcode credentials — API key/token CHỈ đọc từ biến môi trường. Có cờ
-DETERMINISTIC_MODE (không cần API key): planner rơi về rule-based cho test/demo.
+Không hardcode credentials — API key/token CHỈ đọc từ biến môi trường.
 
 Mọi module đọc qua đây (config.DATA_XLSX, config.settings()...), KHÔNG tự
 yaml.load settings.yaml ở chỗ khác.
@@ -23,12 +22,33 @@ ROOT = Path(__file__).resolve().parent.parent
 SETTINGS_YAML = ROOT / "config" / "settings.yaml"
 
 
+def _load_dotenv() -> None:
+    """Nạp .env (repo root) vào os.environ — KEY=VALUE, bỏ comment/dòng trống.
+
+    setdefault: env THẬT (shell/container) luôn thắng .env. Image production
+    không có .env (.dockerignore chặn) → no-op. Nhờ đây make api/eval/test
+    tự ăn cấu hình dev (DATA_SOURCE/DATABASE_URL...) không cần source tay.
+    """
+    dotenv = ROOT / ".env"
+    if not dotenv.exists():
+        return
+    for line in dotenv.read_text(encoding="utf-8").splitlines():
+        line = line.strip()
+        if not line or line.startswith("#") or "=" not in line:
+            continue
+        key, _, value = line.partition("=")
+        if value := value.strip():  # giá trị rỗng ("KEY=") coi như không đặt
+            os.environ.setdefault(key.strip(), value)
+
+
+_load_dotenv()
+
+
 # --- Schema typed cho settings.yaml (frozen — config là read-only) ---
 
 @dataclass(frozen=True)
 class PathsCfg:
     data_xlsx: Path
-    lexicon_dir: Path
     attribute_concepts: Path
     gazetteer: Path
     categories: Path
@@ -43,9 +63,6 @@ class PathsCfg:
 class SheetsCfg:
     poi: str
     eval: str
-    taxonomy: str
-    signals: str
-    readme: str
 
 
 @dataclass(frozen=True)
@@ -77,7 +94,6 @@ class TypoCfg:
 
 @dataclass(frozen=True)
 class UnderstandingCfg:
-    semantic_cache_threshold: float
     landmark_near_cue_window: int
     diacritics: DiacriticsCfg
     typo: TypoCfg
@@ -141,7 +157,6 @@ def settings() -> Settings:
         rerank_weights={profile: {sig: float(w) for sig, w in weights.items()}
                         for profile, weights in raw["rerank_weights"].items()},
         understanding=UnderstandingCfg(
-            semantic_cache_threshold=float(und["semantic_cache_threshold"]),
             landmark_near_cue_window=int(und["landmark_near_cue_window"]),
             diacritics=DiacriticsCfg(
                 max_gram=int(und["diacritics"]["max_gram"]),
@@ -182,7 +197,6 @@ _S = settings()
 
 # --- Data & lexicon ---
 DATA_XLSX = _S.paths.data_xlsx
-LEXICON_DIR = _S.paths.lexicon_dir
 ATTRIBUTE_CONCEPTS_YAML = _S.paths.attribute_concepts
 GAZETTEER_YAML = _S.paths.gazetteer
 CATEGORIES_YAML = _S.paths.categories
@@ -192,9 +206,6 @@ CITY_ALIASES_YAML = _S.paths.city_aliases
 # Tên sheet trong xlsx (đã verify bằng eval/verify_dataset.py)
 SHEET_POI = _S.sheets.poi
 SHEET_EVAL = _S.sheets.eval
-SHEET_TAXONOMY = _S.sheets.taxonomy
-SHEET_SIGNALS = _S.sheets.signals
-SHEET_README = _S.sheets.readme
 
 # --- Eval ---
 REPORTS_DIR = _S.paths.reports_dir
@@ -205,10 +216,6 @@ EVAL_TOP_K = _S.eval_top_k  # số kết quả retriever trả cho eval (MRR tí
 EMBEDDING_MODEL = _S.embedding_model
 EMBEDDING_CACHE_DIR = _S.paths.embedding_cache_dir  # .npy cache — xoá là tự build lại
 
-# --- L1 LLM planner (chưa dùng ở slice BM25) ---
-# Ngưỡng cosine cho semantic cache: đủ gần mới tin, xa hơn → quăng về LLM.
-SEMANTIC_CACHE_THRESHOLD = _S.understanding.semantic_cache_threshold
-
 
 # --- Secrets & flags: CHỈ từ env (default an toàn cho dev — xem .env.example) ---
 
@@ -217,9 +224,6 @@ def _env_flag(name: str, default: bool) -> bool:
     return os.environ.get(name, "1" if default else "0") == "1"
 
 
-ANTHROPIC_API_KEY = os.environ.get("ANTHROPIC_API_KEY", "")
-# DETERMINISTIC_MODE=1 (mặc định): không gọi LLM, planner rule-based — test/demo không cần key.
-DETERMINISTIC_MODE = _env_flag("DETERMINISTIC_MODE", _S.features["deterministic_mode"])
 # Typo correction bảo thủ, query-side. TẮT = export TASCO_TYPO_FIX=0.
 # Xem luật trong src/understanding/typo_fix.py.
 ENABLE_TYPO_FIX = _env_flag("TASCO_TYPO_FIX", _S.features["typo_fix"])
