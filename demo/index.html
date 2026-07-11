@@ -380,15 +380,17 @@
     flex: 0 0 auto; cursor: default; white-space: nowrap;
   }
   .vbadge svg { flex: 0 0 auto; }
+  /* verified = XANH DƯƠNG (convention "verified blue" — nổi trên UI vốn toàn
+     xanh lá); unverified = amber đặc chữ trắng — cặp đôi cân xứng, nhìn là biết. */
   .vbadge.ok {
     color: #fff;
-    background: linear-gradient(135deg, var(--green) 0%, var(--green-dark) 100%);
-    box-shadow: 0 1px 6px rgba(30, 158, 106, .28), inset 0 1px 0 rgba(255, 255, 255, .22);
+    background: linear-gradient(135deg, #3B82F6 0%, #1D4ED8 100%);
+    box-shadow: 0 1px 6px rgba(59, 130, 246, .35), inset 0 1px 0 rgba(255, 255, 255, .22);
   }
   .vbadge.warn {
-    color: #9A6320;
-    background: rgba(224, 145, 58, .09);
-    border: 1px dashed rgba(224, 145, 58, .60);
+    color: #fff;
+    background: linear-gradient(135deg, #F0A44B 0%, #D97706 100%);
+    box-shadow: 0 1px 6px rgba(217, 119, 6, .30), inset 0 1px 0 rgba(255, 255, 255, .20);
   }
   .ctoken {
     position: relative;
