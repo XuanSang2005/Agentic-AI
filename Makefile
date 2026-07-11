@@ -38,4 +38,11 @@ verify-data:
 test:
 	$(PY) -m pytest tests/ -q
 
-.PHONY: install api eval stress hardq bench openapi deploy-hf db-up db-seed verify-data test
+ui-dev:
+	cd frontend && npm install && npm run dev
+
+ui-build:
+	cd frontend && npm install && npm run build
+	rm -rf demo && cp -R frontend/out demo
+
+.PHONY: install api eval stress hardq bench openapi deploy-hf db-up db-seed verify-data test ui-dev ui-build

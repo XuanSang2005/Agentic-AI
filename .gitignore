@@ -8,3 +8,10 @@ eval/reports/*
 *.faiss
 .env
 data/cache/
+.agents/
+.antigravitycli/
+skills-lock.json
+frontend/node_modules/
+frontend/.next/
+frontend/out/
+frontend/*.tsbuildinfo
