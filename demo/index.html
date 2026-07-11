@@ -261,6 +261,13 @@
     margin-right: 10px;
   }
   .understood .u-text { color: var(--ink); font-weight: 500; }
+  .understood .u-same {
+    font-family: var(--mono); font-size: 10px; letter-spacing: .07em;
+    text-transform: uppercase; color: var(--faint);
+    border: 1px dashed rgba(22,40,28,.20); border-radius: 5px;
+    padding: 2px 6px; margin-left: 8px; vertical-align: 1px;
+  }
+  .map-empty { opacity: .75; }
   .slots { display: flex; flex-wrap: wrap; gap: 16px 30px; }
   .slot .slot-name {
     font-size: 11px; letter-spacing: .1em; text-transform: uppercase;
@@ -416,6 +423,11 @@
     background: none; border: 1px dashed rgba(22,40,28,.25); color: var(--faint);
   }
   .ctoken.relax svg { color: var(--faint); }
+  /* Placeholder giữ layout đồng nhất khi query không có ràng buộc/location */
+  .ctoken.none { border: 1px dashed rgba(22,40,28,.16); color: var(--faint);
+                 background: none; font-size: 11.5px; }
+  .dist-row.none { opacity: .55; }
+  .dist-row.none .dist-track { background: rgba(22,40,28,.06); }
   .ctoken .relax-tag {
     font-size: 10px; letter-spacing: .06em; text-transform: uppercase;
     color: var(--faint); border-left: 1px solid rgba(22,40,28,.15);
@@ -563,21 +575,20 @@ function markActiveChip(query) {
     c.setAttribute("aria-pressed", String(c.textContent === query));
 }
 
-/* ---------- query plan ---------- */
+/* ---------- query plan ----------
+   LAYOUT ĐỒNG NHẤT: mọi query đều render CÙNG bộ section — understood-as luôn
+   hiện (unchanged thì ghi chú), đủ 6 slot (trống → "—"), coord luôn có dòng.
+   Section không nhảy hiện/biến theo query. */
 function renderPlan(ex, submittedQuery) {
   const interpreted = ex.interpreted || {};
   const plan = ex.plan || {};
 
-  // "Đã hiểu" — chỉ hiện khi input KHÁC câu sau khi restore dấu
   const u = $("understood");
-  const nq = ex.normalized_query;
-  if (nq && nq.trim() !== submittedQuery.trim()) {
-    u.innerHTML = `<span class="u-label">understood as</span><span class="u-text">${esc(nq)}</span>`;
-    u.classList.add("show");
-  } else {
-    u.classList.remove("show");
-    u.innerHTML = "";
-  }
+  const nq = ex.normalized_query || submittedQuery;
+  const changed = nq.trim() !== submittedQuery.trim();
+  u.innerHTML = `<span class="u-label">understood as</span><span class="u-text">${esc(nq)}</span>`
+    + (changed ? "" : `<span class="u-same">unchanged</span>`);
+  u.classList.add("show");
 
   const slots = $("slots");
   slots.innerHTML = "";
@@ -587,22 +598,20 @@ function renderPlan(ex, submittedQuery) {
     let vals = interpreted[key];
     if (vals == null) vals = [];
     if (!Array.isArray(vals)) vals = [vals];
-    if (!vals.length) continue;
     const neg = key === "excluded" ? " neg" : "";
-    const toks = vals.map((v) => {
-      delay += 45;
-      return `<span class="token${neg}" style="animation-delay:${delay}ms">${esc(v)}</span>`;
-    }).join("");
+    const toks = vals.length
+      ? vals.map((v) => {
+          delay += 45;
+          return `<span class="token${neg}" style="animation-delay:${delay}ms">${esc(v)}</span>`;
+        }).join("")
+      : `<span class="token empty">&mdash;</span>`;
     slotHtml.push(`<div class="slot"><div class="slot-name">${label}</div>
       <div class="tokens">${toks}</div></div>`);
   }
-  if (!slotHtml.length)
-    slotHtml.push(`<div class="slot"><div class="slot-name">plan</div>
-      <div class="tokens"><span class="token empty">no structured slots - pure relevance ranking</span></div></div>`);
   slots.innerHTML = slotHtml.join("");
   $("coord").innerHTML = plan.resolved_coord
     ? `<span>resolved_coord</span>  ${plan.resolved_coord[0].toFixed(4)}, ${plan.resolved_coord[1].toFixed(4)}`
-    : "";
+    : `<span>resolved_coord</span>  &mdash; <span>(no location focus in query)</span>`;
   $("plan").classList.add("show");
 }
 
@@ -616,7 +625,21 @@ function haversineKm(a, b) {
 }
 function renderMap(plan, results, landmarkLabel) {
   const el = $("map");
-  if (!plan.resolved_coord) { el.classList.remove("show"); el.innerHTML = ""; return; }
+  if (!plan.resolved_coord) {
+    // Đồng nhất layout: không có location focus vẫn giữ Ô map (placeholder)
+    // để panel plan không đổi hình dạng theo query.
+    el.innerHTML = `<div class="map-empty">
+        <svg width="160" height="160" viewBox="0 0 160 160" aria-hidden="true">
+          <circle cx="80" cy="80" r="21" fill="none" stroke="rgba(22,40,28,.10)" stroke-width="1"/>
+          <circle cx="80" cy="80" r="42" fill="none" stroke="rgba(22,40,28,.10)" stroke-width="1"/>
+          <circle cx="80" cy="80" r="64" fill="none" stroke="rgba(22,40,28,.08)" stroke-width="1" stroke-dasharray="3 4"/>
+          <circle cx="80" cy="80" r="3" fill="rgba(22,40,28,.18)"/>
+        </svg>
+        <div class="map-caption">no location focus</div>
+      </div>`;
+    el.classList.add("show");
+    return;
+  }
   const center = { lat: plan.resolved_coord[0], lon: plan.resolved_coord[1] };
   const pts = results.map((res, i) => {
     const c = res.coordinates;
@@ -660,19 +683,27 @@ function renderResults(data, planCoord) {
     card.className = "card";
     card.style.animationDelay = `${i * 80}ms`;
 
-    let distHtml = "";
+    // LAYOUT ĐỒNG NHẤT: mọi card đều đủ 3 hàng constraints/proximity/signals —
+    // thiếu data thì hàng đó là dòng muted, không biến mất (UI không nhảy).
     let km = null;
     if (planCoord) {
       km = haversineKm({ lat: planCoord[0], lon: planCoord[1] }, res.coordinates);
     } else if (res.distanceMeters != null) {
       km = res.distanceMeters / 1000;
     }
+    let distHtml;
     if (km != null) {
       const pct = Math.max(6, Math.round(100 / (1 + km)));
       distHtml = `<div class="dist-row">
           <span class="dist-val">${fmtDist(km)}</span>
           <span class="dist-track"><span class="dist-fill" style="width:${pct}%"></span></span>
           <span class="dist-label">proximity</span>
+        </div>`;
+    } else {
+      distHtml = `<div class="dist-row none">
+          <span class="dist-val">&mdash;</span>
+          <span class="dist-track"></span>
+          <span class="dist-label">proximity (no location focus)</span>
         </div>`;
     }
 
@@ -701,7 +732,9 @@ function renderResults(data, planCoord) {
 
     // Reasoning layer: checklist ràng buộc 3 trạng thái cho từng kết quả.
     // Chỉ ĐỌC field constraints từ ?explain — không tự tính, không đổi thứ tự.
-    let consHtml = "";
+    let consHtml = `<div class="cons">
+        <span class="ctoken none">no explicit constraints &mdash; pure relevance</span>
+      </div>`;
     const cons = ex && ex.constraints;
     if (cons && cons.total) {
       // Nhóm theo score: thỏa (=1) → một phần (0<s<1) → nới (=0);
