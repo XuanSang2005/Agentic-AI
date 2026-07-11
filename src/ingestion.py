@@ -10,9 +10,10 @@ Thiết kế:
   MỚI nối tiếp MAX hiện có (subquery trong cùng transaction thấy các insert
   trước đó → tăng dần tất định); POI đã có GIỮ NGUYÊN row_order — thứ tự corpus
   không xê dịch, vector cũ tái dùng được.
-- status='pending' (PLACEHOLDER — Phase 4b sẽ verify qua AWS Location rồi mới
-  chuyển trạng thái; loader/serve hiện chưa đọc status). Update record cũ cũng
-  reset về pending: data đổi là phải verify lại.
+- status do bước VERIFY (Phase 4b, src/verify/geocode.py) quyết định TRƯỚC khi
+  upsert: 'verified' / 'unverified' thật — không còn placeholder 'pending'.
+  "Flag không reject": unverified vẫn ghi. Update record cũ cũng nhận status
+  mới từ lần verify này: data đổi là phải verify lại.
 - KHÔNG parse/normalize thứ hai: module này chỉ ghi field thô đã strip (_text
   của data_loader); document/norm_document/is_synthetic luôn do data_loader
   _finalize dựng khi load lại — một code path duy nhất, document không thể lệch.
@@ -51,7 +52,7 @@ class PoiIn(BaseModel):
 
 
 # row_order: POI mới = MAX+1 tại thời điểm insert (trong cùng tx nên tuần tự);
-# ON CONFLICT KHÔNG update row_order (giữ vị trí corpus) nhưng reset status.
+# ON CONFLICT KHÔNG update row_order (giữ vị trí corpus) nhưng nhận status mới.
 _UPSERT = """
     INSERT INTO pois (poi_id, row_order, name, brand, category, sub_category,
                       city, district, address, lat, lon, rating, review_count,
@@ -59,7 +60,7 @@ _UPSERT = """
                       tags, description, is_synthetic, status)
     VALUES (%s, (SELECT COALESCE(MAX(row_order), -1) + 1 FROM pois),
             %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s,
-            %s::jsonb, %s::jsonb, %s, %s, 'pending')
+            %s::jsonb, %s::jsonb, %s, %s, %s)
     ON CONFLICT (poi_id) DO UPDATE SET
         name = EXCLUDED.name, brand = EXCLUDED.brand,
         category = EXCLUDED.category, sub_category = EXCLUDED.sub_category,
@@ -72,7 +73,7 @@ _UPSERT = """
         attributes = EXCLUDED.attributes, tags = EXCLUDED.tags,
         description = EXCLUDED.description,
         is_synthetic = EXCLUDED.is_synthetic,
-        status = 'pending'
+        status = EXCLUDED.status
 """
 
 
@@ -93,16 +94,19 @@ def validate_batch(records: list[dict]) -> tuple[list[PoiIn], list[dict]]:
     return valid, rejected
 
 
-def upsert_pois(pois: list[PoiIn]) -> None:
+def upsert_pois(pois: list[PoiIn], statuses: list[str]) -> None:
     """Ghi cả batch trong MỘT transaction — lỗi giữa chừng → psycopg tự rollback
-    sạch (with connect: commit khi thoát êm, rollback khi exception nổi lên)."""
+    sạch (with connect: commit khi thoát êm, rollback khi exception nổi lên).
+    statuses: kết quả verify per-record (cùng thứ tự pois) — 4b chạy verify
+    TRƯỚC upsert nên status ghi vào DB là verified/unverified thật."""
     import json
 
     import psycopg
 
+    assert len(statuses) == len(pois)
     with psycopg.connect(config.database_url()) as conn:
         with conn.cursor() as cur:
-            for p in pois:
+            for p, status in zip(pois, statuses):
                 cur.execute(_UPSERT, (
                     _text(p.poi_id), _text(p.name), _text(p.brand),
                     _text(p.category), _text(p.sub_category), _text(p.city),
@@ -113,4 +117,5 @@ def upsert_pois(pois: list[PoiIn]) -> None:
                     json.dumps([_text(t) for t in p.tags], ensure_ascii=False),
                     _text(p.description),
                     _text(p.poi_id).startswith("G"),  # cùng luật is_synthetic với loader
+                    status,
                 ))

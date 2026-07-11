@@ -112,6 +112,16 @@ constraints:
   near_km_full: 1.0
   near_km_partial: 3.0
 
+# Phase 4b — verify POI ingest bằng AWS Location Geocode v2 (geo-places).
+# Credential KHÔNG ở đây — boto3 default chain (env/~/.aws); đây chỉ là tham số.
+verify:
+  aws_region: ap-southeast-1
+  match_score_threshold: 0.8   # MatchScores.Overall ≥ ngưỡng mới tính verified
+  max_distance_m: 150          # toạ độ claim vs matched lệch quá → unverified
+  place_types: [PointAddress, PointOfInterest]  # PlaceType chấp nhận cho verified
+  max_workers: 10              # verify song song có giới hạn (dưới rate limit AWS)
+  throttle_retry_delays: [1, 2, 4]  # backoff (giây) khi ThrottlingException
+
 # Feature flags — default ở đây; env override từng cái (xem .env.example)
 features:
   typo_fix: true            # env TASCO_TYPO_FIX=0/1

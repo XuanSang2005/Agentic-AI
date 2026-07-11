@@ -59,8 +59,13 @@ Với nguồn Postgres có thêm ingestion (Phase 4a): `POST /admin/pois/batch` 
 POI JSON — validate từng record (méo → rejected kèm lý do, không giết batch), upsert
 idempotent trong 1 transaction, rồi **reindex atomic swap** (build index mới, hoán đổi
 con trỏ — request đang chạy vẫn đọc index cũ trọn vẹn; chỉ POI mới phải encode).
-POI mới mang `status='pending'` (placeholder — Phase 4b verify qua AWS Location);
-endpoint chưa có auth (pass-through + TODO, chưa expose internet).
+Mỗi record được **verify qua AWS Location Geocode v2** (Phase 4b) ngay trong request,
+trước commit: `Overall ≥ 0.8` + toạ độ lệch ≤ 150m + PlaceType hợp lệ → `status='verified'`,
+else `unverified` + reason. Verify là "flag không reject" — AWS lỗi/timeout/throttle
+(retry backoff 1s/2s/4s) thì POI vẫn ghi với `unverified`. Credential từ env/`~/.aws`
+(boto3 default chain); ngưỡng trong `config/settings.yaml` (mục `verify`). Smoke thật
+(chạy tay, tốn request AWS): `python scripts/smoke_geocode.py`. Endpoint chưa có auth
+(pass-through + TODO, chưa expose internet).
 
 ## Kiến trúc 3 lớp
 

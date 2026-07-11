@@ -101,30 +101,42 @@ def _admin_auth() -> None:
 @app.post("/admin/pois/batch")
 def ingest_pois_batch(request: Request, records: list[dict] = Body(...),
                       _auth: None = Depends(_admin_auth)):
-    """Batch ingest POI (Phase 4a): validate từng record → upsert Postgres trong
-    1 transaction → reindex MỘT LẦN (atomic swap) để serve thấy POI mới.
+    """Batch ingest POI: validate từng record (4a) → VERIFY qua AWS Location
+    (4b, đồng bộ, trước commit) → upsert Postgres trong 1 transaction (4a) →
+    reindex MỘT LẦN atomic swap (4a).
 
     Partial-success: record méo bị reject kèm lý do, record hợp lệ vẫn vào;
-    lỗi DB giữa batch → rollback sạch + KHÔNG reindex. POI mới mang
-    status='pending' (chưa verify — Phase 4b).
+    verify là "flag không reject" — AWS lỗi/score thấp → vẫn ghi với
+    status='unverified' + reason; lỗi DB giữa batch → rollback sạch + KHÔNG
+    reindex (verify xong không cứu được atomicity — vẫn rollback như 4a).
     """
     from src import ingestion
+    from src.verify import geocode
 
     if config.DATA_SOURCE != "postgres":
         return _error(503, "ingestion_unavailable",
                       "Ingestion cần DATA_SOURCE=postgres (nguồn xlsx là read-only)",
                       request)
     valid, rejected = ingestion.validate_batch(records)
+    verifications = geocode.verify_batch(valid) if valid else []
     report = {
         "received": len(records),
         "accepted": len(valid),
         "accepted_ids": [p.poi_id for p in valid],
+        "verified": sum(v["status"] == "verified" for v in verifications),
+        "unverified": sum(v["status"] == "unverified" for v in verifications),
+        "verification": [
+            {"poi_id": p.poi_id, "status": v["status"], "reason": v["reason"],
+             "overall_score": v["overall_score"], "place_type": v["place_type"]}
+            for p, v in zip(valid, verifications)
+        ],
         "rejected": rejected,
         "reindex": None,
     }
     if valid:
         try:
-            ingestion.upsert_pois(valid)  # 1 transaction — lỗi là rollback sạch
+            # 1 transaction — lỗi là rollback sạch (status theo verify per-record)
+            ingestion.upsert_pois(valid, [v["status"] for v in verifications])
         except Exception as e:
             # KHÔNG reindex: index phải khớp đúng thứ đã commit (= không gì cả)
             return _error(500, "ingestion_db_error",

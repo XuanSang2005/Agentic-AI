@@ -1,6 +1,7 @@
-"""GATE Phase 4a (hành vi mới): ingest batch → Postgres + atomic reindex.
+"""GATE Phase 4a (b–f) + 4b (i, k): ingest batch → verify → Postgres + atomic reindex.
 
 Chạy khi DATA_SOURCE=postgres + DB đã seed (như gate Phase 3); mặc định skip.
+AWS được MOCK (FakeGeo inject qua geocode.set_client) — không mạng thật.
 POI test dùng prefix ZTEST, teardown xoá sạch + clear cache để các test sau
 (equivalence/smoke) thấy DB nguyên trạng.
 """
@@ -9,6 +10,7 @@ from __future__ import annotations
 import pytest
 
 from src import config
+from tests.test_verify import FakeGeo
 
 pytestmark = pytest.mark.skipif(
     config.DATA_SOURCE != "postgres",
@@ -28,8 +30,8 @@ _BATCH = [
     },
     {
         "poi_id": "ZTEST02", "name": "Ztestcafe Đồng Khởi", "category": "Quán cà phê",
-        "city": "TP.HCM", "district": "Quận 1", "lat": 10.776, "lon": 106.702,
-        "rating": 4.0,
+        "city": "TP.HCM", "district": "Quận 1", "address": "2 Đồng Khởi, Quận 1",
+        "lat": 10.776, "lon": 106.702, "rating": 4.0,
     },
 ]
 
@@ -45,10 +47,16 @@ def client():
 
     from fastapi.testclient import TestClient
     from src.api import main as api_main
+    from src.verify import geocode
+
+    # Mock AWS: happy-path (echo BiasPosition, Overall 0.98) — statuses tất định,
+    # không mạng thật; test i/k override hành vi per-address ngay trên fake này.
+    geocode.set_client(FakeGeo())
 
     npy_before = set(config.EMBEDDING_CACHE_DIR.glob("*.npy"))
     with TestClient(api_main.app) as c:
         yield c
+    geocode.set_client(None)
 
     # Teardown: trả DB + mọi data-cache + embedding cache về nguyên trạng
     # để các module test sau (equivalence/smoke) thấy hệ như chưa ingest.
@@ -71,7 +79,7 @@ def _db_rows(where_like: str):
 
 def test_b_push_batch_accepted_and_persisted(client):
     """Gate b: push batch → accepted đúng, Postgres có record (row_order nối tiếp,
-    status pending), chỉ POI mới bị encode."""
+    status theo verify — mock happy → verified), chỉ POI mới bị encode."""
     n_before = client.get("/health").json()["pois"]
     resp = client.post("/admin/pois/batch", json=_BATCH)
     assert resp.status_code == 200, resp.text
@@ -79,13 +87,14 @@ def test_b_push_batch_accepted_and_persisted(client):
     assert report["received"] == 2 and report["accepted"] == 2
     assert report["accepted_ids"] == ["ZTEST01", "ZTEST02"]
     assert report["rejected"] == []
+    assert report["verified"] == 2 and report["unverified"] == 0
     # Reindex 1 lần cho cả batch; POI cũ KHÔNG re-encode — chỉ 2 doc mới
     assert report["reindex"]["pois"] == n_before + 2
     assert report["reindex"]["encoded_new"] == 2
 
     rows = _db_rows(_ZPREFIX + "%")
     assert [r[0] for r in rows] == ["ZTEST01", "ZTEST02"]
-    assert all(r[2] == "pending" for r in rows), "status mới phải là pending (4b verify)"
+    assert all(r[2] == "verified" for r in rows), "mock happy → status verified thật"
     orders = sorted(r[1] for r in rows)
     assert orders == [n_before, n_before + 1], "row_order phải nối tiếp max hiện có"
 
@@ -145,3 +154,57 @@ def test_f_db_error_rolls_back_whole_batch_and_no_reindex(client):
     ids = [r["id"] for r in
            client.get("/v1/search", params={"q": "ztestcafe sáu"}).json()["results"]]
     assert not any("ZTEST06" in i for i in ids)
+
+
+def test_i_aws_error_flags_unverified_but_batch_survives(client):
+    """Gate i (4b): AWS ném exception cho 1 record → record đó VẪN ghi với
+    status='unverified' + reason lỗi; record khác verify bình thường."""
+    from src.verify import geocode
+    fake = geocode.get_client()
+    fake.rules["8 Lê Lợi, Quận 1"] = TimeoutError("connect timeout")
+
+    batch = [
+        dict(_BATCH[0], poi_id="ZTEST08", name="Ztestcafe Tám",
+             address="8 Nguyễn Trãi, Quận 1"),
+        dict(_BATCH[0], poi_id="ZTEST09", name="Ztestcafe Chín",
+             address="8 Lê Lợi, Quận 1"),
+    ]
+    report = client.post("/admin/pois/batch", json=batch).json()
+    assert report["accepted"] == 2
+    assert report["verified"] == 1 and report["unverified"] == 1
+    by_id = {v["poi_id"]: v for v in report["verification"]}
+    assert by_id["ZTEST08"]["status"] == "verified"
+    assert by_id["ZTEST09"]["status"] == "unverified"
+    assert "verify failed:" in by_id["ZTEST09"]["reason"] and "timeout" in by_id["ZTEST09"]["reason"]
+    assert {(r[0], r[2]) for r in _db_rows("ZTEST08")} == {("ZTEST08", "verified")}
+    assert {(r[0], r[2]) for r in _db_rows("ZTEST09")} == {("ZTEST09", "unverified")}
+
+
+def test_k_mixed_batch_all_commit_flag_not_reject(client):
+    """Gate k (4b): 1 verified + 1 unverified(score thấp) + 1 lỗi-AWS →
+    cả 3 đều COMMIT (flag không reject), report phân loại đúng từng cái."""
+    from src.verify import geocode
+    fake = geocode.get_client()
+    fake.rules["11 Hai Bà Trưng, Quận 1"] = {"overall": 0.4}
+    fake.rules["12 Pasteur, Quận 1"] = ConnectionError("network unreachable")
+
+    batch = [
+        dict(_BATCH[0], poi_id="ZTEST10", name="Ztestcafe Mười",
+             address="10 Nguyễn Du, Quận 1"),
+        dict(_BATCH[0], poi_id="ZTEST11", name="Ztestcafe Mười Một",
+             address="11 Hai Bà Trưng, Quận 1"),
+        dict(_BATCH[0], poi_id="ZTEST12", name="Ztestcafe Mười Hai",
+             address="12 Pasteur, Quận 1"),
+    ]
+    report = client.post("/admin/pois/batch", json=batch).json()
+    assert report["accepted"] == 3 and report["rejected"] == []
+    assert report["verified"] == 1 and report["unverified"] == 2
+    by_id = {v["poi_id"]: v for v in report["verification"]}
+    assert by_id["ZTEST10"]["status"] == "verified"
+    assert by_id["ZTEST11"]["status"] == "unverified"
+    assert "match score 0.40" in by_id["ZTEST11"]["reason"]
+    assert by_id["ZTEST12"]["status"] == "unverified"
+    assert by_id["ZTEST12"]["reason"].startswith("verify failed:")
+    statuses = {r[0]: r[2] for r in _db_rows("ZTEST1%")}
+    assert statuses == {"ZTEST10": "verified", "ZTEST11": "unverified",
+                        "ZTEST12": "unverified"}

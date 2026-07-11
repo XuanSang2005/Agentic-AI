@@ -95,6 +95,16 @@ class ConstraintsCfg:
 
 
 @dataclass(frozen=True)
+class VerifyCfg:
+    aws_region: str
+    match_score_threshold: float
+    max_distance_m: float
+    place_types: tuple[str, ...]
+    max_workers: int
+    throttle_retry_delays: tuple[float, ...]
+
+
+@dataclass(frozen=True)
 class Settings:
     paths: PathsCfg
     sheets: SheetsCfg
@@ -105,6 +115,7 @@ class Settings:
     rerank_weights: dict[str, dict[str, float]]  # GIỮ thứ tự key như trong yaml
     understanding: UnderstandingCfg
     constraints: ConstraintsCfg
+    verify: VerifyCfg
     features: dict[str, bool]
 
 
@@ -144,6 +155,14 @@ def settings() -> Settings:
             late_close_partial_minutes=int(cons["late_close_partial_minutes"]),
             near_km_full=float(cons["near_km_full"]),
             near_km_partial=float(cons["near_km_partial"]),
+        ),
+        verify=VerifyCfg(
+            aws_region=str(raw["verify"]["aws_region"]),
+            match_score_threshold=float(raw["verify"]["match_score_threshold"]),
+            max_distance_m=float(raw["verify"]["max_distance_m"]),
+            place_types=tuple(str(t) for t in raw["verify"]["place_types"]),
+            max_workers=int(raw["verify"]["max_workers"]),
+            throttle_retry_delays=tuple(float(d) for d in raw["verify"]["throttle_retry_delays"]),
         ),
         features={str(k): bool(v) for k, v in raw["features"].items()},
     )
