@@ -26,8 +26,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${beVietnamPro.variable} ${ibmPlexSans.variable}`}>
-      <body>{children}</body>
+    <html lang="en" className={`${beVietnamPro.variable} ${ibmPlexSans.variable}`} suppressHydrationWarning>
+      <body suppressHydrationWarning>{children}</body>
     </html>
   );
 }

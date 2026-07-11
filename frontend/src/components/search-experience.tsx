@@ -53,20 +53,6 @@ export function SearchExperience() {
           BM25 + dense union pool with multi-signal rerank. Fully offline, deterministic,
           not a single LLM call.
         </p>
-        <div className="badges">
-          <span className="badge">
-            <i />
-            100% offline
-          </span>
-          <span className="badge amber">
-            <i />
-            0 LLM calls
-          </span>
-          <span className="badge mint">
-            <i />
-            deterministic rerank
-          </span>
-        </div>
       </header>
 
       <div className="search">
