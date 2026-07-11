@@ -37,6 +37,9 @@ def test_postgres_equals_xlsx_exactly():
     diffs = []
     for a, b in zip(xlsx, pg):
         for f in dataclasses.fields(a):
+            if f.name == "status":
+                continue  # field VẬN HÀNH chỉ có phía DB (verify/backfill cập nhật);
+                          # xlsx chỉ có placeholder 'active' — so sánh là vô nghĩa.
             va, vb = getattr(a, f.name), getattr(b, f.name)
             if va != vb or type(va) is not type(vb):
                 diffs.append(f"{a.id}.{f.name}: xlsx={va!r}({type(va).__name__}) "

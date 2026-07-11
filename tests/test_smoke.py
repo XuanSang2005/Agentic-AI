@@ -254,13 +254,14 @@ def test_no_accent_regression():
 
 
 def test_poi_status_display_field():
-    """status (badge verify, policy A): xlsx không có cột → default 'active'
-    (khớp default cột Postgres — equivalence giữ nguyên); DTO chuyển tiếp
-    nguyên vẹn, KHÔNG ảnh hưởng document/ranking."""
+    """status (badge verify, policy A): NGUỒN XLSX không có cột → default
+    'active' (test ép nhánh xlsx — nguồn postgres mang status thật sau
+    verify/backfill); DTO chuyển tiếp nguyên vẹn, KHÔNG rò vào document/ranking."""
     from src.api.dto import to_place_result
+    from src.data_loader import _pois_from_xlsx
     from src.search import SearchHit
 
-    poi = load_pois()[0]
+    poi = _pois_from_xlsx()[0]
     assert poi.status == "active"
     assert "active" not in poi.document      # status không được rò vào corpus
     assert to_place_result(SearchHit(poi=poi, score=0.5)).status == "active"
