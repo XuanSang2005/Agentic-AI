@@ -218,6 +218,23 @@ def load_pois() -> list[POI]:
     return _pois_from_xlsx()
 
 
+def extract_unique_attributes(pois: list[POI]) -> list[str]:
+    """Tập hợp tất cả attribute strings DUY NHẤT trong dataset, sort ổn định cho cache key."""
+    attrs: set[str] = set()
+    for poi in pois:
+        attrs.update(poi.attributes)
+    return sorted(attrs)
+
+
+def extract_unique_categories(pois: list[POI]) -> list[str]:
+    """Tập hợp tất cả category strings DUY NHẤT trong dataset, sort ổn định cho cache key."""
+    cats: set[str] = set()
+    for poi in pois:
+        if poi.category:
+            cats.add(poi.category)
+    return sorted(cats)
+
+
 def current_data_version() -> int:
     """data_version dùng chung trong Postgres (Phase 5) — KHÔNG cache: poller
     đọc trực tiếp mỗi lần. Chưa có row (DB trước migration 002) → 0."""

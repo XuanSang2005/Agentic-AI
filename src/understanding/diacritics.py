@@ -50,16 +50,22 @@ def _accented_phrases() -> list[str]:
         str(p) for key, aliases in cities.items()
         for p in [key, *(aliases or [])] if _has_diacritics(str(p))
     ]
+    # Grammar words cho numeric/attribute constraint parsing (dynamic-vector-
+    # attributes): operator/unit/sort không nằm trong data — khai tay để câu
+    # không dấu ("duoi 100k", "danh gia tren 4 sao") restore đúng dấu.
+    phrases += [
+        "trên", "dưới", "giờ", "giá", "đánh giá", "sao", "mở cửa", "sau",
+        "khoảng", "tầm", "triệu",
+    ]
 
     cats = yaml.safe_load(config.CATEGORIES_YAML.read_text(encoding="utf-8"))
     for entry in cats.values():
         phrases.append(str(entry["canonical"]))
         phrases.extend(str(s) for s in entry["synonyms"])
 
-    concepts = yaml.safe_load(config.ATTRIBUTE_CONCEPTS_YAML.read_text(encoding="utf-8"))
-    for entry in concepts.values():
-        phrases.extend(str(t) for t in entry.get("tokens", []))
-        phrases.extend(str(s) for s in entry.get("surface", []) or [])
+    # v2 dynamic-vector-attributes: KHÔNG hút phrase từ attribute_concepts.yaml
+    # nữa — planner không dùng concept; POI attributes thật đã vào qua load_pois()
+    # bên dưới, đủ phiếu cho các cụm attribute có dấu.
 
     gaz = yaml.safe_load(config.GAZETTEER_YAML.read_text(encoding="utf-8"))
     for entry in gaz.values():

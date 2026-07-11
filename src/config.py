@@ -55,6 +55,7 @@ class PathsCfg:
     abbreviations: Path
     city_aliases: Path
     embedding_cache_dir: Path
+    qdrant_storage_dir: Path
     reports_dir: Path
     readme_md: Path
 
@@ -77,6 +78,7 @@ class SearchCfg:
 class RetrievalCfg:
     n_candidates: int
     pool_k: int
+    attribute_similarity_threshold: float
 
 
 @dataclass(frozen=True)
@@ -106,8 +108,8 @@ class UnderstandingCfg:
 @dataclass(frozen=True)
 class ConstraintsCfg:
     satisfied_threshold: float
-    time_concepts: frozenset[str]
-    price_concepts: frozenset[str]
+    time_keywords: frozenset[str]
+    price_keywords: frozenset[str]
     price_max_level: dict[str, int]
     late_close_full_minutes: int
     late_close_partial_minutes: int
@@ -162,7 +164,12 @@ def settings() -> Settings:
         embedding_model=str(raw["embedding"]["model"]),
         eval_top_k=int(raw["eval"]["top_k"]),
         search=SearchCfg(**{k: int(v) for k, v in raw["search"].items()}),
-        retrieval=RetrievalCfg(**{k: int(v) for k, v in raw["retrieval"].items()}),
+        retrieval=RetrievalCfg(
+            n_candidates=int(raw["retrieval"]["n_candidates"]),
+            pool_k=int(raw["retrieval"]["pool_k"]),
+            attribute_similarity_threshold=float(
+                raw["retrieval"]["attribute_similarity_threshold"]),
+        ),
         rerank_weights={profile: {sig: float(w) for sig, w in weights.items()}
                         for profile, weights in raw["rerank_weights"].items()},
         understanding=UnderstandingCfg(
@@ -183,8 +190,8 @@ def settings() -> Settings:
         ),
         constraints=ConstraintsCfg(
             satisfied_threshold=float(cons["satisfied_threshold"]),
-            time_concepts=frozenset(str(c) for c in cons["time_concepts"]),
-            price_concepts=frozenset(str(c) for c in cons["price_concepts"]),
+            time_keywords=frozenset(str(c) for c in cons["time_keywords"]),
+            price_keywords=frozenset(str(c) for c in cons["price_keywords"]),
             price_max_level={str(k): int(v) for k, v in cons["price_max_level"].items()},
             late_close_full_minutes=int(cons["late_close_full_minutes"]),
             late_close_partial_minutes=int(cons["late_close_partial_minutes"]),
@@ -233,6 +240,11 @@ EVAL_TOP_K = _S.eval_top_k  # số kết quả retriever trả cho eval (MRR tí
 # --- L2 dense ---
 EMBEDDING_MODEL = _S.embedding_model
 EMBEDDING_CACHE_DIR = _S.paths.embedding_cache_dir  # .npy cache — xoá là tự build lại
+QDRANT_STORAGE_DIR = _S.paths.qdrant_storage_dir    # Qdrant local mode — rebuild được
+
+# --- L1 attribute radius search (dynamic-vector-attributes) ---
+# Cosine similarity threshold: query span vs unique POI attributes (AttributeIndex).
+ATTRIBUTE_SIMILARITY_THRESHOLD = _S.retrieval.attribute_similarity_threshold
 
 
 # --- Secrets & flags: CHỈ từ env (default an toàn cho dev — xem .env.example) ---

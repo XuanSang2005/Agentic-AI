@@ -47,11 +47,20 @@ va và la là cua của cho voi với o ở tai tại den đến từ tu ve về
 gì gi khi nếu neu thì thi mà ma hay hoặc hoac cũng cung đã da đang se sẽ có co không khong
 một mot hai ba bốn bon năm nam sáu sau bảy bay tám tam chín chin mười muoi
 này nay đó do kia ấy ay tôi toi bạn ban mình minh chúng chung
-buổi buoi sáng trưa trua chiều chieu tối toi đêm dem ngày ngay tuần tuan tháng thang cuối cuoi
+buổi buoi sáng trưa trua chiều chieu tối toi đêm dem ngày ngay tuần tuan tháng thang cuối cuoi sớm som
 được duoc cần can muốn muon tìm tim kiếm kiem chỗ nơi noi quanh gần đây day
 người nguoi khách khach hàng nhất nhat rất rat hơi hoi khá kha
 quá qua vừa vua lắm luôn luon nữa nua thêm them đừng dung nên nen phải phai
 cả ca mỗi moi từng tung vẫn van đều deu chỉ chi thật that siêu sieu cực cuc hết het còn
+""".split()
+
+
+# Operator and unit keywords used in numeric and attribute constraint parsing
+_GRAMMAR_TERMS = """
+duoi dưới truoc trước kem nho hon nhỏ hơn it hon ít hơn duoi muc dưới mức thap hon thấp hơn
+tren trên sau hon hơn lon hon lớn hơn nhieu hon nhiều hơn tren muc trên mức cao hon cao hơn
+tam tầm khoang khoảng dung đúng bang bằng trieu triệu tr star sao gio giờ g h k am pm
+sang sáng chieu chiều toi tối dem đêm danh gia đánh giá rating gia giá tien tiền mo cua mở cửa dong cua đóng cửa
 """.split()
 
 
@@ -97,6 +106,7 @@ def _vocabs() -> tuple[frozenset[str], dict[str, str], frozenset[str], frozenset
         add_target(str(entry["city"]))
 
     known: set[str] = set(_STOPWORDS) | {normalize_vi(w) for w in _STOPWORDS}
+    known |= set(_GRAMMAR_TERMS) | {normalize_vi(w) for w in _GRAMMAR_TERMS}
     for p in load_pois():
         for field in (p.name, p.category, p.sub_category, p.district, p.city):
             add_target(field)

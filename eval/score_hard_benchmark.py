@@ -28,19 +28,24 @@ def _pipeline():
     """Build full pipeline THẬT đúng 1 lần (BM25 ∪ dense + rerank) + map tra cứu."""
     if _STATE:
         return _STATE
-    from src.data_loader import load_pois, normalize_vi
+    from src.data_loader import (extract_unique_attributes, extract_unique_categories,
+                                 load_pois, normalize_vi)
     from src.ranking.reranker import RerankRetriever
     from src.retrieval.bm25 import BM25Retriever
-    from src.retrieval.dense import DenseRetriever
-    from src.understanding.rules import concept_tokens
+    from src.retrieval.dense import (AttributeIndex, ColumnAnchorIndex, DenseRetriever,
+                                     JointMetadataIndex)
 
     pois = load_pois()
     _STATE["by_id"] = {p.id: p for p in pois}
-    _STATE["retriever"] = RerankRetriever(pois, base=BM25Retriever(pois),
-                                          dense=DenseRetriever(pois))
-    # token thô (benchmark) → concept id (lớp reasoning chấm ở mức concept)
-    _STATE["token2concept"] = {tok: cid for cid, toks in concept_tokens().items()
-                               for tok in toks}
+    unique_attrs = extract_unique_attributes(pois)
+    _STATE["retriever"] = RerankRetriever(
+        pois, base=BM25Retriever(pois), dense=DenseRetriever(pois),
+        attr_index=AttributeIndex(unique_attrs),
+        joint_index=JointMetadataIndex(extract_unique_categories(pois), unique_attrs),
+        column_anchor=ColumnAnchorIndex())
+    # v2 dynamic-vector-attributes: lớp reasoning chấm bằng RAW attribute string —
+    # tập token thật (normalized) chỉ dùng để chọn value/label nào là token thật
+    _STATE["attr_norms"] = {normalize_vi(a) for a in unique_attrs}
     _STATE["normalize"] = normalize_vi
     return _STATE
 
@@ -57,12 +62,13 @@ def predict_satisfaction(query: str, poi_id: str, constraints: list):
     (src.reasoning.constraints.score_constraint) — không tự tính lại logic.
 
     Map type/value của benchmark → Constraint của hệ:
-      category → category; city/district → location; attribute/price → tra
-      token thô → concept id (lớp reasoning chấm CONCEPT-level: POI có token
-      đồng nghĩa cùng concept vẫn tính thỏa — lệch với truth token-level nếu có
-      là finding trung thực, không chỉnh layer để khớp benchmark).
+      category → category; city/district → location; attribute/price → RAW
+      attribute string (v2 dynamic-vector-attributes: lớp reasoning chấm bằng
+      normalized string match + keyword classify, không còn concept id).
+      price của benchmark dùng machine-key EN ("cheap") + label VN ("giá rẻ")
+      → chọn value nếu là token thật trong data, trượt thì lấy label.
     """
-    from src.reasoning.constraints import (_PRICE_CONCEPTS, Constraint,
+    from src.reasoning.constraints import (Constraint, _classify_attr,
                                            score_constraint)
     st = _pipeline()
     poi = st["by_id"].get(poi_id.removeprefix("poi:"))
@@ -79,19 +85,13 @@ def predict_satisfaction(query: str, poi_id: str, constraints: list):
         elif ctype == "district":
             con = Constraint("location", value, value, priority=2,
                              data={"district": value, "city": None})
-        else:  # attribute | price — token thô → concept
-            # price dùng machine-key EN ("cheap") + label VN ("giá rẻ") →
-            # tra value trước, trượt thì tra label
-            concept = (st["token2concept"].get(st["normalize"](value))
-                       or st["token2concept"].get(st["normalize"](c.get("label", ""))))
-            if concept is None:
-                # token ngoài lexicon (không xảy ra với 82 token thật) — fallback
-                # membership thô, vẫn deterministic
-                has = st["normalize"](value) in {st["normalize"](a) for a in poi.attributes}
-                out[c["id"]] = 1.0 if has else 0.0
-                continue
-            kind = "price" if concept in _PRICE_CONCEPTS else "attribute"
-            con = Constraint(kind, value, concept, priority=1)
+        else:  # attribute | price — chọn dạng là token thật trong data
+            token = value
+            if (st["normalize"](value) not in st["attr_norms"]
+                    and st["normalize"](c.get("label", "")) in st["attr_norms"]):
+                token = c["label"]
+            kind = _classify_attr(token)
+            con = Constraint(kind, token, token, priority=1)
         out[c["id"]] = float(score_constraint(poi, con))
     return out
 # ============================================================

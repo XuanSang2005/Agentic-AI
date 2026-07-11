@@ -28,7 +28,7 @@ def preprocess_query(query: str) -> str:
         query = correct_typos(query)
     return query
 
-# Trọng số 7-signal theo cấu hình pipeline — giá trị + rationale từng bộ nằm ở
+# Trọng số signal theo cấu hình pipeline — giá trị + rationale từng bộ nằm ở
 # config/settings.yaml (rerank_weights); tên module-level giữ nguyên để eval/tests
 # import thẳng. Thứ tự key trong yaml quyết định thứ tự cộng float — đừng đảo.
 DEFAULT_WEIGHTS = config.settings().rerank_weights["default"]
@@ -40,13 +40,22 @@ POOL_K = config.settings().retrieval.pool_k
 
 
 class RerankRetriever:
-    """Rerank trên candidate của base retriever; có dense → union pool 2 nguồn."""
+    """Rerank trên candidate của base retriever; có dense → union pool 2 nguồn.
+
+    attr_index / joint_index / column_anchor (dynamic-vector-attributes): index
+    vector trên metadata dataset, chuyền vào extract_plan — planner không đọc
+    YAML concept, chỉ học từ data. None → planner bỏ qua nhánh tương ứng.
+    """
 
     def __init__(self, pois: list[POI], base, weights: dict[str, float] | None = None,
-                 n_candidates: int = N_CANDIDATES, dense=None, pool_k: int = POOL_K):
+                 n_candidates: int = N_CANDIDATES, dense=None, pool_k: int = POOL_K,
+                 attr_index=None, joint_index=None, column_anchor=None):
         self._by_id = {p.id: p for p in pois}
         self._base = base
         self._dense = dense
+        self._attr_index = attr_index
+        self._joint_index = joint_index
+        self._column_anchor = column_anchor
         self._weights = weights or (WEIGHTS_WITH_DENSE if dense else DEFAULT_WEIGHTS)
         self._n = n_candidates
         self._pool_k = pool_k
@@ -60,12 +69,51 @@ class RerankRetriever:
 
     @staticmethod
     def _minmax_in_pool(scores: dict[str, float], pool: list[str]) -> dict[str, float]:
-        """Normalize [0,1] TRONG pool; kênh phẳng (max=min) → 0.5 trung tính."""
-        vals = [scores.get(pid, 0.0) for pid in pool]
-        lo, hi = min(vals), max(vals)
-        if hi - lo < 1e-12:
+        """Normalize [0,1] TRONG pool; kênh phẳng (max=min) → 0.5 trung tính.
+
+        Chỉ scale trên các item thực sự có điểm trong scores, gán 0.0 cho các item
+        bị lọc bỏ để tránh nén dải điểm của các ứng viên chất lượng (bẫy pre-filtering).
+        """
+        valid_vals = [scores[pid] for pid in pool if pid in scores]
+        if not valid_vals:
             return {pid: 0.5 for pid in pool}
-        return {pid: (scores.get(pid, 0.0) - lo) / (hi - lo) for pid in pool}
+        lo, hi = min(valid_vals), max(valid_vals)
+        if hi - lo < 1e-12:
+            return {pid: 1.0 if pid in scores else 0.0 for pid in pool}
+
+        out = {}
+        for pid in pool:
+            if pid in scores:
+                out[pid] = (scores[pid] - lo) / (hi - lo)
+            else:
+                out[pid] = 0.0
+        return out
+
+    def _apply_sort_override(self, scored: list, plan) -> list:
+        """Re-sort candidates by plan.sort_by if a superlative was detected."""
+        if plan.sort_by is None:
+            return scored  # no sort override → unchanged
+
+        ascending = (plan.sort_order == "asc")
+
+        def sort_key(item):
+            pid = item[0]
+            total = item[1]
+            poi = self._by_id[pid]
+            if plan.sort_by == "price":
+                val = poi.price_level if poi.price_level > 0 else (999 if ascending else 0)
+            elif plan.sort_by == "rating":
+                val = poi.rating if poi.rating > 0.0 else (0.0 if not ascending else 999.0)
+            else:
+                return (-total, pid)
+            # Primary: attribute value; Secondary: relevance score (desc)
+            if ascending:
+                return (val, -total, pid)
+            else:
+                return (-val, -total, pid)
+
+        scored.sort(key=sort_key)
+        return scored
 
     def _score_pool(self, query: str,
                     user_coord: tuple[float, float] | None = None
@@ -75,22 +123,28 @@ class RerankRetriever:
         Nguồn sự thật DUY NHẤT của điểm số: search() và search_explained()
         đều đi qua đây — explain không bao giờ lệch khỏi ranking thật.
 
+        Plan extract TRƯỚC retrieval: dense chạy hybrid pre-filtering theo plan
+        (city/district/category) ngay trong Qdrant.
+
         user_coord: focus point từ API (?lat/lon — "local ranking" theo PDF). CHỈ làm
         fallback khi query text không tự resolve được location (landmark/district giữ
         ưu tiên). Eval không truyền → không ảnh hưởng con số eval.
         """
         query = preprocess_query(query)  # expand → restore → typo, trước MỌI nhánh
+        plan = extract_plan(query, attr_index=self._attr_index,
+                            joint_index=self._joint_index,
+                            column_anchor=self._column_anchor)
+        if user_coord is not None and plan.resolved_coord is None:
+            plan.resolved_coord = user_coord
+
         n_all = len(self._by_id)
         bm25_all = self._base.search_scored(query, k=n_all)
-        dense_all = self._dense.search_scored(query, k=n_all)
+        dense_all = self._dense.search_scored(query, k=n_all, plan=plan)
         pool = sorted({pid for pid, _ in bm25_all[:self._pool_k]}
                       | {pid for pid, _ in dense_all[:self._pool_k]})
         bm25_n = self._minmax_in_pool(dict(bm25_all), pool)
         dense_n = self._minmax_in_pool(dict(dense_all), pool)
 
-        plan = extract_plan(query)
-        if user_coord is not None and plan.resolved_coord is None:
-            plan.resolved_coord = user_coord
         scored = []
         for pid in pool:
             poi = self._by_id[pid]
@@ -103,6 +157,7 @@ class RerankRetriever:
                     parts[name] = w * signals.SIGNAL_FUNCS[name](plan, poi)
             scored.append((pid, sum(parts.values()), parts))
         scored.sort(key=lambda x: (-x[1], x[0]))
+        scored = self._apply_sort_override(scored, plan)
         return scored
 
     @property
@@ -122,7 +177,9 @@ class RerankRetriever:
         if self._dense is not None:
             return [pid for pid, _, _ in self._score_pool(query)[:k]]
         query = preprocess_query(query)  # path không dense cũng qua chuỗi hiểu query
-        plan = extract_plan(query)
+        plan = extract_plan(query, attr_index=self._attr_index,
+                            joint_index=self._joint_index,
+                            column_anchor=self._column_anchor)
         cands = self._candidates(query)
         if not cands:
             return []
@@ -138,4 +195,7 @@ class RerankRetriever:
             scored.append((pid, total))
 
         scored.sort(key=lambda x: (-x[1], x[0]))  # tie-break poi_id → deterministic
+        if plan.sort_by is not None:
+            scored = [(pid, s) for pid, s, _ in self._apply_sort_override(
+                [(pid, s, {}) for pid, s in scored], plan)]
         return [pid for pid, _ in scored[:k]]

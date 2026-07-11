@@ -210,12 +210,20 @@ def run_eval(
 
 def main() -> None:
     from src.ranking.reranker import WEIGHTS_WITH_DISTANCE, RerankRetriever
+    from src.retrieval.dense import AttributeIndex, ColumnAnchorIndex, JointMetadataIndex
+    from src.data_loader import extract_unique_attributes, extract_unique_categories
 
     pois = load_pois()
     queries = load_eval()
     synthetic_ids = {p.id for p in pois if p.is_synthetic}
     print(f"POI: {len(pois)} ({len(pois) - len(synthetic_ids)} thật + "
           f"{len(synthetic_ids)} synthetic G) | Eval: {len(queries)} câu\n")
+
+    unique_attrs = extract_unique_attributes(pois)
+    unique_cats = extract_unique_categories(pois)
+    attr_index = AttributeIndex(unique_attrs)
+    joint_index = JointMetadataIndex(unique_cats, unique_attrs)
+    column_anchor = ColumnAnchorIndex()
 
     # Dòng 1 bảng ablation — BM25 thuần trên câu thô: sàn lexical.
     bm25 = BM25Retriever(pois)
@@ -236,10 +244,11 @@ def main() -> None:
     print()
 
     # Dense-as-signal: union pool BM25 ∪ dense, dense_relevance là relevance chính.
-    # So với MỐC 0.967 (dist_report) để soi saved/broken sát nhất.
     from src.retrieval.dense import DenseRetriever
     dense = DenseRetriever(pois)
-    rerank_dense = RerankRetriever(pois, base=bm25, dense=dense)
+    rerank_dense = RerankRetriever(pois, base=bm25, dense=dense,
+                                  attr_index=attr_index, joint_index=joint_index,
+                                  column_anchor=column_anchor)
     dense_report = run_eval(rerank_dense, "BM25 + Rerank + Distance + Dense",
                             queries, synthetic_ids,
                             readme_row="+ Dense (signal)", compare_to=dist_report)

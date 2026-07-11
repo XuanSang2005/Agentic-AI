@@ -19,10 +19,12 @@ from collections import defaultdict
 from datetime import datetime
 
 from src import config
-from src.data_loader import load_pois
+from src.data_loader import (extract_unique_attributes, extract_unique_categories,
+                             load_pois)
 from src.ranking.reranker import RerankRetriever
 from src.retrieval.bm25 import BM25Retriever
-from src.retrieval.dense import DenseRetriever
+from src.retrieval.dense import (AttributeIndex, ColumnAnchorIndex, DenseRetriever,
+                                 JointMetadataIndex)
 
 # (nhóm, query, gold set — hit khi top-1 thuộc set, ghi chú độ khó)
 CASES: list[tuple[str, str, set[str], str]] = [
@@ -128,7 +130,12 @@ CASES: list[tuple[str, str, set[str], str]] = [
 def main() -> None:
     pois = load_pois()
     g_ids = {p.id for p in pois if p.is_synthetic}
-    retriever = RerankRetriever(pois, base=BM25Retriever(pois), dense=DenseRetriever(pois))
+    unique_attrs = extract_unique_attributes(pois)
+    retriever = RerankRetriever(
+        pois, base=BM25Retriever(pois), dense=DenseRetriever(pois),
+        attr_index=AttributeIndex(unique_attrs),
+        joint_index=JointMetadataIndex(extract_unique_categories(pois), unique_attrs),
+        column_anchor=ColumnAnchorIndex())
 
     rows = []
     for group, query, gold, note in CASES:

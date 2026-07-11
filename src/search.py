@@ -15,16 +15,18 @@ import time
 from dataclasses import asdict, dataclass
 from typing import Protocol, runtime_checkable
 
-from src.data_loader import POI, current_data_version, load_pois
+from src.data_loader import (POI, current_data_version, extract_unique_attributes,
+                             extract_unique_categories, load_pois)
 from src.ranking.reranker import RerankRetriever
 from src.ranking.signals import haversine_km
 from src.retrieval.bm25 import BM25Retriever
-from src.retrieval.dense import DenseRetriever
+from src.retrieval.dense import (AttributeIndex, ColumnAnchorIndex, DenseRetriever,
+                                 JointMetadataIndex)
 from src import config
 from src.reasoning.constraints import annotate as annotate_constraints
 from src.understanding.abbreviations import expand_abbreviations
 from src.understanding.diacritics import restore_diacritics
-from src.understanding.rules import concept_label, extract_plan, landmark_label
+from src.understanding.rules import extract_plan, landmark_label
 from src.understanding.typo_fix import correct_typos
 
 _log = logging.getLogger("tasco.search")
@@ -49,15 +51,28 @@ class SearchHit:
 
 
 class _SearchIndex:
-    """Bundle bất biến pois + retrievers — reindex build BẢN MỚI rồi swap nguyên
-    con, TUYỆT ĐỐI không mutate index đang được request đọc."""
+    """Bundle bất biến pois + retrievers + metadata indexes — reindex build BẢN MỚI
+    rồi swap nguyên con, TUYỆT ĐỐI không mutate index đang được request đọc.
+
+    attr/joint/column_anchor (dynamic-vector-attributes) nằm TRONG bundle: chúng
+    derive từ POI data (unique attributes/categories) nên phải rebuild + swap
+    cùng nhịp với BM25/dense khi ingestion đổi data.
+    """
 
     def __init__(self, pois: list[POI], reuse_embeddings=None, model=None):
         self.pois = pois
         self.by_id = {p.id: p for p in pois}
         bm25 = BM25Retriever(pois)
         self.dense = DenseRetriever(pois, reuse_embeddings=reuse_embeddings, model=model)
-        self.reranker = RerankRetriever(pois, base=bm25, dense=self.dense)
+        unique_attrs = extract_unique_attributes(pois)
+        unique_cats = extract_unique_categories(pois)
+        self.attr_index = AttributeIndex(unique_attrs)
+        self.joint_index = JointMetadataIndex(unique_cats, unique_attrs)
+        self.column_anchor = ColumnAnchorIndex()
+        self.reranker = RerankRetriever(pois, base=bm25, dense=self.dense,
+                                        attr_index=self.attr_index,
+                                        joint_index=self.joint_index,
+                                        column_anchor=self.column_anchor)
 
 
 def _clear_data_caches() -> None:
@@ -76,6 +91,7 @@ def _clear_data_caches() -> None:
     signals._NORM_ATTRS.clear()
     rules._city_rules.cache_clear()
     rules._district_rules.cache_clear()
+    rules._district_surface_norms.cache_clear()
     rules.district_centroids.cache_clear()
     abbreviations._data_vocab.cache_clear()
     abbreviations._rules.cache_clear()
@@ -220,18 +236,31 @@ class SearchService:
                 fixed = correct_typos(normalized_query)
                 typo_corrected = fixed if fixed != normalized_query else None
                 understood = fixed
-            plan = extract_plan(understood)
+            plan = extract_plan(understood, attr_index=idx.attr_index,
+                                joint_index=idx.joint_index,
+                                column_anchor=idx.column_anchor)
             plan_dict = {key: (sorted(v) if isinstance(v, set) else v)
                          for key, v in asdict(plan).items()}
             normalized_query = understood  # UI hiện bản "đã hiểu" CUỐI CÙNG
-            # Plan ở dạng người-đọc-được: concept id → nhãn có dấu
+            # Plan ở dạng người-đọc-được: attr là RAW string có dấu từ dataset
             interpreted = {
                 "categories": sorted(plan.categories),
-                "attributes": [concept_label(c) for c in sorted(plan.attr_concepts)],
-                "excluded": [concept_label(c) for c in sorted(plan.neg_concepts)],
+                "attributes": sorted(plan.attr_concepts),
+                "excluded": sorted(plan.neg_concepts),
                 "city": plan.city,
                 "district": plan.district,
                 "landmark": landmark_label(plan.landmark) if plan.landmark else None,
+                "price_limit": (f"giá ≤ {plan.price_limit}" if plan.price_op == "le" and plan.price_limit is not None
+                                else f"giá ≥ {plan.price_limit}" if plan.price_op == "ge" and plan.price_limit is not None
+                                else f"giá = {plan.price_limit}" if plan.price_limit is not None else None),
+                "rating_limit": (f"đánh giá ≥ {plan.rating_limit}" if plan.rating_op == "ge" and plan.rating_limit is not None
+                                 else f"đánh giá ≤ {plan.rating_limit}" if plan.rating_op == "le" and plan.rating_limit is not None
+                                 else f"đánh giá = {plan.rating_limit}" if plan.rating_limit is not None else None),
+                "time_limit": (f"mở cửa {'trước' if plan.time_op == 'le' else 'sau'} {plan.time_limit_minutes // 60:02d}:{plan.time_limit_minutes % 60:02d}"
+                               if plan.time_limit_minutes is not None else None),
+                "sort_by": plan.sort_by,
+                "sort_order": plan.sort_order,
+                "current_time_open": plan.current_time_open,
             }
 
         hits = []
