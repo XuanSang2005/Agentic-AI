@@ -8,3 +8,6 @@ eval/reports/*
 *.faiss
 .env
 data/cache/
+.agents/
+.antigravitycli/
+skills-lock.json
