@@ -1,12 +1,38 @@
-# Postgres cho dev cục bộ (Phase 3 — nguồn data thay thế xlsx, opt-in).
+# Stack dev cục bộ: postgres (Phase 3) + api (Phase 6).
 #
-#   docker compose up -d          # chờ healthy
-#   make db-seed                  # xlsx → Postgres (chạy 1 lần)
-#   DATA_SOURCE=postgres make eval
+#   docker compose up -d          # chờ postgres healthy, api build + warmup
+#   make db-seed                  # xlsx → Postgres (chạy 1 lần, từ host)
+#   curl localhost:8000/ready     # 200 khi index sẵn sàng
 #
 # Port 5433 phía host để không đụng Postgres cài sẵn (brew thường chiếm 5432).
 # Schema tự áp lúc init (migrations/ mount vào /docker-entrypoint-initdb.d).
+# Secret KHÔNG nằm trong file này/image: api đọc qua environment — dev lấy từ
+# .env (docker compose tự nạp), production lấy từ secrets manager.
 services:
+  api:
+    build: .
+    container_name: tasco-api
+    ports:
+      - "8000:7860"
+    environment:
+      DATA_SOURCE: postgres
+      # Trong network compose: host là tên service, port trong container 5432
+      DATABASE_URL: postgresql://tasco:tasco@postgres:5432/tasco
+      ADMIN_TOKEN: ${ADMIN_TOKEN:-}                    # trống = ingestion KHOÁ
+      AWS_LOCATION_API_KEY: ${AWS_LOCATION_API_KEY:-}  # trống = verify flag unverified
+      AWS_DEFAULT_REGION: ${AWS_DEFAULT_REGION:-ap-southeast-2}
+      LOG_LEVEL: ${LOG_LEVEL:-INFO}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      # /ready (không phải /health): container "khỏe" = index sẵn sàng nhận traffic
+      test: ["CMD", "python", "-c",
+             "import urllib.request; urllib.request.urlopen('http://localhost:7860/ready', timeout=3)"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 30s
   postgres:
     image: postgres:16.4-alpine
     container_name: tasco-postgres

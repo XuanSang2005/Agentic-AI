@@ -11,6 +11,7 @@ from __future__ import annotations
 
 import logging
 import threading
+import time
 from dataclasses import asdict, dataclass, field
 from typing import Protocol, runtime_checkable
 
@@ -25,6 +26,8 @@ from src.understanding.abbreviations import expand_abbreviations
 from src.understanding.diacritics import restore_diacritics
 from src.understanding.rules import concept_label, extract_plan, landmark_label
 from src.understanding.typo_fix import correct_typos
+
+_log = logging.getLogger("tasco.search")
 
 
 @runtime_checkable
@@ -115,6 +118,7 @@ class SearchService:
         index phải khớp đúng thứ đã commit. Vector POI cũ + model chuyền lại từ
         index cũ: chỉ POI mới phải encode (kiểm bằng n_encoded trả về).
         """
+        t0 = time.perf_counter()
         with self._reindex_lock:
             old = self._index
             _clear_data_caches()
@@ -122,7 +126,10 @@ class SearchService:
             new = _SearchIndex(load_pois(), reuse_embeddings=reuse,
                                model=old.dense.loaded_model)
             self._index = new  # atomic swap — từ đây request mới đọc index mới
-            return {"pois": len(new.pois), "encoded_new": new.dense.n_encoded}
+            info = {"pois": len(new.pois), "encoded_new": new.dense.n_encoded}
+            _log.info("reindex", extra={
+                **info, "latency_ms": round((time.perf_counter() - t0) * 1000, 1)})
+            return info
 
     # --- Phase 5: version dùng chung + reload đa-instance ---
 
@@ -148,8 +155,13 @@ class SearchService:
             return {"reloaded": False, "version": remote}
         # Đọc version TRƯỚC khi reindex: nếu có bump chen giữa, data load được
         # mới hơn version ghi nhận → vòng poll sau reload thêm lần nữa (an toàn).
-        self.reindex()
+        t0 = time.perf_counter()
+        info = self.reindex()
         self._loaded_version = remote
+        _log.info("reload", extra={
+            "from_version": loaded, "to_version": remote,
+            "encoded_new": info["encoded_new"], "pois": info["pois"],
+            "latency_ms": round((time.perf_counter() - t0) * 1000, 1)})
         return {"reloaded": True, "version": remote, "was": loaded}
 
     def start_version_poller(self, interval_seconds: float | None = None) -> None:
@@ -168,10 +180,11 @@ class SearchService:
                 except Exception:  # DB chớp nhoáng — poll sau thử lại, đừng chết thread
                     logging.getLogger("tasco.search").exception("version poll fail")
 
+        poller = threading.Thread(target=_loop, daemon=True,
+                                  name="tasco-version-poller")
+        poller.start()  # start TRƯỚC khi publish — ai thấy _poller là join được ngay
         self._poll_stop = stop
-        self._poller = threading.Thread(target=_loop, daemon=True,
-                                        name="tasco-version-poller")
-        self._poller.start()
+        self._poller = poller
 
     def stop_version_poller(self) -> None:
         if self._poller is None:

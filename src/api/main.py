@@ -14,12 +14,14 @@ from __future__ import annotations
 
 import hmac
 import logging
+import threading
+import time
 import uuid
 from contextlib import asynccontextmanager
 
 from typing import Optional
 
-from fastapi import Body, Depends, FastAPI, Query, Request
+from fastapi import Body, FastAPI, Query, Request
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import FileResponse, JSONResponse
 
@@ -27,28 +29,46 @@ from src import config
 from src.api.dto import (ErrorBody, ErrorResponse, SearchMeta, SearchResponse,
                          to_place_result)
 from src.data_loader import normalize_vi
+from src.logging_config import setup_logging
 from src.search import SearchService
 
 MAX_LIMIT = config.settings().search.api_max_limit  # "max recommended 20" theo PDF
 
+setup_logging()
 logger = logging.getLogger("tasco.api")
 
 _service: SearchService | None = None
+_service_lock = threading.Lock()
 
 
 def _get_service() -> SearchService:
+    """Build service đúng 1 lần (thread-safe) — caller CHỜ nếu đang build."""
     global _service
-    if _service is None:
-        _service = SearchService()
-    return _service
+    with _service_lock:
+        if _service is None:
+            _service = SearchService()
+        return _service
+
+
+def _service_ready() -> bool:
+    """Index đã build + warmup xong chưa — KHÔNG trigger build (probe phải rẻ)."""
+    return _service is not None
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    svc = _get_service()  # build index + load embedding cache 1 lần lúc startup
-    svc.start_version_poller()  # Phase 5 — no-op khi DATA_SOURCE=xlsx
+    # Build NỀN (daemon thread) để /health và /ready trả lời được NGAY trong lúc
+    # warmup ~7s — LB phân biệt "sống" vs "sẵn sàng". Request search đến sớm
+    # sẽ chờ ở _get_service (lock) thay vì lỗi.
+    def _build() -> None:
+        svc = _get_service()
+        svc.start_version_poller()  # Phase 5 — no-op khi DATA_SOURCE=xlsx
+        logger.info("service_ready", extra={"pois": svc.n_pois,
+                                            "data_version": svc.loaded_version})
+    threading.Thread(target=_build, daemon=True, name="tasco-startup").start()
     yield
-    svc.stop_version_poller()
+    if _service is not None:
+        _service.stop_version_poller()
 
 
 app = FastAPI(
@@ -58,6 +78,21 @@ app = FastAPI(
                 "Contract: docs/tasco_api.pdf. Deterministic, offline, 0 LLM call.",
     lifespan=lifespan,
 )
+
+
+@app.middleware("http")
+async def access_log_middleware(request: Request, call_next):
+    """Đo latency mọi request. Chỉ log PATH — KHÔNG log query string
+    (?lat/lon là vị trí người dùng, không đưa vào log)."""
+    t0 = time.perf_counter()
+    response = await call_next(request)
+    logger.info("request", extra={
+        "method": request.method,
+        "path": request.url.path,
+        "status": response.status_code,
+        "latency_ms": round((time.perf_counter() - t0) * 1000, 1),
+    })
+    return response
 
 
 def _error(status: int, code: str, message: str, request: Request,
@@ -102,20 +137,28 @@ def _check_auth(request: Request) -> JSONResponse | None:
     return _error(401, "unauthorized", "Missing or invalid token/key", request)
 
 
-def _admin_auth() -> None:
-    """PASS-THROUGH có chủ đích (Phase 4a) — điểm cắm auth cho endpoint admin.
+def _check_admin_auth(request: Request) -> JSONResponse | None:
+    """Auth admin (Phase 6, đóng TODO pass-through 4a) — token RIÊNG (env
+    ADMIN_TOKEN, không dùng chung TASCO_BEARER_TOKEN), so constant-time.
 
-    TODO(trước khi expose internet): auth thật cho admin — token riêng (không
-    dùng chung TASCO_BEARER_TOKEN của search) hoặc mTLS/IAM tuỳ hạ tầng deploy.
+    KHÁC search có chủ đích: search không token → mock MỞ; admin không token
+    → KHOÁ 503 (admin ghi DB + tốn tiền AWS, không được default mở).
     """
+    token = config.admin_token()
+    if not token:
+        return _error(503, "admin_disabled",
+                      "ADMIN_TOKEN chưa đặt — ingestion bị khoá (bắt buộc đặt env để bật)",
+                      request)
+    if _secret_eq(request.headers.get("Authorization", ""), f"Bearer {token}"):
+        return None
+    return _error(401, "unauthorized", "Missing or invalid admin token", request)
 
 
 @app.post("/admin/pois/batch")
-def ingest_pois_batch(request: Request, records: list[dict] = Body(...),
-                      _auth: None = Depends(_admin_auth)):
+def ingest_pois_batch(request: Request, records: list[dict] = Body(...)):
     """Batch ingest POI: validate từng record (4a) → VERIFY qua AWS Location
     (4b, đồng bộ, trước commit) → upsert Postgres trong 1 transaction (4a) →
-    reindex MỘT LẦN atomic swap (4a).
+    reindex MỘT LẦN atomic swap (4a). Auth: Bearer ADMIN_TOKEN (Phase 6).
 
     Partial-success: record méo bị reject kèm lý do, record hợp lệ vẫn vào;
     verify là "flag không reject" — AWS lỗi/score thấp → vẫn ghi với
@@ -125,6 +168,10 @@ def ingest_pois_batch(request: Request, records: list[dict] = Body(...),
     from src import ingestion
     from src.verify import geocode
 
+    t0 = time.perf_counter()
+    denied = _check_admin_auth(request)  # auth TRƯỚC mọi thứ — kể cả check nguồn
+    if denied is not None:
+        return denied
     if config.DATA_SOURCE != "postgres":
         return _error(503, "ingestion_unavailable",
                       "Ingestion cần DATA_SOURCE=postgres (nguồn xlsx là read-only)",
@@ -178,6 +225,16 @@ def ingest_pois_batch(request: Request, records: list[dict] = Body(...),
                            "sẽ cập nhật ở lần reindex/restart sau",
                 "reason": str(e).strip(),
             }
+    n_unverified = report["unverified"]
+    logger.info("ingest_batch", extra={
+        "received": report["received"], "accepted": report["accepted"],
+        "rejected": len(report["rejected"]),
+        "verified": report["verified"], "unverified": n_unverified,
+        # tín hiệu chất lượng data nguồn — unverified cao là data bẩn/toạ độ lệch
+        "unverified_ratio": round(n_unverified / max(len(valid), 1), 3),
+        "data_version": report.get("data_version"),
+        "latency_ms": round((time.perf_counter() - t0) * 1000, 1),
+    })
     return report
 
 
@@ -190,10 +247,36 @@ def demo_page():
 
 @app.get("/health")
 def health():
-    """Health check — kèm thông tin chế độ deterministic/offline."""
-    svc = _get_service()
-    return {"status": "ok", "pois": svc.n_pois, "embeddingModel": config.EMBEDDING_MODEL,
+    """LIVENESS: process sống → 200 NGAY, kể cả khi index CHƯA build xong
+    (không phụ thuộc _get_service — không trigger build). LB dùng để biết
+    "đừng kill"; đã sẵn sàng nhận traffic hay chưa là việc của /ready."""
+    body = {"status": "ok", "ready": _service_ready(),
+            "embeddingModel": config.EMBEDDING_MODEL,
             "deterministic": True, "llmCalls": 0}
+    if _service_ready():
+        body["pois"] = _service.n_pois
+    return body
+
+
+@app.get("/ready")
+def ready(request: Request):
+    """READINESS: 200 CHỈ khi index đã build + warmup xong (và Postgres chạm
+    được, khi DATA_SOURCE=postgres). Lúc startup ~7s → 503 để LB chưa gửi
+    traffic tới. DB check nhẹ tay: SELECT 1, timeout ngắn."""
+    if not _service_ready():
+        return _error(503, "warming_up", "Index đang build/warmup — chưa nhận traffic",
+                      request)
+    body = {"status": "ready", "pois": _service.n_pois}
+    if config.DATA_SOURCE == "postgres":
+        try:
+            import psycopg
+            with psycopg.connect(config.database_url(), connect_timeout=2) as conn:
+                conn.execute("SELECT 1")
+        except Exception as e:
+            return _error(503, "db_unreachable", "Postgres không chạm được", request,
+                          details={"reason": str(e).strip()[:200]})
+        body["data_version"] = _service.loaded_version
+    return body
 
 
 @app.get("/v1/search", response_model=SearchResponse, response_model_exclude_none=True)
@@ -252,8 +335,7 @@ def search(
         hits = [h for h in hits
                 if h.distance_meters is not None and h.distance_meters <= radiusMeters]
 
-    return SearchResponse(
-        query=q,
-        results=[to_place_result(h) for h in hits[:limit]],
-        meta=SearchMeta(limit=limit, lang=lang),
-    )
+    results = [to_place_result(h) for h in hits[:limit]]
+    # Log query + n_results (POI query không nhạy cảm); KHÔNG log lat/lon người dùng
+    logger.info("search", extra={"query": q, "n_results": len(results), "limit": limit})
+    return SearchResponse(query=q, results=results, meta=SearchMeta(limit=limit, lang=lang))

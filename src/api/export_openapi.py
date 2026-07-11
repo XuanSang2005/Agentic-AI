@@ -6,10 +6,14 @@ Fail (exit 1) nếu thiếu path/param/field bắt buộc — đây là contract
 from __future__ import annotations
 
 import json
+import logging
 import sys
 
 from src import config
 from src.api.main import app
+from src.logging_config import setup_logging
+
+logger = logging.getLogger("tasco.openapi")
 
 # Contract tối thiểu theo PDF (Search API + Common DTOs)
 REQUIRED_PATHS = {"/v1/search", "/health"}
@@ -44,14 +48,15 @@ def main() -> None:
 
     if errors:
         for e in errors:
-            print(f"✗ CONTRACT MISMATCH: {e}")
+            logger.error("CONTRACT MISMATCH", extra={"detail": e})
         sys.exit(1)
 
     out = config.ROOT / "docs" / "openapi.json"
     out.write_text(json.dumps(spec, ensure_ascii=False, indent=2), encoding="utf-8")
-    print(f"✓ OpenAPI khớp contract PDF (paths/aliases/params/PlaceResult đủ field)")
-    print(f"✓ Exported: {out.relative_to(config.ROOT)}")
+    logger.info("OpenAPI khớp contract PDF (paths/aliases/params/PlaceResult đủ field)")
+    logger.info("exported", extra={"path": str(out.relative_to(config.ROOT))})
 
 
 if __name__ == "__main__":
+    setup_logging()
     main()

@@ -235,6 +235,12 @@ def database_url() -> str:
     return os.environ.get("DATABASE_URL", "postgresql://tasco:tasco@localhost:5433/tasco")
 
 
+def admin_token() -> str:
+    """Token admin ingestion (Phase 6) — secret CHỈ từ env. KHÔNG đặt → endpoint
+    admin bị KHOÁ (503), khác search mock-mode có chủ đích."""
+    return os.environ.get("ADMIN_TOKEN", "")
+
+
 def aws_location_api_key() -> str:
     """API key AWS Location (Phase 4b) — secret, CHỈ từ env. TODO(production):
     chuyển sang IAM SigV4 — API key lộ qua URL/log/proxy."""

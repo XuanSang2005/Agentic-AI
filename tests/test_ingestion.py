@@ -53,13 +53,25 @@ def client():
     # không mạng thật; test i/k override hành vi per-address ngay trên fake này.
     geocode.set_client(FakeGeo())
 
+    import os
+    import time as _time
+
+    # Admin auth (Phase 6): bật ingestion bằng token test, gắn header mặc định.
+    os.environ["ADMIN_TOKEN"] = "test-admin-token"
+
     npy_before = set(config.EMBEDDING_CACHE_DIR.glob("*.npy"))
     with TestClient(api_main.app) as c:
-        # Tắt poller mà lifespan start — test điều khiển reload bằng poll-ONCE
-        # (deterministic); test_u tự start/stop poller riêng để kiểm daemon.
-        api_main._get_service().stop_version_poller()
+        c.headers.update({"Authorization": "Bearer test-admin-token"})
+        # Lifespan build NỀN (Phase 6) — chờ service + poller lên rồi TẮT poller:
+        # test điều khiển reload bằng poll-ONCE (deterministic), không vòng lặp thật.
+        svc = api_main._get_service()  # block tới khi build xong
+        deadline = _time.time() + 30
+        while svc._poller is None and _time.time() < deadline:
+            _time.sleep(0.05)
+        svc.stop_version_poller()
         yield c
     geocode.set_client(None)
+    os.environ.pop("ADMIN_TOKEN", None)
 
     # Teardown: trả DB + mọi data-cache + embedding cache về nguyên trạng
     # để các module test sau (equivalence/smoke) thấy hệ như chưa ingest.
@@ -417,3 +429,15 @@ def test_u_poller_thread_daemon_and_clean_shutdown(client):
     assert not poller.is_alive(), "stop phải join sạch thread"
     assert not any(t.name == "tasco-version-poller" for t in threading.enumerate())
     svc.start_version_poller()  # trả lại trạng thái như lifespan để teardown bình thường
+
+
+def test_v_ready_200_when_built_and_db_reachable(client):
+    """Gate 6a (nửa sau): service đã build + Postgres chạm được → /ready 200
+    kèm pois + data_version; /health cũng 200 với ready=true."""
+    resp = client.get("/ready")
+    assert resp.status_code == 200
+    body = resp.json()
+    assert body["status"] == "ready" and body["pois"] >= 111
+    assert body["data_version"] >= 1
+    health = client.get("/health").json()
+    assert health["status"] == "ok" and health["ready"] is True
