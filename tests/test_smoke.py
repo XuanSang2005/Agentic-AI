@@ -123,6 +123,46 @@ def test_abbreviation_retrieval():
     assert r.search("cf yên tĩnh q1", k=3)[0] == "C001"
 
 
+def test_typo_correction():
+    """Typo fix bảo thủ: sửa đúng typo thật, TUYỆT ĐỐI không đụng từ đúng."""
+    from src.understanding.typo_fix import correct_typos as fix
+
+    # Sửa đúng (có dấu, unique candidate / bigram tie-break)
+    assert fix("nhà hàg gia đình") == "nhà hàng gia đình"
+    assert fix("khách sạnn gần biển") == "khách sạn gần biển"
+    # BẪY — phải giữ nguyên tuyệt đối:
+    assert fix("bún bò") == "bún bò"                    # từ thật trong vocab
+    assert fix("quán bún bò") == "quán bún bò"
+    assert fix("vinmec ở đâu") == "vinmec ở đâu"        # tên riêng hợp lệ trong data
+    assert fix("cf ok") == "cf ok"                      # token < 3 ký tự
+    assert fix("hag gan ho") == "hag gan ho"            # ≥2 ứng viên (hang/hai) → bỏ
+    assert fix("nhà hàn quốc") == "nhà hàn quốc"        # "hàn" là từ thật (sông Hàn)
+    assert fix("cafe không quá đông") == "cafe không quá đông"  # function word "quá"
+
+
+def test_typo_flag_off(monkeypatch):
+    """Tắt được bằng 1 flag — preprocess không đụng gì khi ENABLE_TYPO_FIX=False."""
+    from src import config
+    from src.ranking.reranker import preprocess_query
+
+    monkeypatch.setattr(config, "ENABLE_TYPO_FIX", False)
+    assert preprocess_query("nhà hàg gia đình") == "nhà hàg gia đình"
+    monkeypatch.setattr(config, "ENABLE_TYPO_FIX", True)
+    assert preprocess_query("nhà hàg gia đình") == "nhà hàng gia đình"
+
+
+def test_typo_retrieval():
+    """Câu có typo phải ra đúng loại POI (path v2 không dense cho nhanh)."""
+    from src.ranking.reranker import RerankRetriever, WEIGHTS_WITH_DISTANCE
+    from src.retrieval.bm25 import BM25Retriever
+
+    pois = load_pois()
+    by_id = {p.id: p for p in pois}
+    r = RerankRetriever(pois, base=BM25Retriever(pois), weights=WEIGHTS_WITH_DISTANCE)
+    assert by_id[r.search("nhà hàg cho gia đình", k=3)[0]].category == "Nhà hàng"
+    assert by_id[r.search("khách sạnn gần biển đà nẵng", k=3)[0]].category == "Khách sạn"
+
+
 def test_no_accent_regression():
     """Câu KHÔNG DẤU phải ra đúng gold — dense mù chỗ này, BM25 (bỏ dấu 2 phía)
     + rules (match trên norm) + district phải gánh. Chạy path v2 (không dense) cho nhanh.

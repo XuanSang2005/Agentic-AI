@@ -39,7 +39,12 @@ cache tại `data/cache/*.npy` — các lần sau khởi động không cần ne
 ## Kiến trúc 3 lớp
 
 ```
-query ──▶ L1 Query Understanding (rules, deterministic)
+query ──▶ L0 Preprocess (deterministic, idempotent)
+          │  viết tắt → đầy đủ (bv/ks/q1…, whitelist + vocab guard)
+          │  restore dấu (dictionary domain, phrase-first) · typo fix BẢO THỦ
+          │  (edit-dist 1, unique-candidate, bigram tie-break — TẮT được:
+          │   TASCO_TYPO_FIX=0, xem src/understanding/typo_fix.py)
+          L1 Query Understanding (rules, deterministic)
           │  lexicon whitelist: 82 attr token → concept; category synonyms
           │  regex: city / district (→ centroid) / landmark (gazetteer, cần cue "gần")
           │  polarity ("không quá đông" → NEG đông khách) · popularity flag

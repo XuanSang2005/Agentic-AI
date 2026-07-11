@@ -5,10 +5,28 @@ Deterministic: không LLM, tie-break theo poi_id.
 """
 from __future__ import annotations
 
+from src import config
 from src.data_loader import POI
 from src.ranking import signals
 from src.understanding.abbreviations import expand_abbreviations
+from src.understanding.diacritics import restore_diacritics
 from src.understanding.rules import extract_plan
+from src.understanding.typo_fix import correct_typos
+
+
+def preprocess_query(query: str) -> str:
+    """Chuỗi hiểu query ĐẦU pipeline, thứ tự cố định — mọi nhánh nhận cùng bản:
+    expand viết tắt → restore dấu → typo fix (tắt được: config.ENABLE_TYPO_FIX).
+
+    restore ở đây TRANSPARENT với BM25/rules (normalize round-trip về y nguyên
+    token) — chỉ dense hưởng; typo fix thì đổi token thật nên phải trước cả ba.
+    Mọi bước đều idempotent.
+    """
+    query = expand_abbreviations(query)
+    query = restore_diacritics(query)
+    if config.ENABLE_TYPO_FIX:
+        query = correct_typos(query)
+    return query
 
 # Trọng số mặc định (Bước 1 — chưa distance). bm25 = điểm base đã chuẩn hóa theo max
 # trong candidate set; phần còn lại là signal từ QueryPlan + POI.
@@ -94,9 +112,7 @@ class RerankRetriever:
         fallback khi query text không tự resolve được location (landmark/district giữ
         ưu tiên). Eval không truyền → không ảnh hưởng con số eval.
         """
-        # Viết tắt expand Ở ĐÂY — đầu pipeline, TRƯỚC mọi nhánh: bm25/dense/rules
-        # đều nhận bản đầy đủ có dấu. Idempotent (câu không viết tắt → nguyên).
-        query = expand_abbreviations(query)
+        query = preprocess_query(query)  # expand → restore → typo, trước MỌI nhánh
         n_all = len(self._by_id)
         bm25_all = self._base.search_scored(query, k=n_all)
         dense_all = self._dense.search_scored(query, k=n_all)
@@ -138,7 +154,7 @@ class RerankRetriever:
     def search(self, query: str, k: int = 10) -> list[str]:
         if self._dense is not None:
             return [pid for pid, _, _ in self._score_pool(query)[:k]]
-        query = expand_abbreviations(query)  # path không dense cũng expand đầu pipeline
+        query = preprocess_query(query)  # path không dense cũng qua chuỗi hiểu query
         plan = extract_plan(query)
         cands = self._candidates(query)
         if not cands:

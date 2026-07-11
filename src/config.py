@@ -39,3 +39,8 @@ SEMANTIC_CACHE_THRESHOLD = 0.92
 ANTHROPIC_API_KEY = os.environ.get("ANTHROPIC_API_KEY", "")
 # DETERMINISTIC_MODE=1 (mặc định): không gọi LLM, planner rule-based — test/demo không cần key.
 DETERMINISTIC_MODE = os.environ.get("DETERMINISTIC_MODE", "1") == "1"
+
+# --- Typo correction (bảo thủ, query-side) ---
+# TẮT = export TASCO_TYPO_FIX=0 (hoặc sửa default ở đây — đúng 1 dòng).
+# Xem luật trong src/understanding/typo_fix.py.
+ENABLE_TYPO_FIX = os.environ.get("TASCO_TYPO_FIX", "1") == "1"
