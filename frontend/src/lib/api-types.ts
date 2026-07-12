@@ -76,6 +76,9 @@ export interface PlaceResult {
   score: number;
   source: string;
   tags: string[];
+  /** Verify status (policy A, display-only): "verified" | "unverified" |
+   *  "active" (xlsx default — no verify info, render nothing). */
+  status?: string;
   explanation?: Explanation;
 }
 

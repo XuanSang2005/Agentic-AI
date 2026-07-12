@@ -64,7 +64,24 @@ export function ResultCard({
     <article className="card" style={{ animationDelay: `${index * 80}ms` }}>
       <div className="card-top">
         <span className="rank">{index + 1}</span>
-        <span className="name">{result.name}</span>
+        <span className="name">
+          {result.name}
+          {result.status === "verified" && (
+            <span className="vbadge ok" data-tip="Address cross-checked via geocoding">
+              <CheckIcon />
+              verified
+            </span>
+          )}
+          {result.status === "unverified" && (
+            <span
+              className="vbadge warn"
+              data-tip="Coordinates not matching geocoded address - needs review"
+            >
+              <HalfIcon />
+              unverified
+            </span>
+          )}
+        </span>
         <span className="score-col">
           <span className="score">{result.score.toFixed(3)}</span>
           <span className="score-label">relevance</span>

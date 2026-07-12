@@ -293,7 +293,8 @@ h1 em { font-style: normal; color: var(--green); }
   color: var(--faint); border-left: 1px solid rgba(22,40,28,.15);
   padding-left: 5px;
 }
-.ctoken::after {
+.ctoken::after,
+.vbadge::after {
   content: attr(data-tip);
   position: absolute; left: 50%; bottom: calc(100% + 6px);
   transform: translateX(-50%);
@@ -304,7 +305,32 @@ h1 em { font-style: normal; color: var(--green); }
   transition: opacity .15s ease-out;
   z-index: 5;
 }
-.ctoken:hover::after { opacity: 1; }
+.ctoken:hover::after,
+.vbadge:hover::after { opacity: 1; }
+
+/* Badge trạng thái verify (policy A, display-only) — inline cạnh tên POI.
+   verified = XANH DƯƠNG (convention "verified blue" — nổi trên UI vốn toàn
+   xanh lá); unverified = amber đặc chữ trắng. status "active" (nguồn xlsx,
+   chưa qua verify) → không render gì. */
+.vbadge {
+  position: relative;
+  display: inline-flex; align-items: center; gap: 5px;
+  font-family: var(--mono); font-size: 10px; font-weight: 700;
+  letter-spacing: .08em; text-transform: uppercase;
+  border-radius: 999px; padding: 4px 10px 4px 8px;
+  margin-left: 10px; vertical-align: 3px;
+}
+.vbadge svg { flex: 0 0 auto; }
+.vbadge.ok {
+  color: #fff;
+  background: linear-gradient(135deg, #3B82F6 0%, #1D4ED8 100%);
+  box-shadow: 0 1px 6px rgba(59, 130, 246, .35), inset 0 1px 0 rgba(255, 255, 255, .22);
+}
+.vbadge.warn {
+  color: #fff;
+  background: linear-gradient(135deg, #F0A44B 0%, #D97706 100%);
+  box-shadow: 0 1px 6px rgba(217, 119, 6, .30), inset 0 1px 0 rgba(255, 255, 255, .20);
+}
 
 /* ===== result skeleton (loading state) ===== */
 .skeleton-card {
