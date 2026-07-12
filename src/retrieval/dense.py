@@ -150,8 +150,13 @@ class DenseRetriever:
                 must_filters.append(FieldCondition(key="city", match=MatchValue(value=plan.city)))
             if plan.district:
                 must_filters.append(FieldCondition(key="district", match=MatchValue(value=plan.district)))
-            if plan.categories:
-                must_filters.append(FieldCondition(key="category", match=MatchAny(any=list(plan.categories))))
+            
+            # Resolve categories semantically from weights if rules are bypassed
+            categories = list(plan.categories)
+            if not categories and plan.category_weights:
+                categories = [cat for cat, w in plan.category_weights.items() if w >= 0.15]
+            if categories:
+                must_filters.append(FieldCondition(key="category", match=MatchAny(any=categories)))
 
         query_filter = Filter(must=must_filters) if must_filters else None
 

@@ -443,8 +443,12 @@ def extract_plan(query: str, attr_index=None, joint_index=None, column_anchor=No
     landmark_span = _detect_landmark(plan, norm)   # cần cue "gần/near", có city guard
     _detect_district(plan, norm)   # district → city + centroid (khi chưa có landmark)
 
-    # Category: match + track consumed spans
-    plan.categories, cat_spans = _match_consuming_tracked(norm, _category_rules())
+    # Category: bypassed hardcoded rules to defer to semantic matching if joint_index is available
+    if joint_index is not None:
+        plan.categories = set()
+        cat_spans = []
+    else:
+        plan.categories, cat_spans = _match_consuming_tracked(norm, _category_rules())
 
     if attr_index is not None:
         # --- Subtractive parsing: loại bỏ entities đã nhận diện, giữ candidate attrs ---
@@ -475,7 +479,7 @@ def extract_plan(query: str, attr_index=None, joint_index=None, column_anchor=No
                 for w in rem_words:
                     if len(w) >= 2:
                         matched_attrs.update(attr_index.radius_search(w))
-            plan.attr_concepts = matched_attrs
+            plan.attr_concepts.update(matched_attrs)
 
             # --- Joint Semantic Competition (continuous weights) ---
             if joint_index is not None:

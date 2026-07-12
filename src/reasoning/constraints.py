@@ -57,13 +57,14 @@ def _classify_attr(attr_str: str) -> str:
     if any(kw in norm for kw in _PRICE_KEYWORDS):
         return "price"
     return "attribute"
-
-
 def parse_constraints(plan: QueryPlan) -> list[Constraint]:
     """QueryPlan (đã có sẵn từ L1) → danh sách ràng buộc có kiểu."""
     out: list[Constraint] = []
 
-    for cat in sorted(plan.categories):
+    categories = plan.categories
+    if not categories and plan.category_weights:
+        categories = {cat for cat, w in plan.category_weights.items() if w >= 0.15}
+    for cat in sorted(categories):
         out.append(Constraint("category", cat, cat, priority=2))
 
     for attr_str in sorted(plan.attr_concepts):

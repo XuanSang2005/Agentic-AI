@@ -11,7 +11,7 @@ hybrid retrieval (BM25 ∪ dense union-pool) → multi-signal re-rank (explainab
 | BM25 only | 0.833 | 0.890 | 0.861 |
 | + Rerank (rules, no distance) | 0.933 | 0.954 | 0.906 |
 | + Multi-signal Rerank | 0.933 | 0.954 | 0.914 |
-| + Dense (signal) | 0.967 | 0.983 | 0.958 |
+| + Dense (signal) | 0.833 | 0.885 | 0.903 |
 | + LLM Planner | — | — | — |
 | Stress (unseen phrasing, n=20) | 0.950 | 0.967 | — |
 
