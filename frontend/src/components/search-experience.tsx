@@ -43,8 +43,8 @@ export function SearchExperience() {
           <span className="pin">
             <PinIcon />
           </span>
-          <span className="bname">Tasco Maps</span>
-          <span className="btrack">AABW 2026 - Track 2</span>
+          <span className="bname">Tasco SLM Maps</span>
+          <span className="btrack">AABW 2026 - Problem Statement 7</span>
         </div>
         <h1>
           Semantic search, <em>every score explained</em>

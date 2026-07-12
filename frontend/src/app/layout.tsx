@@ -15,7 +15,7 @@ const ibmPlexSans = IBM_Plex_Sans({
 });
 
 export const metadata: Metadata = {
-  title: "Tasco Maps — Semantic Search",
+  title: "Tasco SLM Maps — Semantic Search",
   description:
     "BM25 + dense union pool with multi-signal rerank. Fully offline, deterministic, not a single LLM call.",
 };

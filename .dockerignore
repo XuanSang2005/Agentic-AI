@@ -6,3 +6,9 @@ data/cache
 eval/reports/*.json
 demo/screenshots
 .env
+# frontend là SOURCE của UI — image chỉ cần demo/ (static export đã build).
+# node_modules/.next/out chỉ là artifact build ở máy dev, không được vào image.
+frontend/node_modules
+frontend/.next
+frontend/out
+data/qdrant_storage
